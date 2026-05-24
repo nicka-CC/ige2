@@ -1,0 +1,2069 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тренажер по Инфокоммуникационным Системам и Сетям — HARD LEVEL</title>
+    
+    <!-- Google Fonts: Outfit for headings, Fira Code for code blocks, Inter for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Outfit:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* CSS Variables - Cyberpunk Purple & Neon Pink Theme */
+        :root {
+            --bg-color: #06060f;
+            --container-bg: rgba(18, 12, 38, 0.75);
+            --card-bg: rgba(28, 18, 56, 0.85);
+            --card-hover-border: rgba(192, 132, 252, 0.5);
+            
+            --accent-purple: #c084fc;
+            --accent-purple-glow: rgba(192, 132, 252, 0.4);
+            --accent-cyan: #f472b6;
+            --accent-cyan-glow: rgba(244, 114, 182, 0.4);
+            
+            --text-primary: #fdfdfd;
+            --text-secondary: #d1d5db;
+            --text-dark: #111827;
+            
+            --correct-color: #10b981;
+            --correct-bg: rgba(16, 185, 129, 0.15);
+            --correct-border: rgba(16, 185, 129, 0.4);
+            
+            --wrong-color: #f43f5e;
+            --wrong-bg: rgba(244, 63, 94, 0.15);
+            --wrong-border: rgba(244, 63, 94, 0.4);
+            
+            --sidebar-width: 340px;
+            --transition-speed: 0.3s;
+            --border-radius: 16px;
+        }
+
+        /* Base Resets & Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(192, 132, 252, 0.15) 0px, transparent 45%),
+                radial-gradient(at 90% 90%, rgba(244, 114, 182, 0.1) 0px, transparent 45%),
+                radial-gradient(at 50% 50%, rgba(6, 6, 15, 0.95) 0px, var(--bg-color) 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080814;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e1b4b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-purple);
+        }
+
+        /* App Wrapper */
+        .app-container {
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--container-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+        }
+
+        .header-title-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-icon {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 8px rgba(192, 132, 252, 0.3));
+        }
+
+        .header-text h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(90deg, #ffffff, #d1d5db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-text p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-badge {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-badge i {
+            font-size: 1.1rem;
+        }
+
+        .stat-badge.correct i { color: var(--correct-color); }
+        .stat-badge.wrong i { color: var(--wrong-color); }
+        .stat-badge.streak {
+            background: rgba(244, 114, 182, 0.1);
+            border-color: rgba(244, 114, 182, 0.2);
+            color: #f472b6;
+            animation: pulse-pink 2s infinite;
+        }
+        .stat-badge.streak i { color: #f472b6; }
+
+        .stat-badge.timer i { color: var(--accent-purple); }
+
+        /* Main Workspace Layout */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr var(--sidebar-width);
+            gap: 24px;
+            flex-grow: 1;
+        }
+
+        @media (max-width: 1024px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+            .sidebar-toggle-btn {
+                display: block !important;
+            }
+        }
+
+        /* Main Content Panel */
+        .quiz-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Cards Style */
+        .glass-card {
+            background: var(--container-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+            position: relative;
+            transition: border-color var(--transition-speed);
+        }
+
+        /* Question Progress Bar */
+        .progress-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            box-shadow: 0 0 10px var(--accent-purple-glow);
+            border-radius: 5px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Question Content styling */
+        .question-category {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(192, 132, 252, 0.15);
+            border: 1px solid rgba(192, 132, 252, 0.3);
+            color: #d8b4fe;
+            margin-bottom: 16px;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.5;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        /* Codeblock styling */
+        .codeblock-container {
+            position: relative;
+            background: #020205;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .codeblock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 8px 16px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .codeblock-header i {
+            cursor: pointer;
+            transition: color var(--transition-speed);
+        }
+
+        .codeblock-header i:hover {
+            color: var(--accent-purple);
+        }
+
+        pre {
+            padding: 16px;
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #e9d5ff;
+        }
+
+        /* Answer Options Layout */
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .answer-option {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 16px 20px;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .answer-option:hover:not(.disabled) {
+            background: rgba(43, 29, 82, 0.5);
+            border-color: var(--card-hover-border);
+            box-shadow: 0 4px 20px rgba(192, 132, 252, 0.15);
+            transform: translateX(4px);
+        }
+
+        .option-marker {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+            transition: all var(--transition-speed);
+        }
+
+        .answer-option:hover:not(.disabled) .option-marker {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+            color: var(--text-dark);
+            box-shadow: 0 0 8px var(--accent-purple-glow);
+        }
+
+        .option-text {
+            font-size: 0.95rem;
+            line-height: 1.45;
+            color: var(--text-secondary);
+            transition: color var(--transition-speed);
+        }
+
+        .answer-option:hover:not(.disabled) .option-text {
+            color: var(--text-primary);
+        }
+
+        /* Option States: Correct / Wrong */
+        .answer-option.correct {
+            background: var(--correct-bg) !important;
+            border-color: var(--correct-border) !important;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1) !important;
+        }
+
+        .answer-option.correct .option-marker {
+            background: var(--correct-color) !important;
+            border-color: var(--correct-color) !important;
+            color: white !important;
+        }
+
+        .answer-option.correct .option-text {
+            color: white !important;
+            font-weight: 600;
+        }
+
+        .answer-option.wrong {
+            background: var(--wrong-bg) !important;
+            border-color: var(--wrong-border) !important;
+            box-shadow: 0 4px 20px rgba(244, 63, 94, 0.1) !important;
+            animation: shake 0.4s ease;
+        }
+
+        .answer-option.wrong .option-marker {
+            background: var(--wrong-color) !important;
+            border-color: var(--wrong-color) !important;
+            color: white !important;
+        }
+
+        .answer-option.wrong .option-text {
+            color: white !important;
+        }
+
+        .answer-option.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .answer-option.disabled.correct, .answer-option.disabled.wrong {
+            opacity: 1;
+        }
+
+        /* Action Buttons */
+        .actions-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 14px 24px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all var(--transition-speed);
+        }
+
+        .btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            border: none;
+            color: var(--text-dark);
+            box-shadow: 0 4px 15px rgba(192, 132, 252, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, #a755e3, #e54c9a);
+            box-shadow: 0 4px 20px rgba(192, 132, 252, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: rgba(244, 63, 94, 0.1);
+            border-color: rgba(244, 63, 94, 0.2);
+            color: #fda4af;
+        }
+
+        .btn-danger:hover {
+            background: rgba(244, 63, 94, 0.2);
+            border-color: rgba(244, 63, 94, 0.4);
+        }
+
+        /* Explanation Panel */
+        .explanation-card {
+            background: rgba(18, 12, 38, 0.9);
+            border: 1px solid rgba(192, 132, 252, 0.2);
+            border-left: 5px solid var(--accent-purple);
+            animation: slideIn 0.4s ease;
+        }
+
+        .explanation-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .explanation-header.correct-text {
+            color: var(--correct-color);
+        }
+
+        .explanation-header.wrong-text {
+            color: var(--wrong-color);
+        }
+
+        .explanation-body {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        /* Sidebar Navigation grid */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .sidebar-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 8px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .grid-item {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .grid-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .grid-item.active {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 8px var(--accent-purple-glow);
+            color: var(--accent-purple);
+            font-weight: 700;
+            background: rgba(192, 132, 252, 0.05);
+        }
+
+        .grid-item.answered-correct {
+            background: rgba(16, 185, 129, 0.1) !important;
+            border-color: rgba(16, 185, 129, 0.3) !important;
+            color: var(--correct-color) !important;
+        }
+
+        .grid-item.answered-wrong {
+            background: rgba(244, 63, 94, 0.1) !important;
+            border-color: rgba(244, 63, 94, 0.3) !important;
+            color: var(--wrong-color) !important;
+        }
+
+        .help-card {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+
+        .help-card ul {
+            padding-left: 16px;
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        /* Results Panel */
+        .results-panel {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 30px;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+
+        .results-circle-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+
+        .results-svg {
+            transform: rotate(-90deg);
+        }
+
+        .results-circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.03);
+            stroke-width: 12;
+        }
+
+        .results-circle-fill {
+            fill: none;
+            stroke: url(#results-gradient);
+            stroke-width: 12;
+            stroke-linecap: round;
+            stroke-dasharray: 565.48; /* 2 * PI * r (r=90) */
+            stroke-dashoffset: 565.48;
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .results-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .results-value span {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: -2px;
+        }
+
+        .results-header h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #ffffff, var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .results-grade {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            margin-bottom: 16px;
+        }
+
+        .results-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            width: 100%;
+        }
+
+        @media (max-width: 600px) {
+            .results-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .results-stats-card {
+                padding: 12px !important;
+            }
+        }
+
+        .results-stats-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .res-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .res-stat-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .res-stat-value.correct { color: var(--correct-color); }
+        .res-stat-value.wrong { color: var(--wrong-color); }
+
+        .wrong-reviews-container {
+            width: 100%;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-top: 10px;
+        }
+
+        .wrong-reviews-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--wrong-color);
+        }
+
+        .wrong-reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .wrong-review-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-secondary);
+        }
+
+        .wrong-review-item:hover {
+            background: rgba(244, 63, 94, 0.08);
+            border-color: rgba(244, 63, 94, 0.2);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .sidebar-toggle-btn {
+            display: none;
+        }
+
+        /* Animations */
+        @keyframes pulse-pink {
+            0% { box-shadow: 0 0 0 0 rgba(244, 114, 182, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(244, 114, 182, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(244, 114, 182, 0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- App Header -->
+        <header>
+            <div class="header-title-container">
+                <a href="index.html" class="btn" style="padding: 8px 12px; border-radius: 8px; display: flex; align-items: center; gap: 6px; font-size: 0.8rem;">
+                    <i class="fa-solid fa-arrow-left"></i> На главную
+                </a>
+                <div class="header-icon">
+                    <i class="fa-solid fa-circle-nodes"></i>
+                </div>
+                <div class="header-text">
+                    <h1>Инфокоммуникационные Системы и Сети</h1>
+                    <p><i class="fa-solid fa-graduation-cap"></i> Подготовка к ГИА 09.03.02 • HARD LEVEL</p>
+                </div>
+            </div>
+            
+            <div class="header-stats">
+                <div class="stat-badge correct" title="Правильные ответы">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span id="correct-count">0</span>
+                </div>
+                <div class="stat-badge wrong" title="Ошибки">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                    <span id="wrong-count">0</span>
+                </div>
+                <div class="stat-badge streak" title="Серия ответов">
+                    <i class="fa-solid fa-fire"></i>
+                    <span id="streak-count">0</span>
+                </div>
+                <div class="stat-badge timer" title="Времени прошло">
+                    <i class="fa-solid fa-clock"></i>
+                    <span id="elapsed-time">00:00</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <div class="workspace">
+            
+            <!-- Left Quiz Area -->
+            <div class="quiz-panel" id="quiz-panel">
+                
+                <!-- Main Glass Card for Quiz -->
+                <div class="glass-card">
+                    <!-- Progress bar -->
+                    <div class="progress-container">
+                        <div class="progress-text">
+                            <span id="completion-percentage">0% выполнено</span>
+                            <span>Вопрос <span id="current-q-index">1</span> из 32</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card for Question Content -->
+                <div class="glass-card" style="margin-top: -12px;">
+                    <span class="question-category" id="question-category">УРОВНИ OSI / СЕТЕВЫЕ ПРОТОКОЛЫ</span>
+                    
+                    <div class="question-text" id="question-text">
+                        Загрузка вопроса...
+                    </div>
+
+                    <!-- Code block wrapper (only shown if code is present) -->
+                    <div class="codeblock-container" id="codeblock-container" style="display: none;">
+                        <div class="codeblock-header">
+                            <span>Сетевой листинг / Конфигурация</span>
+                            <i class="fa-regular fa-copy" id="copy-code-btn" title="Копировать код"></i>
+                        </div>
+                        <pre><code id="code-content"></code></pre>
+                    </div>
+
+                    <!-- Answer Options -->
+                    <div class="answers-grid" id="answers-grid">
+                        <!-- Options injected dynamically by JS -->
+                    </div>
+                </div>
+
+                <!-- Explanation Box (revealed after selection) -->
+                <div class="glass-card explanation-card" id="explanation-card" style="display: none; margin-top: -12px;">
+                    <div class="explanation-header" id="explanation-header">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Правильный ответ!</span>
+                    </div>
+                    <div class="explanation-body" id="explanation-body">
+                        Здесь будет академическое объяснение...
+                    </div>
+                </div>
+
+                <!-- Actions Bar -->
+                <div class="actions-bar">
+                    <button class="btn btn-danger" onclick="confirmReset()"><i class="fa-solid fa-arrow-rotate-left"></i> Начать заново</button>
+                    <button class="btn sidebar-toggle-btn" onclick="toggleSidebar()"><i class="fa-solid fa-list-ol"></i> Навигация</button>
+                    <button class="btn btn-primary" id="next-btn" onclick="goToNextQuestion()">
+                        <span>Следующий вопрос</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Right Navigation Sidebar -->
+            <div class="glass-card sidebar" id="sidebar-panel">
+                <div>
+                    <h3 class="sidebar-title"><i class="fa-solid fa-compass"></i> Навигатор по тесту</h3>
+                    <div class="grid-container" id="sidebar-grid">
+                        <!-- Navigation items injected by JS -->
+                    </div>
+                </div>
+
+                <div class="help-card" style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 15px; margin-top: auto;">
+                    <h4 style="font-weight: 600; color: white; margin-bottom: 8px;"><i class="fa-solid fa-circle-info"></i> Пояснения к цветам:</h4>
+                    <p>Отвечайте на вопросы в любом порядке. Сетка отображает Ваш текущий прогресс:</p>
+                    <ul>
+                        <li><span style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); margin-right: 6px;"></span> Не начат</li>
+                        <li><span style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--correct-bg); border: 1px solid var(--correct-border); margin-right: 6px;"></span> Правильный ответ</li>
+                        <li><span style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--wrong-bg); border: 1px solid var(--wrong-border); margin-right: 6px;"></span> Неверный ответ</li>
+                        <li><span style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--accent-purple); margin-right: 6px;"></span> Активный вопрос</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Score / Triumph Panel -->
+            <div class="glass-card results-panel" id="results-panel">
+                <div class="results-header">
+                    <h2 id="results-title">Тест Завершен!</h2>
+                    <p style="color: var(--text-secondary);">Ваш итоговый академический результат:</p>
+                </div>
+
+                <div class="results-circle-container">
+                    <svg class="results-svg" width="200" height="200" viewBox="0 0 200 200">
+                        <defs>
+                            <linearGradient id="results-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="var(--accent-purple)" />
+                                <stop offset="100%" stop-color="var(--accent-cyan)" />
+                            </linearGradient>
+                        </defs>
+                        <circle class="results-circle-bg" cx="100" cy="100" r="90" />
+                        <circle class="results-circle-fill" id="results-circle-fill" cx="100" cy="100" r="90" />
+                    </svg>
+                    <div class="results-value" id="results-percentage">
+                        0%
+                        <span>верно</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="results-grade" id="results-grade">Загрузка звания...</div>
+                    <p style="color: var(--text-secondary); max-width: 500px; font-size: 0.95rem; margin: 0 auto;">
+                        Ваш уровень готовности к сдаче государственного экзамена по дисциплине «Инфокоммуникационные системы и сети» определен на основе правильных ответов.
+                    </p>
+                </div>
+
+                <div class="results-stats-grid">
+                    <div class="results-stats-card">
+                        <span class="res-stat-label">Всего отвечено</span>
+                        <span class="res-stat-value" id="res-answered">32</span>
+                    </div>
+                    <div class="results-stats-card">
+                        <span class="res-stat-label">Правильно</span>
+                        <span class="res-stat-value correct" id="res-correct">0</span>
+                    </div>
+                    <div class="results-stats-card">
+                        <span class="res-stat-label">Ошибки</span>
+                        <span class="res-stat-value wrong" id="res-wrong">0</span>
+                    </div>
+                    <div class="results-stats-card">
+                        <span class="res-stat-label">Рекорд серии</span>
+                        <span class="res-stat-value" id="res-streak">0</span>
+                    </div>
+                    <div class="results-stats-card" style="grid-column: span 4;">
+                        <span class="res-stat-label">Затрачено времени</span>
+                        <span class="res-stat-value" id="res-time">00:00</span>
+                    </div>
+                </div>
+
+                <div class="wrong-reviews-container" id="wrong-reviews-container" style="display: none;">
+                    <div class="wrong-reviews-title">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>Вопросы, в которых вы допустили ошибки:</span>
+                    </div>
+                    <div class="wrong-reviews-list" id="wrong-reviews-list">
+                        <!-- Injected by JS -->
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 16px;">
+                    <button class="btn btn-primary" onclick="restartQuiz()"><i class="fa-solid fa-rotate-right"></i> Пройти тест заново</button>
+                    <a href="index.html" class="btn"><i class="fa-solid fa-house"></i> На главную панель</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Canvas Confetti for triumphal explosion -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Quiz Engine & Question Database -->
+    <script>
+        // High-fidelity database of 32 networks questions
+        const questions = [
+            {
+                category: 'Введение в сети',
+                text: 'Дать определение сети. Чем отличается коммуникационная сеть от информационной сети? Как разделяются сети по территориальному признаку?',
+                options: [
+                    'Сеть — это объединение серверов; коммуникационная сеть передает файлы, а информационная — данные; по территории делятся на кабельные и беспроводные.',
+                    'Сеть — это совокупность оконечных устройств (компьютеров) и каналов связи; коммуникационная сеть занимается исключительно транспортировкой данных (без их изменения), а информационная (вычислительная) выполняет также обработку и хранение данных; по территориальному признаку сети делятся на локальные (LAN), городские (MAN) и глобальные (WAN).',
+                    'Сеть — это любая среда передачи; коммуникационная сеть обеспечивает физическую среду и коммутацию каналов, а информационная — коммутацию пакетов; по территории делятся на корпоративные и публичные.',
+                    'Сеть — это совокупность программных протоколов обмена; коммуникационная сеть обеспечивает стек TCP/IP, а информационная — приложения; по территории делятся на одноранговые и многоранговые.'
+                ],
+                correctIndex: 1,
+                explanation: `<b>Вычислительная (информационная) сеть</b> — это совокупность компьютеров, объединенных каналами связи и обеспечивающих распределенную обработку информации.<br><br>
+                <b>Коммуникационная сеть (подсеть)</b> отвечает только за доставку сообщений (передачу данных) между узлами без их обработки или изменения.<br><br>
+                По территориальному охвату сети классифицируют на:
+                <ul>
+                    <li><b>Локальные (LAN)</b> — радиус до нескольких километров (офис, здание, предприятие).</li>
+                    <li><b>Городские (MAN)</b> — радиус от десятков до сотни километров (город, область).</li>
+                    <li><b>Глобальные (WAN)</b> — охватывают целые страны и континенты (Интернет).</li>
+                </ul>`
+            },
+            {
+                category: 'Каналы связи и ИС',
+                text: 'Что такое информационная система? Дать определение физического и логического канала связи.',
+                options: [
+                    'Информационная система — это совокупность баз данных; физический канал — это кабель, а логический канал — это интерфейс подключения RJ-45.',
+                    'Информационная система — это совокупность аппаратных средств; физический канал — это оптоволокно, а логический канал — это порт TCP/UDP.',
+                    'Информационная система — взаимосвязанная совокупность средств, методов и персонала, используемых для хранения, обработки и выдачи информации. Физический канал связи — это материальная среда (кабель, радиоэфир) и приемопередающая аппаратура. Логический канал — это программно-аппаратный путь передачи данных между двумя узлами, создаваемый поверх физического канала в соответствии с протоколом.',
+                    'Информационная система — это сетевая операционная система; физический канал — это медная жила, а логический канал — это таблица маршрутизации.'
+                ],
+                correctIndex: 2,
+                explanation: `<b>Информационная система (ИС)</b> — это взаимосвязанная совокупность средств, методов и персонала, используемая для хранения, обработки и выдачи информации в интересах достижения поставленной цели.<br><br>
+                <b>Физический канал связи</b> представляет собой физическую среду передачи (кабель, радиоволна, оптоволокно) вместе с аппаратными средствами сопряжения (модемы, сетевые карты), обеспечивающими перенос электрических или оптических сигналов.<br><br>
+                <b>Логический (виртуальный) канал связи</b> — это логический путь передачи данных между двумя конечными точками, организуемый поверх физических каналов на основе программно-аппаратных правил (протоколов) и позволяющий мультиплексировать множество соединений в одной физической среде.`
+            },
+            {
+                category: 'Протоколы и стандарты',
+                text: 'Как называется совокупность правил обмена информацией между двумя или несколькими устройствами?',
+                options: [
+                    'Интерфейс',
+                    'Стек протоколов',
+                    'Протокол',
+                    'Стандарт IEEE'
+                ],
+                correctIndex: 2,
+                explanation: `<b>Протокол передачи данных</b> — это совокупность правил, соглашений и процедур, определяющих формат, синтаксис, семантику и синхронизацию обмена информацией между двумя или более сетевыми устройствами.<br><br>
+                Важно отличать <i>протокол</i> (правила логического взаимодействия на одном уровне между разными устройствами) от <i>интерфейса</i> (правила физического и логического взаимодействия между смежными уровнями внутри одного устройства).`
+            },
+            {
+                category: 'Архитектура сети',
+                text: 'Какие компоненты входят в состав сети? Что понимается под архитектурой сети?',
+                options: [
+                    'Компоненты: только серверы и кабели; архитектура сети — это геометрическое расположение серверов в стойке.',
+                    'Компоненты: компьютеры, сетевые адаптеры, кабели, сетевые ОС, сетевые протоколы и приложения. Архитектура сети — это логическая, функциональная и физическая организация сети, определяющая ее топологию, структуру ПО, протоколы обмена и интерфейсы.',
+                    'Компоненты: файлы и таблицы маршрутизации; архитектура — это спецификация стандартов ISO/OSI.',
+                    'Компоненты: исключительно стек протоколов TCP/IP; архитектура — это распределение IP-адресов по подсетям.'
+                ],
+                correctIndex: 1,
+                explanation: `Сетевая инфраструктура состоит из трех основных групп компонентов:
+                <ol>
+                    <li><b>Аппаратное обеспечение</b>: серверы, рабочие станции, сетевые адаптеры, кабели, коммутаторы, маршрутизаторы.</li>
+                    <li><b>Программное обеспечение</b>: сетевые ОС, сетевые службы, драйверы устройств, сетевые приложения.</li>
+                    <li><b>Информационное наполнение (данные)</b>: передаваемый по сети трафик.</li>
+                </ol>
+                <b>Архитектура сети</b> — это концептуальная схема, определяющая структуру, взаимосвязь элементов, протоколы, интерфейсы и логическую организацию всей сетевой среды.`
+            },
+            {
+                category: 'Архитектура сети',
+                text: 'Чем отличается одноранговая архитектура от клиент-серверной архитектуры?',
+                options: [
+                    'В одноранговой сети все компьютеры выполняют функции только клиентов; в клиент-серверной — только функции серверов.',
+                    'В одноранговой сети (Peer-to-Peer) все компьютеры равноправны: каждый может выступать и клиентом, и сервером. В клиент-серверной выделен один или несколько мощных компьютеров (серверов), монопольно предоставляющих ресурсы, а остальные компьютеры (клиенты) только используют их.',
+                    'Одноранговая архитектура работает только на оптоволокне, а клиент-серверная — на витой паре.',
+                    'Одноранговая архитектура не использует протоколы IP, а клиент-серверная базируется исключительно на IP-адресации.'
+                ],
+                correctIndex: 1,
+                explanation: `<b>Одноранговая архитектура (P2P)</b> характеризуется отсутствием постоянных выделенных серверов. Каждый компьютер (пир, peer) может выполнять функции как сервера (предоставлять файлы, принтеры, БД), так и клиента. Достоинство — простота и дешевизна; недостаток — отсутствие централизованного администрирования и слабая безопасность.<br><br>
+                <b>Клиент-серверная архитектура</b> имеет четкое разделение ролей. <i>Сервер</i> ожидает запросы и обслуживает их, <i>клиенты</i> инициируют запросы. Обеспечивает высокую производительность, надежную централизованную систему безопасности и администрирования.`
+            },
+            {
+                category: 'Архитектура сети',
+                text: 'Укажите преимущества и недостатки архитектуры терминал – главный компьютер.',
+                options: [
+                    'Преимущества: автономная работа терминалов; недостатки: низкая скорость физических каналов связи.',
+                    'Преимущества: возможность сборки терминалов своими руками; недостатки: использование только ОС Linux.',
+                    'Преимущества: высокая концентрация вычислительной мощности, централизованное хранение и администрирование данных, высокая безопасность и низкая стоимость оконечных устройств (терминалов). Недостатки: полная зависимость работы всех пользователей от работоспособности главного компьютера, высокая стоимость мейнфрейма и риск отказа центральной точки.',
+                    'Преимущества: легкая настройка беспроводных сетей; недостатки: отсутствие поддержки стека TCP/IP.'
+                ],
+                correctIndex: 2,
+                explanation: `Архитектура <b>«Терминал — главный компьютер» (Mainframe architecture)</b> подразумевает, что вся обработка данных и выполнение программ происходят на мощном центральном компьютере (мейнфрейме). 
+                Абоненты работают через <i>«глупые» терминалы</i>, которые состоят только из монитора и клавиатуры, и занимаются исключительно вводом-выводом.<br><br>
+                <b>Преимущества:</b> крайняя простота администрирования, надежная защита данных, отсутствие необходимости в дорогих ПК на столах сотрудников.<br><br>
+                <b>Недостатки:</b> при отказе мейнфрейма останавливается работа всей организации; высокая стоимость центрального оборудования; плохая масштабируемость.`
+            },
+            {
+                category: 'Архитектура сети',
+                text: 'Что характерно для сетей с выделенным сервером?',
+                options: [
+                    'Централизованное администрирование ЛВС',
+                    'Выход из строя рабочей станции блокирует работу ЛВС',
+                    'Небольшое количество рабочих станций в ЛВС',
+                    'Необходимо соединение с Интернетом',
+                    'Использование только ПО UNIX'
+                ],
+                correctIndex: 0,
+                explanation: `Для сетей с выделенным сервером (серверных сетей) характерно централизованное управление. Учетные записи пользователей, права доступа и параметры безопасности хранятся и управляются на сервере (например, контроллере домена), что обеспечивает <b>централизованное администрирование ЛВС</b> (один из ключевых ответов в билетах ГЭК!) и высокую надежность.`
+            },
+            {
+                category: 'Модель OSI',
+                text: 'Что такое модель OSI и на какие уровни она разделена в базовой спецификации?',
+                options: [
+                    'Это операционная система; уровни: Ядро, Драйверы, Файловая система, Пользовательский интерфейс.',
+                    'Модель взаимодействия открытых систем (Open Systems Interconnection) — концептуальная основа, описывающая сетевые функции. Разделена на 7 уровней: Физический, Канальный, Сетевой, Транспортный, Сеансовый, Представительский, Прикладной.',
+                    'Это спецификация локальных сетей Ethernet; уровни: 10Base-T, 100Base-TX, 1000Base-SX, Fast Ethernet.',
+                    'Модель маршрутизации в глобальных сетях; уровни: Локальный, Региональный, Национальный, Континентальный.'
+                ],
+                correctIndex: 1,
+                explanation: `<b>Базовая эталонная модель взаимодействия открытых систем (ISO/OSI)</b> — это концептуальная семиуровневая модель, разработанная Международной организацией по стандартизации (ISO) в 1984 году для унификации сетевых стандартов и обеспечения совместимости оборудования различных производителей.<br><br>
+                Модель делит процесс сетевого взаимодействия на 7 независимых уровней, каждый из которых предоставляет сервис вышележащему уровню и использует услуги нижележащего. Передача данных сверху вниз (у отправителя) сопровождается <b>инкапсуляцией</b> (добавлением заголовков каждого уровня), а снизу вверх (у получателя) — <b>декапсуляцией</b> (снятием заголовков).<br><br>
+                Подробная академическая спецификация всех 7 уровней модели OSI (снизу вверх):<br><br>
+                <ol>
+                    <li><b>Физический уровень (L1 - Physical Layer)</b>
+                        <ul>
+                            <li><b>Единица передачи данных (PDU):</b> Бит (Bit).</li>
+                            <li><b>Назначение:</b> Непосредственная передача неструктурированного потока сырых битов по физической среде (медь, оптоволокно, радиоэфир).</li>
+                            <li><b>Ключевые функции:</b> Физическое кодирование (NRZ, Манчестерский код, PAM-5), модуляция, синхронизация битов, определение механических и электрических характеристик интерфейсов (распайка RJ-45, V.35, DB-9, геометрия кабелей, уровни напряжений).</li>
+                            <li><b>Сетевые устройства:</b> Сетевые кабели (витая пара UTP/STP, одномодовое/многомодовое оптоволокно), коннекторы, повторители (Repeaters), концентраторы (Hubs), медиаконвертеры.</li>
+                            <li><b>Стандарты:</b> IEEE 802.3 (10BaseT, 100Base-TX), RS-232, DSL, GPON.</li>
+                        </ul>
+                    </li><br>
+                    <li><b>Канальный уровень (L2 - Data Link Layer)</b>
+                        <ul>
+                            <li><b>Единица передачи данных (PDU):</b> Кадр (Frame).</li>
+                            <li><b>Назначение:</b> Обеспечение надежной передачи данных в пределах одного физического сегмента сети, обнаружение и исправление ошибок физической среды.</li>
+                            <li><b>Ключевые функции:</b> Физическая адресация по MAC-адресам (уникальным аппаратным 48-битным адресам сетевых карт), разграничение кадров, контроль доступа к среде передачи (CSMA/CD в полудуплексном Ethernet, CSMA/CA в Wi-Fi), подсчет контрольной суммы кадра (CRC).</li>
+                            <li><b>Архитектура IEEE 802 делит L2 на два подуровня:</b>
+                                <ul>
+                                    <li><b>MAC (Media Access Control)</b> — управление доступом к физической среде и адресация кадров.</li>
+                                    <li><b>LLC (Logical Link Control)</b> — управление логической связью и контроль потока данных.</li>
+                                </ul>
+                            </li>
+                            <li><b>Сетевые устройства:</b> Коммутаторы L2 (Switches), мосты (Bridges), сетевые адаптеры (NIC).</li>
+                            <li><b>Протоколы:</b> Ethernet, PPP, HDLC, Frame Relay, L2TP, STP (Spanning Tree Protocol), ARP (пограничный между L2 и L3).</li>
+                        </ul>
+                    </li><br>
+                    <li><b>Сетевой уровень (L3 - Network Layer)</b>
+                        <ul>
+                            <li><b>Единица передачи данных (PDU):</b> Пакет (Packet).</li>
+                            <li><b>Назначение:</b> Объединение разнородных сегментов сети и определение оптимального маршрута (логического пути) доставки данных между узлами-отправителями и узлами-получателями, находящимися в разных сетях.</li>
+                            <li><b>Ключевые функции:</b> Логическая адресация узлов (IP-адресация), маршрутизация (вычисление маршрутов на основе метрик и построение таблиц маршрутизации), трансляция сетевых адресов (NAT), фрагментация и последующая сборка пакетов (если размер превышает MTU канала).</li>
+                            <li><b>Сетевые устройства:</b> Маршрутизаторы (Routers), L3-коммутаторы (многоуровневые коммутаторы).</li>
+                            <li><b>Протоколы:</b> IP (IPv4, IPv6), ICMP, RIP, OSPF, BGP, IPX (стек Novell NetWare), IPSec.</li>
+                        </ul>
+                    </li><br>
+                    <li><b>Транспортный уровень (L4 - Transport Layer)</b>
+                        <ul>
+                            <li><b>Единица передачи данных (PDU):</b> Сегмент (Segment) для TCP, Датаграмма (Datagram) для UDP.</li>
+                            <li><b>Назначение:</b> Обеспечение сквозной (end-to-end) доставки данных от конкретного программного процесса на стороне отправителя к процессу на стороне получателя с заданным уровнем надежности.</li>
+                            <li><b>Ключевые функции:</b> Мультиплексирование и демультиплексирование потоков данных с использованием логических адресов приложений — <b>портов</b> (например, веб-сервер слушает порт 80, SSH-сервер — 22); установление, поддержание и разрыв логических соединений; контроль потока данных (механизм скользящего окна / Sliding Window) для исключения переполнения буфера получателя; сборка фрагментированных сегментов в строго правильном порядке.</li>
+                            <li><b>Основные протоколы:</b>
+                                <ul>
+                                    <li><b>TCP (Transmission Control Protocol)</b> — надежный протокол с установлением соединения, гарантирующий доставку данных без дублирования и потерь (посредством подтверждений ACK и повторной отправки тайм-аута).</li>
+                                    <li><b>UDP (User Datagram Protocol)</b> — быстрый, легковесный протокол без установления соединения, отправляющий датаграммы без подтверждения доставки (идеально для потокового видео, телефонии и DNS).</li>
+                                    <li><b>SPX</b> (в стеке Novell NetWare).</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li><br>
+                    <li><b>Сеансовый уровень (L5 - Session Layer)</b>
+                        <ul>
+                            <li><b>Единица передачи данных (PDU):</b> Данные (Data).</li>
+                            <li><b>Назначение:</b> Управление диалогом между приложениями на удаленных узлах: установление, поддержание, синхронизация и завершение сеансов связи.</li>
+                            <li><b>Ключевые функции:</b> Управление очередностью передачи (полудуплексный или полный дуплекс), синхронизация диалога путем внедрения в поток данных контрольных точек (чекпоинтов) — в случае разрыва соединения передача возобновится с последней подтвержденной точки, а не с самого начала.</li>
+                            <li><b>Протоколы:</b> NetBIOS, RPC, L2TP (управление сессией тунлеля), SOCKS, PPTP.</li>
+                        </ul>
+                    </li><br>
+                    <li><b>Представительский уровень (L6 - Presentation Layer)</b>
+                        <ul>
+                            <li><b>Единица передачи данных (PDU):</b> Данные (Data).</li>
+                            <li><b>Назначение:</b> Обеспечение независимости прикладных служб от конкретного синтаксиса и кодировок передаваемых данных; представление информации в общедоступном и согласованном формате.</li>
+                            <li><b>Ключевые функции:</b> Преобразование форматов данных и перекодирование символьных наборов (например, из ASCII в Unicode, перевод структуры целых и вещественных чисел), сжатие и архивация данных на лету для уменьшения объема передаваемого трафика, шифрование и дешифрование данных (обеспечение конфиденциальности на синтаксическом уровне).</li>
+                            <li><b>Форматы и протоколы:</b> SSL/TLS (в части шифрования синтаксиса), форматирование JPEG, MPEG, GIF, XML, JSON, ASCII, EBCDIC.</li>
+                        </ul>
+                    </li><br>
+                    <li><b>Прикладной уровень (L7 - Application Layer)</b>
+                        <ul>
+                            <li><b>Единица передачи данных (PDU):</b> Данные (Data).</li>
+                            <li><b>Назначение:</b> Предоставление непосредственного интерфейса взаимодействия между прикладным пользовательским программным обеспечением (браузеры, почтовые клиенты, терминалы) и сетевыми службами.</li>
+                            <li><b>Ключевые функции:</b> Идентификация партнеров по сеансу связи, согласование готовности сетевых ресурсов, обеспечение доступа к распределенным базам данных, отправка электронной почты, пересылка файлов, поддержка удаленного доступа.</li>
+                            <li><b>Сетевые устройства:</b> Шлюзы (Gateways), межсетевые экраны прикладного уровня (WAF, Application Firewalls), прокси-серверы прикладного уровня.</li>
+                            <li><b>Протоколы:</b> HTTP, HTTPS, FTP, SSH, Telnet, SMTP, POP3, IMAP, DNS, DHCP, SNMP, NTP, LDAP.</li>
+                        </ul>
+                    </li>
+                </ol>`
+            },
+            {
+                category: 'Уровни OSI',
+                text: 'Какие функции выполняются и какие технические вопросы решаются на физическом уровне (Physical Layer) модели OSI?',
+                options: [
+                    'На физическом уровне выполняется маршрутизация пакетов на основе IP-адресов и рассчитывается контрольная сумма кадра.',
+                    'На физическом уровне выполняется преобразование данных в формат XML/JSON и устанавливаются сессии пользователей.',
+                    'Выполняется передача неструктурированного потока битов по физической среде. Решаются вопросы: типы сигналов и кодирования, уровни напряжений электрических сигналов, длительность импульсов, характеристики разъемов и кабелей.',
+                    'Осуществляется доступ к веб-страницам по протоколу HTTP и отправка почты.'
+                ],
+                correctIndex: 2,
+                explanation: `<b>Физический уровень (Physical Layer)</b> — самый нижний уровень модели OSI. Он взаимодействует непосредственно с физической средой передачи.<br><br>
+                На этом уровне не существует понятий «пакет», «кадр» или «IP-адрес» — здесь оперируют исключительно <b>битами (0 и 1)</b>, преобразуемыми в физические сигналы (электрический ток, световые импульсы, радиоволны).<br><br>
+                Решаемые вопросы включают: тип модуляции, схемы линейного кодирования (например, Манчестерский код, NRZ), уровни сигналов, распайка разъемов (например, RJ-45) и спецификации кабелей.`
+            },
+            {
+                category: 'Уровни OSI',
+                text: 'Какой уровень модели OSI отвечает за преобразование данных в общий формат (представление данных) для передачи по сети?',
+                options: [
+                    'Сеансовый уровень (Session Layer)',
+                    'Представительский уровень (Presentation Layer)',
+                    'Прикладной уровень (Application Layer)',
+                    'Канальный уровень (Data Link Layer)'
+                ],
+                correctIndex: 1,
+                explanation: `<b>Представительский уровень (Presentation Layer, 6-й уровень)</b> модели OSI отвечает за то, чтобы данные, отправленные прикладным уровнем одной системы, были понятны прикладному уровню другой системы.<br><br>
+                Этот уровень выполняет:
+                <ul>
+                    <li><b>Преобразование форматов и кодировок</b> (например, из ASCII в EBCDIC, перевод чисел с плавающей точкой).</li>
+                    <li><b>Сжатие данных</b> для уменьшения объема передаваемого трафика.</li>
+                    <li><b>Шифрование и дешифрование данных</b> (обеспечение конфиденциальности на уровне представления).</li>
+                </ul>`
+            },
+            {
+                category: 'Уровни OSI',
+                text: 'Какие протоколы и стандарты функционируют на канальном уровне (Data Link) модели OSI?',
+                options: [
+                    'IP, ICMP, RIP, OSPF',
+                    'TCP, UDP, SPX',
+                    'Ethernet (подуровни MAC и LLC), Wi-Fi (IEEE 802.11), PPP, HDLC, ARP (пограничный)',
+                    'HTTP, FTP, SMTP, DNS, DHCP'
+                ],
+                correctIndex: 2,
+                explanation: `<b>Канальный уровень (Data Link Layer, 2-й уровень)</b> обеспечивает доставку кадров (frames) между узлами в пределах одного физического сегмента сети.<br><br>
+                В соответствии со спецификациями IEEE 802, он разделен на два подуровня:
+                <ul>
+                    <li><b>LLC (Logical Link Control)</b> — управление логической связью (независимо от физической среды).</li>
+                    <li><b>MAC (Media Access Control)</b> — управление доступом к физической среде и адресация кадров на основе физических (MAC) адресов.</li>
+                </ul>
+                Основные протоколы: Ethernet, PPP, HDLC, Frame Relay, L2TP, STP.`
+            },
+            {
+                category: 'Уровни OSI',
+                text: 'Какие протоколы используются на сетевом уровне?',
+                options: [
+                    'UDP',
+                    'IP',
+                    'IPX',
+                    'SMTP',
+                    'POP'
+                ],
+                correctIndex: [1, 2],
+                explanation: `На сетевом (3-м) уровне модели OSI работают протоколы логической адресации и маршрутизации. Основными примерами являются протокол <b>IP</b> (Internet Protocol) и протокол <b>IPX</b> (Internetwork Packet Exchange, стек Novell NetWare).<br><br>
+                <i>UDP</i> работает на Транспортном уровне (4), а <i>SMTP</i> и <i>POP</i> — на Прикладном уровне (7).`
+            },
+            {
+                category: 'Уровни OSI',
+                text: 'Перечислите основные функции транспортного уровня (Transport) модели OSI. Какие протоколы на нем работают?',
+                options: [
+                    'Кодирование текстовых символов в стандарт Юникод; протокол HTTP.',
+                    'Физическое сопряжение сетевых адаптеров; стандарты 10BaseT.',
+                    'Обеспечение надежной (или ненадежной) сквозной (end-to-end) доставки данных от процесса на отправителе к процессу на получателе, мультиплексирование с помощью портов, контроль потока. Протоколы: TCP, UDP, SPX.',
+                    'Управление сессиями диалога между терминалами; протокол NetBIOS.'
+                ],
+                correctIndex: 2,
+                explanation: `<b>Транспортный уровень (Transport Layer, 4-й уровень)</b> является связующим звеном между сетевой подсистемой (уровни 1-3) и прикладной частью (уровни 5-7).<br><br>
+                <b>Основные функции:</b>
+                <ul>
+                    <li><b>Мультиплексирование</b> — разделение трафика различных приложений на одном компьютере с помощью номеров <i>портов</i> (например, порт 80 для HTTP, 22 для SSH).</li>
+                    <li><b>Сквозная доставка (End-to-End)</b> — контроль доставки между процессами (а не просто узлами).</li>
+                </ul>
+                <b>Протоколы:</b>
+                <ul>
+                    <li><b>TCP (Transmission Control Protocol)</b> — ориентирован на соединение, гарантирует надежную доставку, собирает сегменты в правильном порядке, осуществляет контроль перегрузок.</li>
+                    <li><b>UDP (User Datagram Protocol)</b> — работает без установления соединения, не гарантирует доставку (быстрее, с минимальными накладными расходами).</li>
+                </ul>`
+            },
+            {
+                category: 'Протоколы и стандарты',
+                text: 'Каково основное назначение спецификаций стандартов комитета IEEE 802?',
+                options: [
+                    'Разработка стандартов для глобальных телефонных сетей общего пользования (PSTN).',
+                    'Стандартизация протоколов физического и канального уровней (L1 и L2 модели OSI) для локальных (LAN) и городских (MAN) вычислительных сетей.',
+                    'Спецификация языков программирования C# и C++ для сетевых приложений.',
+                    'Стандартизация прикладных протоколов интернета (HTTP, FTP, SMTP).'
+                ],
+                correctIndex: 1,
+                explanation: `<b>Институт инженеров электротехники и электроники (IEEE)</b> сформировал комитет <b>IEEE 802</b> в 1980 году.<br><br>
+                Назначение стандартов семейства IEEE 802 состоит в регламентации аппаратных интерфейсов и протоколов передачи данных на двух нижних уровнях модели OSI — <b>Физическом</b> и <b>Канальном</b>. Именно в рамках этой деятельности канальный уровень был разделен на подуровни LLC и MAC.`
+            },
+            {
+                category: 'Протоколы и стандарты',
+                text: 'Какой стандарт описывает сетевую технологию Ethernet? Какой стандарт содержит рекомендации по оптоволоконным сетевым технологиям?',
+                options: [
+                    'Ethernet описывается стандартом IEEE 802.11; оптоволокно — IEEE 802.15 (Bluetooth).',
+                    'Ethernet описывается стандартом IEEE 802.5 (Token Ring); оптоволокно — IEEE 802.1 (Security).',
+                    'Ethernet описывается стандартом IEEE 802.3; рекомендации по оптоволоконным технологиям содержит стандарт IEEE 802.8.',
+                    'Ethernet описывается стандартом IEEE 802.2 (LLC); оптоволокно — IEEE 802.4 (Token Bus).'
+                ],
+                correctIndex: 2,
+                explanation: `Согласно классификации рабочих групп комитета IEEE 802:
+                <ul>
+                    <li><b>IEEE 802.3</b> — рабочая группа, разрабатывающая стандарты проводных сетей <b>Ethernet</b> (включая спецификации медных кабелей, коаксиала и оптоволокна 10Base-FL, 100Base-FX и т.д.).</li>
+                    <li><b>IEEE 802.8</b> — техническая консультативная группа по <b>волоконно-оптическим технологиям</b> (Fiber Optic Technical Advisory Group), предоставляющая рекомендации по интеграции оптоволокна в локальные сети.</li>
+                </ul>`
+            },
+            {
+                category: 'Протоколы и стандарты',
+                text: 'Назовите наиболее популярные и широко используемые сетевые протоколы в современных информационных системах.',
+                options: [
+                    'HTML, CSS, JavaScript, SQL',
+                    'IP, TCP, UDP, HTTP, FTP, SMTP, POP3, DNS, DHCP, ARP, ICMP',
+                    'SATA, PCI-Express, USB, Thunderbolt',
+                    '10BaseT, 100BaseTX, 1000BaseT'
+                ],
+                correctIndex: 1,
+                explanation: `Современные сети построены на стеке протоколов <b>TCP/IP</b>. Популярные протоколы разделяют по уровням:
+                <ul>
+                    <li><b>Прикладной (L7)</b>: HTTP/HTTPS (веб-страницы), FTP (передача файлов), SMTP/POP3/IMAP (почта), DNS (разрешение имен), DHCP (динамическое конфигурирование IP).</li>
+                    <li><b>Транспортный (L4)</b>: TCP, UDP.</li>
+                    <li><b>Сетевой (L3)</b>: IP, ICMP (сообщения об ошибках), ARP (сопоставление IP и MAC).</li>
+                </ul>`
+            },
+            {
+                category: 'Стек TCP/IP',
+                text: 'Каковы основные функции протокола IP? Какие существуют виды адресации в IP-сетях?',
+                options: [
+                    'Гарантированная доставка файлов с подтверждением приема; виды адресации: только MAC-адрес.',
+                    'Логическая адресация узлов, маршрутизация пакетов без установления соединения, фрагментация пакетов. Виды адресации: физическая (MAC-адрес, L2), логическая (IP-адрес, L3), символьная (доменное имя, L7).',
+                    'Установление телефонного соединения; виды адресации: телефонные номера по стандарту E.164.',
+                    'Защита сети от хакерских атак; виды адресации: списки контроля доступа ACL.'
+                ],
+                correctIndex: 1,
+                explanation: `<b>IP (Internet Protocol)</b> — базовый протокол сетевого уровня. Его свойства:
+                <ul>
+                    <li>Работает <i>без предварительного установления соединения</i> (connectionless).</li>
+                    <li>Не гарантирует надежную доставку (best-effort) — контроль ошибок возлагается на TCP.</li>
+                    <li>Выполняет <i>фрагментацию</i> пакетов на промежуточных узлах, если размер пакета превышает MTU канала.</li>
+                </ul>
+                <b>Виды адресации в компьютерных сетях:</b>
+                <ol>
+                    <li><b>Физическая (аппаратная)</b> — MAC-адрес сетевой карты (48 бит, L2 уровень), уникальна во всем мире.</li>
+                    <li><b>Логическая (сетевая)</b> — IP-адрес (32 бита в IPv4, 128 бит в IPv6, L3 уровень), назначается администратором или DHCP.</li>
+                    <li><b>Символьная (доменная)</b> — буквенное имя (например, google.com, L7 уровень), удобное для человека.</li>
+                </ol>`
+            },
+            {
+                category: 'Сетевые протоколы',
+                text: 'Какой протокол необходим для определения локального (физического, MAC) адреса узла по его известному IP-адресу?',
+                options: [
+                    'DHCP',
+                    'DNS',
+                    'ARP (Address Resolution Protocol)',
+                    'ICMP'
+                ],
+                correctIndex: 2,
+                explanation: `<b>Протокол ARP (Address Resolution Protocol)</b> решает фундаментальную задачу сопряжения сетевого (L3) и канального (L2) уровней.<br><br>
+                Когда компьютеру А необходимо отправить кадр компьютеру Б в локальной сети, он знает IP-адрес Б, но сетевая карта может отправить данные только на физический MAC-адрес. 
+                Компьютер А отправляет <i>широковещательный ARP-запрос</i> (ARP Request): «У кого IP-адрес X? Сообщите свой MAC-адрес». Узел с указанным IP отвечает <i>одноадресным ARP-ответом</i> (ARP Reply), сообщая свой MAC-адрес. Полученный результат кэшируется в ARP-таблице отправителя.`
+            },
+            {
+                category: 'Сетевые протоколы',
+                text: 'Какой протокол необходим для определения IP-адреса по известному локальному (физическому, MAC) адресу устройства?',
+                options: [
+                    'RARP (Reverse Address Resolution Protocol)',
+                    'RIP',
+                    'HTTP',
+                    'OSPF'
+                ],
+                correctIndex: 0,
+                explanation: `<b>RARP (Reverse Address Resolution Protocol — обратный протокол разрешения адресов)</b> решает задачу, обратную ARP: по известному MAC-адресу он запрашивает IP-адрес у выделенного RARP-сервера.<br><br>
+                Обычно RARP использовался бездисковыми рабочими станциями при загрузке для выяснения своего IP-адреса. В современных сетях функции RARP полностью вытеснены более мощными протоколами <b>BOOTP</b> и <b>DHCP</b>.`
+            },
+            {
+                category: 'Сетевые протоколы',
+                text: 'Какой протокол используется для управления сообщениями Интернета (передачи уведомлений об ошибках маршрутизации и диагностики связи)?',
+                options: [
+                    'SMTP',
+                    'ICMP (Internet Control Message Protocol)',
+                    'UDP',
+                    'ARP'
+                ],
+                correctIndex: 1,
+                explanation: `<b>ICMP (Internet Control Message Protocol)</b> — это вспомогательный протокол сетевого уровня стека TCP/IP, используемый для передачи управляющих сообщений и информации об ошибках.<br><br>
+                Например, если маршрутизатор не может доставить пакет из-за истечения времени жизни (TTL=0), он уничтожает пакет и отправляет отправителю ICMP-сообщение «Time Exceeded» (время жизни истекло).<br><br>
+                На протоколе ICMP базируются популярные утилиты диагностики сетей: <b>ping</b> (использует эхо-запрос Echo Request и эхо-ответ Echo Reply) и <b>tracert/traceroute</b>.`
+            },
+            {
+                category: 'Стек TCP/IP',
+                text: 'Каково назначение уровня сетевого интерфейса в стеке протоколов TCP/IP?',
+                options: [
+                    'Назначение этого уровня — кодирование веб-страниц на языке HTML.',
+                    'Он обеспечивает привязку доменных имен к IP-адресам.',
+                    'Это нижний уровень стека TCP/IP, соответствующий физическому и канальному уровням модели OSI. Он отвечает за сопряжение с физической средой передачи, упаковку IP-пакетов в кадры, физическое кодирование и передачу сигналов.',
+                    'Он отвечает за шифрование паролей пользователей с использованием алгоритма AES.'
+                ],
+                correctIndex: 2,
+                explanation: `Четырехуровневая модель стека <b>TCP/IP (модель DoD)</b> включает:
+                <ol>
+                    <li>Прикладной уровень (Application)</li>
+                    <li>Транспортный уровень (Host-to-Host / Transport)</li>
+                    <li>Межсетевой уровень (Internet)</li>
+                    <li><b>Уровень сетевого интерфейса (Network Interface / Network Access)</b></li>
+                </ol>
+                Уровень сетевого интерфейса принимает IP-пакеты от межсетевого уровня, инкапсулирует их в кадры конкретной технологии (например, Ethernet кадры) и передает биты в физическую среду.`
+            },
+            {
+                category: 'Топология сети',
+                text: 'Что такое топология физических связей вычислительной сети? Какие геометрические топологии используются чаще всего?',
+                options: [
+                    'Топология — это географическая карта прокладки кабелей по городу; используются топологии: параллельная и перпендикулярная.',
+                    'Топология — геометрическая схема (структура) физических или логических связей между узлами сети. Чаще всего используются: общая шина (bus), звезда (star), кольцо (ring), дерево (tree), ячеистая (mesh) и полносвязная.',
+                    'Топология — это схема логического взаимодействия баз данных в домене Active Directory; используются топологии: реляционная и нереляционная.',
+                    'Топология — это структура меню на веб-сервере; используются топологии: линейная и иерархическая.'
+                ],
+                correctIndex: 1,
+                explanation: `<b>Физическая топология</b> описывает конфигурацию физических связей (кабелей, радиоканалов) между компьютерами.<br><br>
+                <b>Основные классические топологии:</b>
+                <ul>
+                    <li><b>Шина (Bus)</b> — все компьютеры подключены к одному общему кабелю (каналу). На концах кабеля стоят терминаторы.</li>
+                    <li><b>Звезда (Star)</b> — каждый компьютер подключен индивидуальным кабелем к центральному устройству (коммутатору, концентратору). Наиболее популярна сегодня.</li>
+                    <li><b>Кольцо (Ring)</b> — компьютеры соединены кабелями последовательно по кругу. Данные передаются в одном направлении.</li>
+                    <li><b>Ячеистая (Mesh)</b> — каждый узел имеет связи со многими другими узлами, что обеспечивает максимальную отказоустойчивость.</li>
+                </ul>`
+            },
+            {
+                category: 'Методы доступа',
+                text: 'Охарактеризуйте метод множественного доступа к среде передачи с прослушиванием несущей и обнаружением коллизий (CSMA/CD).',
+                options: [
+                    'Это беспроводной метод доступа, при котором станции передают данные строго по расписанию, выдаваемому контроллером домена.',
+                    'Это метод, используемый в оптоволоконных кольцевых сетях Token Ring, основанный на передаче маркера доступа.',
+                    'Это случайный метод доступа в разделяемой среде Ethernet. Станция слушает кабель: если среда свободна — начинает передачу. Если фиксируется коллизия (одновременная передача другим узлом), передача прерывается, посылается jam-сигнал, и узлы ждут случайный интервал времени перед повторной попыткой.',
+                    'Это метод доступа, при котором коллизии исключены аппаратно за счет работы маршрутизаторов на третьем уровне OSI.'
+                ],
+                correctIndex: 2,
+                explanation: `Метод <b>CSMA/CD (Carrier Sense Multiple Access with Collision Detection)</b> — это классический базовый метод доступа, разработанный для полудуплексных сетей Ethernet в разделяемой среде (через хабы или коаксиал).<br><br>
+                <b>Алгоритм работы:</b>
+                <ol>
+                    <li><b>Прослушивание (Carrier Sense)</b>: передающая станция убеждается, что в канале нет сигналов других станций.</li>
+                    <li><b>Передача</b>: если канал свободен, начинается отправка кадра.</li>
+                    <li><b>Обнаружение коллизии (Collision Detection)</b>: если две станции начали передачу одновременно, их сигналы накладываются — происходит коллизия. Станции мгновенно прекращают передачу кадра.</li>
+                    <li><b>Jam-сигнал</b>: станция выдает в сеть специальный забивающий jam-сигнал для надежного уведомления всех узлов о коллизии.</li>
+                    <li><b>Случайная пауза</b>: станции запускают алгоритм экспоненциального отката (backoff), вычисляя случайную задержку, после чего повторяют попытку.</li>
+                </ol>`
+            },
+            {
+                category: 'Роли компьютеров',
+                text: 'Как подразделяются компьютеры в сети по выполняемым функциональным ролям? Что такое файловый сервер?',
+                options: [
+                    'Делятся на персональные и суперкомпьютеры; файловый сервер — это компьютер, на котором установлена сетевая плата.',
+                    'Компьютеры подразделяются на серверы (предоставляют ресурсы в общее пользование) и рабочие станции (клиенты, использующие ресурсы серверов). Файловый сервер — это выделенный высоконадежный компьютер с дисковым массивом большой емкости, предназначенный для совместного хранения файлов пользователей и управления доступом к ним.',
+                    'Делятся на активные и пассивные; файловый сервер — это компьютер, который автоматически архивирует файлы в архивы .zip.',
+                    'Делятся на маршрутизаторы и мосты; файловый сервер — это сервер баз данных Microsoft SQL Server.'
+                ],
+                correctIndex: 1,
+                explanation: `В сетевой архитектуре компьютеры классифицируются по функциональному назначению:
+                <ul>
+                    <li><b>Рабочие станции (Workstations)</b> — персональные компьютеры пользователей, с которых осуществляется доступ к сетевым службам.</li>
+                    <li><b>Серверы (Servers)</b> — специализированные компьютеры, оптимизированные под конкретные задачи обслуживания клиентов.</li>
+                </ul>
+                <b>Файловый сервер (File Server)</b> — самый первый исторический тип сетевого сервера. Он предоставляет дисковое пространство для организации централизованного файлового хранилища компании на базе протоколов доступа к файлам на уровне блоков (SMB/CIFS в Windows, NFS в Unix, FTP/SFTP в глобальных сетях).`
+            },
+            {
+                category: 'Контроллеры домена',
+                text: 'Каково назначение Первичного контроллера домена (PDC) в локальной сети, и для чего служит Вторичный контроллер домена (BDC)?',
+                options: [
+                    'PDC служит для подключения кабелей, а BDC — это резервный кабель электропитания.',
+                    'PDC — это компьютер администратора домена; BDC — компьютер его помощника, используемый для удаленного рабочего стола.',
+                    'PDC содержит единственную доступную для чтения и записи базу данных учетных записей домена, управляет безопасностью и аутентификацией. BDC содержит резервную копию базы данных учетных записей (только для чтения), разгружает PDC при аутентификации пользователей и обеспечивает отказоустойчивость при выходе PDC из строя.',
+                    'PDC распределяет IP-адреса по протоколу DHCP, а BDC транслирует IP-адреса во внешнюю сеть по протоколу NAT.'
+                ],
+                correctIndex: 2,
+                explanation: `Концепция <b>PDC (Primary Domain Controller)</b> и <b>BDC (Backup Domain Controller)</b> берет свое начало из сетевой архитектуры ОС Windows NT Server.<br><br>
+                <ul>
+                    <li><b>Первичный контроллер домена (PDC)</b> — главный сервер аутентификации. Любые изменения в учетных записях пользователей (смена паролей, создание групп) записываются только в его базу SAM.</li>
+                    <li><b>Вторичный контроллер домена (BDC)</b> — периодически синхронизирует свою базу с PDC. База на BDC открыта только для чтения. При входе пользователя в сеть BDC может самостоятельно провести аутентификацию (проверить пароль), снижая нагрузку на PDC. При аппаратном сбое PDC, один из BDC может быть вручную или автоматически повышен до статуса PDC.</li>
+                </ul>`
+            },
+            {
+                category: 'Сетевые службы',
+                text: 'Что такое Proxy-сервер (прокси-сервер) и для каких практических целей он используется в корпоративных сетях?',
+                options: [
+                    'Proxy-сервер — это устройство физического разветвления медного кабеля витой пары.',
+                    'Proxy-сервер — это промежуточный сервер-посредник между клиентским ПК и внешними интернет-ресурсами. Используется для кэширования веб-контента (ускорение загрузки), фильтрации нежелательного трафика, контроля интернет-доступа сотрудников и скрытия внутренних IP-адресов компании.',
+                    'Proxy-сервер — это программа для отправки спама и автоматической рассылки электронных писем по протоколу POP3.',
+                    'Proxy-сервер — это резервный маршрутизатор, заменяющий основной в случае падения канала связи.'
+                ],
+                correctIndex: 1,
+                explanation: `<b>Proxy-сервер (прокси-сервер)</b> работает на прикладном (L7) уровне модели OSI в качестве посредника при отправке клиентских запросов.<br><br>
+                <b>Основные функции:</b>
+                <ul>
+                    <li><b>Кэширование:</b> прокси сохраняет копии часто запрашиваемых веб-страниц и картинок. При повторном обращении другого сотрудника данные выдаются из локального кэша мгновенно, экономя внешний трафик.</li>
+                    <li><b>Безопасность:</b> внешние веб-сайты видят только IP-адрес самого прокси, но не внутренние IP-адреса компьютеров ЛВС.</li>
+                    <li><b>Фильтрация контента:</b> блокировка доступа к социальным сетям или вредоносным сайтам на рабочем месте.</li>
+                </ul>`
+            },
+            {
+                category: 'Среда передачи',
+                text: 'Что может использоваться в качестве физической среды передачи данных и какие основные проблемы возникают при организации каналов связи?',
+                options: [
+                    'Только медный коаксиальный кабель; основная проблема — высокая стоимость разъемов BNC.',
+                    'Витая пара (UTP/STP), оптоволоконный кабель, коаксиал, радиоволновой эфир. Основные проблемы: затухание сигнала с расстоянием, электромагнитные помехи (наводки), дисперсия (для оптоволокна), отражения сигналов и ограниченность пропускной способности.',
+                    'Жесткие диски и флеш-накопители; главная проблема — механический износ магнитных головок.',
+                    'Только спутниковые каналы связи; основная проблема — влияние фаз Луны на радиоволны.'
+                ],
+                correctIndex: 1,
+                explanation: `<b>Физическая среда передачи</b> — это материальная субстанция, используемая для переноса информационных сигналов.<br><br>
+                <b>Основные типы сред:</b>
+                <ul>
+                    <li><b>Витая пара (Twisted Pair)</b>: медные провода, скрученные попарно для взаимокомпенсации наводок. Дешева, но ограничена дальностью в 100м и чувствительна к помехам (особенно неэкранированная UTP).</li>
+                    <li><b>Волоконно-оптический кабель (Fiber Optic)</b>: передает свет по стеклянным/пластиковым волокнам. Нечувствителен к электромагнитным помехам, обладает колоссальной пропускной способностью и дальностью (десятки километров). Проблемы — хрупкость, дисперсия (рассеяние световых импульсов во времени).</li>
+                    <li><b>Радиоэфир (Wi-Fi, радиореле, спутник)</b>: мобильность, но высокая подверженность затуханию в препятствиях и интерференции сигналов.</li>
+                </ul>`
+            },
+            {
+                category: 'Протоколы и стандарты',
+                text: 'XBaseT. Что такое X?',
+                options: [
+                    'Среда передачи',
+                    'Скорость передачи',
+                    'rote',
+                    'start',
+                    'apt get'
+                ],
+                correctIndex: 1,
+                explanation: `Стандарты физического уровня Ethernet именуются по строгому шаблону: <b>[Скорость][Метод модуляции][Среда передачи]</b>.<br><br>
+                Например, в <b>10BaseT</b> или <b>100BaseTX</b> префикс <b>X</b> (10 или 100) определяет номинальную <b>Скорость передачи данных</b> в мегабитах в секунду (Мбит/с).`
+            },
+            {
+                category: 'Производительность сети',
+                text: 'Что понимается под производительностью сети? Какие основные характеристики на нее влияют и какие существуют способы ее повышения?',
+                options: [
+                    'Производительность — это тактовая частота процессора на сервере; повышается за счет разгона процессора в BIOS.',
+                    'Производительность — это общая надежность оборудования; повышается путем дублирования жестких дисков в RAID-массивы.',
+                    'Производительность — мера эффективности передачи данных сетью. На нее влияют: пропускная способность, задержки передачи данных (latency), джиттер и реальная скорость доставки данных (throughput). Способы повышения: сегментация сетей коммутаторами/маршрутизаторами, переход на Fast/Gigabit Ethernet, приоритезация трафика (QoS).',
+                    'Производительность — это скорость вращения кулеров охлаждения в серверной комнате.'
+                ],
+                correctIndex: 2,
+                explanation: `<b>Производительность сети</b> не сводится к одной лишь пропускной способности.<br><br>
+                <b>Основные метрики производительности:</b>
+                <ul>
+                    <li><b>Пропускная способность (Bandwidth)</b> — теоретический максимум передачи бит в единицу времени (например, 1 Гбит/с).</li>
+                    <li><b>Задержка (Latency / Delay)</b> — время, необходимое пакету для прохождения от отправителя до получателя. Критично для голоса (VoIP) и видеосвязи.</li>
+                    <li><b>Реальная скорость (Throughput)</b> — объем полезных данных прикладного уровня, переданных по факту с учетом накладных расходов протоколов и повторных передач.</li>
+                </ul>
+                <b>Способы повышения производительности:</b>
+                <ul>
+                    <li><b>Сегментация:</b> замена общих шин (разделяемой среды) на коммутируемые соединения, локализующие трафик в портах коммутатора.</li>
+                    <li><b>QoS (Quality of Service):</b> приоритезация критичного к задержкам трафика над обычным веб-серфингом.</li>
+                </ul>`
+            },
+            {
+                category: 'Надежность сети',
+                text: 'Чем обеспечивается надежность вычислительной сети и как формулируется понятие «отказоустойчивость» (fault tolerance)?',
+                options: [
+                    'Надежность обеспечивается установкой ZoneAlarm Free Firewall; отказоустойчивость — это способность системы работать без подключения к электрической сети.',
+                    'Надежность сети обеспечивается аппаратным резервированием каналов и узлов, дублированием питания, использованием протоколов резервных путей (STP, динамическая маршрутизация). Отказоустойчивость — это свойство системы сохранять работоспособность и продолжать функционирование при выходе из строя одного или нескольких ее компонентов.',
+                    'Надежность обеспечивается только качественной сборкой кабелей RJ-45; отказоустойчивость — это отказ от использования ОС Windows.',
+                    'Надежность — это отсутствие вирусов; отказоустойчивость означает, что пользователи не могут совершать ошибки в сетевых программах.'
+                ],
+                correctIndex: 1,
+                explanation: `<b>Надежность сети</b> — это комплексный показатель, включающий готовность, отказоустойчивость и восстанавливаемость.<br><br>
+                <b>Методы обеспечения надежности:</b>
+                <ul>
+                    <li><b>Резервирование путей (Redundancy)</b>: создание альтернативных физических каналов связи. Чтобы избежать петель коммутации при этом, применяется протокол <b>STP (Spanning Tree Protocol)</b>.</li>
+                    <li><b>Отказоустойчивость (Fault Tolerance)</b> гарантирует, что единичная точка отказа (Single Point of Failure), например, сгоревший порт коммутатора или авария на линии провайдера, не приведет к полной остановке сети. Трафик автоматически перенаправится по резервному маршруту благодаря динамическим протоколам маршрутизации (OSPF, EIGRP).</li>
+                </ul>`
+            },
+            {
+                category: 'Прозрачность сети',
+                text: 'Что понимается под свойством «прозрачность сетей»?',
+                options: [
+                    'Использование прозрачных пластиковых коробов для укладки сетевого кабеля по стенам здания.',
+                    'Свойство сети полностью раскрывать весь пользовательский трафик государственным контролирующим органам.',
+                    'Свойство сети скрывать от пользователя и прикладных программ физическое распределение ресурсов и детали сетевого взаимодействия, предоставляя удаленные ресурсы точно так же, как локальные.',
+                    'Возможность визуально наблюдать за работой светодиодных индикаторов на портах коммутатора.'
+                ],
+                correctIndex: 2,
+                explanation: `<b>Прозрачность сети (Network Transparency)</b> — важнейшая концепция системной интеграции.<br><br>
+                Идеально прозрачная сеть работает незаметно для пользователя. Например, когда вы монтируете сетевую папку файлового сервера в качестве диска <code style="color: #fda4af;">Z:\\</code> в проводнике Windows, вы копируете, открываете и переименовываете файлы в ней точно так же, как на локальном диске <code style="color: #fda4af;">C:\\</code>. 
+                Операционная система и сетевой стек полностью скрывают от вас сложнейшую логику упаковки данных в TCP-сегменты, IP-пакеты, MAC-кадры и их физический транспорт.`
+            },
+            {
+                category: 'Активное оборудование',
+                text: 'Сопоставьте назначение и уровни функционирования активных сетевых устройств: Повторитель (Repeater), Мост (Bridge), Коммутатор (Switch), Маршрутизатор (Router) и Шлюз (Gateway).',
+                options: [
+                    'Все устройства работают исключительно на физическом уровне (L1) и выполняют только усиление электрического сигнала.',
+                    'Повторитель (L1) усиливает сигнал. Мост (L2) соединяет сегменты и фильтрует трафик по MAC-адресам. Коммутатор (L2) — высокопроизводительный многопортовый мост с аппаратной обработкой кадров. Маршрутизатор (L3) соединяет разные логические сети на основе IP-адресов. Шлюз (L7) объединяет сети с несовместимыми протоколами, преобразуя стек протоколов.',
+                    'Маршрутизатор работает на канальном уровне (L2) и передает кадры; коммутатор работает на сетевом уровне (L3) и пересылает пакеты.',
+                    'Повторитель работает на сеансовом уровне модели OSI и организует логические сессии пользователей.'
+                ],
+                correctIndex: 1,
+                explanation: `Каждое сетевое устройство имеет строго определенное место в модели OSI:
+                <ol>
+                    <li><b>Повторитель (Repeater / Hub) [L1 - Физический]</b>: восстанавливает амплитуду и фронты электрического сигнала. Не понимает структуру кадра, не фильтрует трафик. Повторяет пришедший сигнал на все порты.</li>
+                    <li><b>Мост (Bridge) [L2 - Канальный]</b>: соединяет два сегмента сети, анализирует MAC-адреса и передает кадр в другой сегмент только тогда, когда получатель действительно находится там (фильтрация трафика). Таблица адресов строится программно.</li>
+                    <li><b>Коммутатор (Switch) [L2 - Канальный]</b>: многопортовый мост. Обрабатывает кадры «на лету» аппаратно (ASIC-чипы), организуя независимые параллельные каналы коммутации между парами портов.</li>
+                    <li><b>Маршрутизатор (Router) [L3 - Сетевой]</b>: связывает технологически разные сети. Принимает решения о пересылке пакетов на основе IP-адресов и таблиц маршрутизации, блокирует широковещательный трафик.</li>
+                    <li><b>Шлюз (Gateway) [L7 - Прикладной]</b>: объединяет совершенно разные сетевые среды с несовместимыми наборами протоколов (например, сеть TCP/IP и сеть AppleTalk/IPX). Выполняет полное перекодирование данных на верхних уровнях модели OSI.</li>
+                </ol>`
+            }
+        ];
+
+        // Core App variables
+        let currentQuestionIndex = 0;
+        let answeredQuestions = {};
+        let scoreCorrect = 0;
+        let scoreWrong = 0;
+        let currentStreak = 0;
+        let maxStreak = 0;
+        let startTime = Date.now();
+        let timeOffset = 0; // used when loading progress
+        let timerInterval = null;
+        let wrongAnswersList = [];
+
+        // DOM elements
+        const currentQIndexEl = document.getElementById('current-q-index');
+        const questionCategoryEl = document.getElementById('question-category');
+        const questionTextEl = document.getElementById('question-text');
+        const answersGridEl = document.getElementById('answers-grid');
+        const explanationCardEl = document.getElementById('explanation-card');
+        const explanationHeaderEl = document.getElementById('explanation-header');
+        const explanationBodyEl = document.getElementById('explanation-body');
+        const nextBtnEl = document.getElementById('next-btn');
+        const progressFillEl = document.getElementById('progress-fill');
+        const completionPercentageEl = document.getElementById('completion-percentage');
+        
+        const correctCountEl = document.getElementById('correct-count');
+        const wrongCountEl = document.getElementById('wrong-count');
+        const streakCountEl = document.getElementById('streak-count');
+        const elapsedTimeEl = document.getElementById('elapsed-time');
+
+        const quizPanelEl = document.getElementById('quiz-panel');
+        const sidebarPanelEl = document.getElementById('sidebar-panel');
+        const resultsPanelEl = document.getElementById('results-panel');
+        const sidebarGridEl = document.getElementById('sidebar-grid');
+
+        const resultsPercentageEl = document.getElementById('results-percentage');
+        const resultsGradeEl = document.getElementById('results-grade');
+
+        // Init Application
+        function initApp() {
+            loadProgress();
+            
+            // Build navigation grid sidebar
+            sidebarGridEl.innerHTML = "";
+            questions.forEach((_, idx) => {
+                const gridItem = document.createElement('div');
+                gridItem.className = 'grid-item';
+                gridItem.id = `grid-item-${idx}`;
+                gridItem.textContent = idx + 1;
+                
+                // Color status if answered
+                if (answeredQuestions[idx]) {
+                    gridItem.classList.add(answeredQuestions[idx].isCorrect ? 'answered-correct' : 'answered-wrong');
+                }
+                
+                gridItem.onclick = () => jumpToQuestion(idx);
+                sidebarGridEl.appendChild(gridItem);
+            });
+
+            // Start timer
+            startTime = Date.now() - (timeOffset * 1000);
+            updateTimer();
+            clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 1000);
+
+            // Display active question
+            displayQuestion(currentQuestionIndex);
+            updateStats();
+        }
+
+        // Timer function
+        function updateTimer() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            elapsedTimeEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Render question content
+        function displayQuestion(index) {
+            currentQuestionIndex = index;
+            
+            // Update active grid element
+            document.querySelectorAll('.grid-item').forEach(item => item.classList.remove('active'));
+            const currentGridItem = document.getElementById(`grid-item-${index}`);
+            if (currentGridItem) currentGridItem.classList.add('active');
+
+            const q = questions[index];
+            currentQIndexEl.textContent = index + 1;
+            questionCategoryEl.textContent = q.category;
+            questionTextEl.textContent = q.text;
+
+            // Handle optional code blocks
+            const codeContainer = document.getElementById('codeblock-container');
+            const codeContent = document.getElementById('code-content');
+            if (q.code) {
+                codeContainer.style.display = 'block';
+                codeContent.textContent = q.code;
+            } else {
+                codeContainer.style.display = 'none';
+            }
+
+            answersGridEl.innerHTML = "";
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+            
+            q.options.forEach((opt, idx) => {
+                const optBtn = document.createElement('button');
+                optBtn.className = 'answer-option';
+                optBtn.innerHTML = `
+                    <div class="option-marker">${letters[idx] || (idx + 1)}</div>
+                    <div class="option-text">${opt.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
+                `;
+                
+                // If question is already answered, disable buttons and show correct/incorrect markers
+                if (answeredQuestions[index]) {
+                    optBtn.classList.add('disabled');
+                    const answered = answeredQuestions[index];
+                    const optionIsCorrect = Array.isArray(q.correctIndex) ? q.correctIndex.includes(idx) : idx === q.correctIndex;
+                    if (optionIsCorrect) {
+                        optBtn.classList.add('correct');
+                    } else if (idx === answered.chosenIndex) {
+                        optBtn.classList.add('wrong');
+                    }
+                } else {
+                    optBtn.onclick = () => selectAnswer(idx);
+                }
+                answersGridEl.appendChild(optBtn);
+            });
+
+            // Handle explanation visibility
+            if (answeredQuestions[index]) {
+                const answered = answeredQuestions[index];
+                showExplanationBlock(answered.isCorrect, q.explanation);
+            } else {
+                explanationCardEl.style.display = "none";
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Handle answer click
+        function selectAnswer(chosenIdx) {
+            if (answeredQuestions[currentQuestionIndex]) return;
+
+            const q = questions[currentQuestionIndex];
+            const isCorrect = Array.isArray(q.correctIndex) ? q.correctIndex.includes(chosenIdx) : chosenIdx === q.correctIndex;
+
+            answeredQuestions[currentQuestionIndex] = {
+                chosenIndex: chosenIdx,
+                isCorrect: isCorrect
+            };
+
+            if (isCorrect) {
+                scoreCorrect++;
+                currentStreak++;
+                if (currentStreak > maxStreak) maxStreak = currentStreak;
+                triggerSuccessAnimation();
+            } else {
+                scoreWrong++;
+                currentStreak = 0;
+                wrongAnswersList.push({
+                    questionIndex: currentQuestionIndex,
+                    text: q.text
+                });
+                triggerWrongAnimation();
+            }
+
+            // Style answer buttons
+            const options = answersGridEl.children;
+            for (let i = 0; i < options.length; i++) {
+                options[i].classList.add('disabled');
+                const optionIsCorrect = Array.isArray(q.correctIndex) ? q.correctIndex.includes(i) : i === q.correctIndex;
+                if (optionIsCorrect) {
+                    options[i].classList.add('correct');
+                } else if (i === chosenIdx) {
+                    options[i].classList.add('wrong');
+                }
+            }
+
+            // Color the sidebar navigator block
+            const gridItem = document.getElementById(`grid-item-${currentQuestionIndex}`);
+            if (gridItem) {
+                gridItem.classList.remove('answered-correct', 'answered-wrong');
+                gridItem.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+            }
+
+            showExplanationBlock(isCorrect, q.explanation);
+            updateStats();
+            saveProgress();
+            
+            // Check if all answered
+            if (Object.keys(answeredQuestions).length === questions.length) {
+                nextBtnEl.innerHTML = `<span>Показать результаты</span> <i class="fa-solid fa-square-poll-vertical"></i>`;
+            }
+        }
+
+        function showExplanationBlock(isCorrect, text) {
+            explanationCardEl.style.display = "block";
+            if (isCorrect) {
+                explanationHeaderEl.className = "explanation-header correct-text";
+                explanationHeaderEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>Правильный ответ!</span>`;
+            } else {
+                explanationHeaderEl.className = "explanation-header wrong-text";
+                explanationHeaderEl.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <span>Неверно</span>`;
+            }
+            explanationBodyEl.innerHTML = text;
+        }
+
+        function triggerSuccessAnimation() {
+            const correctBadge = document.querySelector('.stat-badge.correct');
+            correctBadge.style.transform = "scale(1.2)";
+            setTimeout(() => correctBadge.style.transform = "scale(1)", 200);
+            
+            // Trigger quick confetti burst on every 5-streak
+            if (currentStreak > 0 && currentStreak % 5 === 0) {
+                confetti({
+                    particleCount: 50,
+                    spread: 60,
+                    origin: { y: 0.8 }
+                });
+            }
+        }
+
+        function triggerWrongAnimation() {
+            const wrongBadge = document.querySelector('.stat-badge.wrong');
+            wrongBadge.style.transform = "scale(1.2)";
+            setTimeout(() => wrongBadge.style.transform = "scale(1)", 200);
+        }
+
+        // Skip/Next button action
+        function goToNextQuestion() {
+            if (Object.keys(answeredQuestions).length === questions.length) {
+                showResultsPanel();
+                return;
+            }
+
+            // Find next unanswered question
+            let nextIndex = (currentQuestionIndex + 1) % questions.length;
+            while (answeredQuestions[nextIndex] && nextIndex !== currentQuestionIndex) {
+                nextIndex = (nextIndex + 1) % questions.length;
+            }
+
+            jumpToQuestion(nextIndex);
+        }
+
+        function jumpToQuestion(index) {
+            currentQuestionIndex = index;
+            displayQuestion(currentQuestionIndex);
+            
+            // Reset visibility
+            quizPanelEl.style.display = "flex";
+            resultsPanelEl.style.display = "none";
+            sidebarPanelEl.style.display = "flex";
+            
+            if (Object.keys(answeredQuestions).length === questions.length) {
+                nextBtnEl.innerHTML = `<span>Показать результаты</span> <i class="fa-solid fa-square-poll-vertical"></i>`;
+            } else {
+                nextBtnEl.innerHTML = `<span>Следующий вопрос</span> <i class="fa-solid fa-arrow-right"></i>`;
+            }
+        }
+
+        function updateStats() {
+            correctCountEl.textContent = scoreCorrect;
+            wrongCountEl.textContent = scoreWrong;
+            streakCountEl.textContent = currentStreak;
+
+            const answeredCount = Object.keys(answeredQuestions).length;
+
+            const percent = Math.round((answeredCount / questions.length) * 100);
+            completionPercentageEl.textContent = `${percent}% выполнено`;
+            progressFillEl.style.width = `${percent}%`;
+        }
+
+        // Final score card display
+        function showResultsPanel() {
+            clearInterval(timerInterval);
+
+            quizPanelEl.style.display = "none";
+            sidebarPanelEl.style.display = "none";
+            resultsPanelEl.style.display = "flex";
+
+            const total = questions.length;
+            const percentage = Math.round((scoreCorrect / total) * 100);
+            resultsPercentageEl.textContent = `${percentage}%`;
+
+            // Animate SVG path offset
+            const circleFill = document.getElementById('results-circle-fill');
+            const radius = 90;
+            const circumference = 2 * Math.PI * radius;
+            const offset = circumference - (percentage / 100) * circumference;
+            
+            setTimeout(() => {
+                circleFill.style.strokeDashoffset = offset;
+            }, 100);
+
+            // Determine appropriate grade based on PskovSU requirements
+            let grade = "";
+            let title = "Тест Завершен!";
+            
+            if (percentage >= 90) {
+                grade = "Network Administrator 👑 (Сетевой Архитектор)";
+                title = "Потрясающий результат!";
+                triggerCelebrationConfetti();
+            } else if (percentage >= 75) {
+                grade = "Network Engineer 🛡️ (Инженер Сети)";
+                title = "Отличная работа!";
+                triggerCelebrationConfetti();
+            } else if (percentage >= 50) {
+                grade = "System Administrator 💻 (Системный Администратор)";
+                title = "Неплохой результат!";
+            } else {
+                grade = "Junior Cable Installer 📋 (Настройщик-Стажер)";
+                title = "Нужно подучить теорию!";
+            }
+
+            document.getElementById('results-title').textContent = title;
+            resultsGradeEl.textContent = grade;
+            
+            document.getElementById('res-answered').textContent = Object.keys(answeredQuestions).length;
+            document.getElementById('res-correct').textContent = scoreCorrect;
+            document.getElementById('res-wrong').textContent = scoreWrong;
+            document.getElementById('res-streak').textContent = maxStreak;
+            document.getElementById('res-time').textContent = elapsedTimeEl.textContent;
+
+            // Build wrong answers review grid
+            const wrongReviewListEl = document.getElementById('wrong-reviews-list');
+            const reviewsContainer = document.getElementById('wrong-reviews-container');
+            wrongReviewListEl.innerHTML = "";
+
+            if (wrongAnswersList.length > 0) {
+                reviewsContainer.style.display = "block";
+                wrongAnswersList.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = 'wrong-review-item';
+                    row.innerHTML = `
+                        <span>Вопрос ${item.questionIndex + 1}: ${item.text.substring(0, 80)}...</span>
+                        <i class="fa-solid fa-chevron-right" style="font-size: 0.8rem; opacity: 0.7;"></i>
+                    `;
+                    row.onclick = () => jumpToQuestion(item.questionIndex);
+                    wrongReviewListEl.appendChild(row);
+                });
+            } else {
+                reviewsContainer.style.display = "none";
+            }
+        }
+
+        // Triumphant cascade celebration
+        function triggerCelebrationConfetti() {
+            const end = Date.now() + (3 * 1000);
+            const colors = ['#c084fc', '#f472b6', '#10b981'];
+
+            (function frame() {
+                confetti({
+                    particleCount: 4,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: colors
+                });
+                confetti({
+                    particleCount: 4,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: colors
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        // Save progress to LocalStorage
+        function saveProgress() {
+            const elapsedMs = Date.now() - startTime;
+            const progressData = {
+                answeredQuestions: answeredQuestions,
+                scoreCorrect: scoreCorrect,
+                scoreWrong: scoreWrong,
+                currentStreak: currentStreak,
+                maxStreak: maxStreak,
+                elapsedSeconds: Math.floor(elapsedMs / 1000),
+                currentQuestionIndex: currentQuestionIndex,
+                wrongAnswersList: wrongAnswersList
+            };
+            localStorage.setItem('networks_quiz_progress', JSON.stringify(progressData));
+        }
+
+        // Load progress from LocalStorage
+        function loadProgress() {
+            const raw = localStorage.getItem('networks_quiz_progress');
+            if (raw) {
+                try {
+                    const data = JSON.parse(raw);
+                    answeredQuestions = data.answeredQuestions || {};
+                    scoreCorrect = data.scoreCorrect || 0;
+                    scoreWrong = data.scoreWrong || 0;
+                    currentStreak = data.currentStreak || 0;
+                    maxStreak = data.maxStreak || 0;
+                    timeOffset = data.elapsedSeconds || 0;
+                    currentQuestionIndex = data.currentQuestionIndex || 0;
+                    wrongAnswersList = data.wrongAnswersList || [];
+                    
+                    if (Object.keys(answeredQuestions).length === questions.length) {
+                        showResultsPanel();
+                    }
+                } catch (e) {
+                    console.error("Failed to parse stored progress", e);
+                }
+            }
+        }
+
+        // Reset progress confirmation
+        function confirmReset() {
+            if (confirm("Вы действительно хотите сбросить текущий прогресс теста по Сетям и начать заново?")) {
+                restartQuiz();
+            }
+        }
+
+        function restartQuiz() {
+            localStorage.removeItem('networks_quiz_progress');
+            answeredQuestions = {};
+            scoreCorrect = 0;
+            scoreWrong = 0;
+            currentStreak = 0;
+            maxStreak = 0;
+            startTime = Date.now();
+            timeOffset = 0;
+            currentQuestionIndex = 0;
+            wrongAnswersList = [];
+
+            // Reset UI visibility
+            quizPanelEl.style.display = "flex";
+            resultsPanelEl.style.display = "none";
+            sidebarPanelEl.style.display = "flex";
+            
+            initApp();
+        }
+
+        // Toggle Sidebar visibility for mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar-panel');
+            if (sidebar.style.display === "none" || sidebar.style.display === "") {
+                sidebar.style.display = "flex";
+            } else {
+                sidebar.style.display = "none";
+            }
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>

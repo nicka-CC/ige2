@@ -1,0 +1,1195 @@
+ <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель Подготовки к ГИА — Информационные Системы и Технологии</title>
+    
+    <!-- Google Fonts: Outfit for headings, Inter for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* CSS Variables - Premium Control Center Dark Theme */
+        :root {
+            --bg-color: #050508;
+            --container-bg: rgba(10, 10, 16, 0.75);
+            --card-bg: rgba(18, 18, 28, 0.8);
+            
+            --accent-primary: #6366f1; /* Indigo */
+            --accent-primary-glow: rgba(99, 102, 241, 0.35);
+            --accent-pink: #ec4899;
+            --accent-cyan: #06b6d4;
+            
+            --text-primary: #fdfdfd;
+            --text-secondary: #9ca3af;
+            
+            --correct-color: #10b981;
+            --wrong-color: #ef4444;
+            
+            --border-radius: 20px;
+            --transition-speed: 0.3s;
+        }
+
+        /* Base Resets & Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.08) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.06) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            padding-bottom: 40px;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #07070b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e1e2f;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-primary);
+        }
+
+        /* App Wrapper */
+        .app-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* Portal Header */
+        header {
+            background: var(--container-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-pink), var(--accent-cyan));
+        }
+
+        .header-title-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-pink));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
+        }
+
+        .header-text h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #ffffff, #d1d5db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+
+        .header-text p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        /* Countdown Timer */
+        .countdown-container {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 12px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 250px;
+        }
+
+        .countdown-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-pink);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .countdown-timer {
+            display: flex;
+            gap: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .countdown-item span {
+            font-size: 0.6rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Dashboard Global Stats Grid */
+        .global-stats-card {
+            background: var(--container-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            display: grid;
+            grid-template-columns: 2fr repeat(3, 1fr);
+            gap: 24px;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .global-stats-card {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .banners-grid-wrapper {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        .global-progress-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .global-progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .global-progress-bar-bg {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            height: 14px;
+            border-radius: 7px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .global-progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-cyan));
+            border-radius: 7px;
+            box-shadow: 0 0 10px var(--accent-primary-glow);
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-box {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            text-align: center;
+        }
+
+        .stat-box-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .stat-box-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .stat-box-value.correct { color: var(--correct-color); }
+        .stat-box-value.wrong { color: var(--wrong-color); }
+
+        /* Quiz Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Individual Discipline Card */
+        .quiz-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 28px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition-speed);
+        }
+
+        .quiz-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--card-color, var(--accent-primary));
+            transition: width 0.2s;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--card-border-hover, var(--accent-primary));
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 255, 255, 0.02);
+        }
+
+        .quiz-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .quiz-card-title-area {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .quiz-card-tag {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            color: var(--card-color, var(--accent-primary));
+        }
+
+        .quiz-card-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .quiz-card-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: var(--card-color, var(--accent-primary));
+            transition: all var(--transition-speed);
+        }
+
+        .quiz-card:hover .quiz-card-icon {
+            background: var(--card-color, var(--accent-primary));
+            color: #050508;
+            box-shadow: 0 0 12px var(--card-color-glow, var(--accent-primary));
+        }
+
+        .quiz-card-desc {
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            flex-grow: 1;
+        }
+
+        /* Card Progress Info */
+        .card-progress-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 16px;
+        }
+
+        .card-progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .card-progress-stats strong {
+            color: white;
+        }
+
+        .card-progress-bar-bg {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .card-progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--card-color, var(--accent-primary));
+            border-radius: 4px;
+            transition: width 0.6s;
+        }
+
+        /* Card Actions */
+        .card-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 5px;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px 20px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all var(--transition-speed);
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-primary {
+            background: var(--card-color, var(--accent-primary));
+            border: none;
+            color: #050508;
+            flex-grow: 1;
+            box-shadow: 0 4px 12px var(--card-color-glow, var(--accent-primary-glow));
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px var(--card-color-glow, var(--accent-primary-glow));
+        }
+
+        .btn-icon-only {
+            padding: 12px;
+            aspect-ratio: 1;
+            flex-shrink: 0;
+            color: var(--wrong-color);
+            background: rgba(239, 68, 68, 0.05);
+            border-color: rgba(239, 68, 68, 0.1);
+        }
+
+        .btn-icon-only:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Tips & Motivation Area */
+        .tips-section {
+            background: var(--container-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        @media (max-width: 600px) {
+            .tips-section {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        .tip-icon {
+            font-size: 2.2rem;
+            color: #fbbf24;
+            animation: bounce 3s infinite;
+        }
+
+        .tip-content h4 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .tip-content p {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Global Footer */
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #6b7280;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .global-reset-btn {
+            background: transparent;
+            border: none;
+            color: #4b5563;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-decoration: underline;
+            transition: color var(--transition-speed);
+        }
+
+        .global-reset-btn:hover {
+            color: var(--wrong-color);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- Portal Header -->
+        <header>
+            <div class="header-title-section">
+                <div class="header-logo">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div class="header-text">
+                    <h1>Подготовка к ГИА 09.03.02</h1>
+                    <p>Информационные Системы и Технологии • ПсковГУ • Академический тренажер</p>
+                </div>
+            </div>
+
+            <!-- Countdown Timer -->
+            <div class="countdown-container">
+                <div class="countdown-title">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                    <span>До государственного экзамена:</span>
+                </div>
+                <div class="countdown-timer" id="countdown">
+                    <div class="countdown-item" id="days-box">
+                        00
+                        <span>дн</span>
+                    </div>
+                    <span>:</span>
+                    <div class="countdown-item" id="hours-box">
+                        00
+                        <span>ч</span>
+                    </div>
+                    <span>:</span>
+                    <div class="countdown-item" id="minutes-box">
+                        00
+                        <span>м</span>
+                    </div>
+                    <span>:</span>
+                    <div class="countdown-item" id="seconds-box">
+                        00
+                        <span>с</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Global Progress Card -->
+        <div class="global-stats-card">
+            <div class="global-progress-wrapper">
+                <div class="global-progress-header">
+                    <span>Суммарный прогресс подготовки</span>
+                    <span id="global-percent">0%</span>
+                </div>
+                <div class="global-progress-bar-bg">
+                    <div class="global-progress-bar-fill" id="global-progress-fill"></div>
+                </div>
+            </div>
+            
+            <div class="stat-box">
+                <span class="stat-box-label">Всего верно</span>
+                <span class="stat-box-value correct" id="global-correct">0</span>
+            </div>
+
+            <div class="stat-box">
+                <span class="stat-box-label">Всего ошибок</span>
+                <span class="stat-box-value wrong" id="global-wrong">0</span>
+            </div>
+
+            <div class="stat-box">
+                <span class="stat-box-label">Общее время</span>
+                <span class="stat-box-value" id="global-time">0 ч 0 м</span>
+            </div>
+        </div>
+
+        <!-- Major Academic Integrations -->
+        <div style="
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        " class="banners-grid-wrapper">
+            
+            <!-- Reference Handbook Card -->
+            <div class="reference-banner" style="
+                background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(6, 182, 212, 0.12));
+                border: 1px solid rgba(99, 102, 241, 0.25);
+                border-radius: var(--border-radius);
+                padding: 28px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                gap: 20px;
+                position: relative;
+                overflow: hidden;
+                transition: all var(--transition-speed);
+            ">
+                <!-- decorative neon background blur -->
+                <div style="
+                    position: absolute;
+                    top: -50px;
+                    right: -50px;
+                    width: 120px;
+                    height: 120px;
+                    background: var(--accent-primary);
+                    filter: blur(80px);
+                    opacity: 0.25;
+                    pointer-events: none;
+                "></div>
+
+                <div style="display: flex; align-items: flex-start; gap: 16px;">
+                    <div style="
+                        width: 48px;
+                        height: 48px;
+                        border-radius: 12px;
+                        background: linear-gradient(135deg, var(--accent-primary), var(--accent-cyan));
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 1.4rem;
+                        color: #050508;
+                        box-shadow: 0 6px 15px rgba(99, 102, 241, 0.25);
+                        flex-shrink: 0;
+                    ">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <span style="
+                            font-size: 0.65rem;
+                            text-transform: uppercase;
+                            letter-spacing: 1px;
+                            font-weight: 700;
+                            color: var(--accent-cyan);
+                        ">
+                            Единая база знаний
+                        </span>
+                        <h3 style="
+                            font-family: 'Outfit', sans-serif;
+                            font-size: 1.25rem;
+                            font-weight: 800;
+                            color: white;
+                        ">
+                            Академический Справочник ГИА
+                        </h3>
+                        <p style="
+                            font-size: 0.82rem;
+                            line-height: 1.5;
+                            color: var(--text-secondary);
+                        ">
+                            Полный перечень всех вопросов с верными ответами и подробными разборами теории по всем 5 дисциплинам. Интерактивный живой поиск по тексту, коду и академическим пояснениям.
+                        </p>
+                    </div>
+                </div>
+
+                <a href="reference.html" style="
+                    background: linear-gradient(135deg, var(--accent-primary), var(--accent-cyan));
+                    border: none;
+                    border-radius: 10px;
+                    padding: 12px 20px;
+                    color: #050508;
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    text-decoration: none;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.25);
+                    transition: all var(--transition-speed);
+                    cursor: pointer;
+                    white-space: nowrap;
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(99, 102, 241, 0.4)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(99, 102, 241, 0.25)';">
+                    Открыть Справочник <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+
+            <!-- Articles Lectures Card -->
+            <div class="articles-banner" style="
+                background: linear-gradient(135deg, rgba(236, 72, 153, 0.12), rgba(99, 102, 241, 0.12));
+                border: 1px solid rgba(236, 72, 153, 0.25);
+                border-radius: var(--border-radius);
+                padding: 28px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                gap: 20px;
+                position: relative;
+                overflow: hidden;
+                transition: all var(--transition-speed);
+            ">
+                <!-- decorative neon background blur -->
+                <div style="
+                    position: absolute;
+                    top: -50px;
+                    right: -50px;
+                    width: 120px;
+                    height: 120px;
+                    background: var(--accent-pink);
+                    filter: blur(80px);
+                    opacity: 0.25;
+                    pointer-events: none;
+                "></div>
+
+                <div style="display: flex; align-items: flex-start; gap: 16px;">
+                    <div style="
+                        width: 48px;
+                        height: 48px;
+                        border-radius: 12px;
+                        background: linear-gradient(135deg, var(--accent-pink), var(--accent-primary));
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 1.4rem;
+                        color: #050508;
+                        box-shadow: 0 6px 15px rgba(236, 72, 153, 0.25);
+                        flex-shrink: 0;
+                    ">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <span style="
+                            font-size: 0.65rem;
+                            text-transform: uppercase;
+                            letter-spacing: 1px;
+                            font-weight: 700;
+                            color: var(--accent-pink);
+                        ">
+                            Теория и Экспресс-Практика
+                        </span>
+                        <h3 style="
+                            font-family: 'Outfit', sans-serif;
+                            font-size: 1.25rem;
+                            font-weight: 800;
+                            color: white;
+                        ">
+                            Академический Лекторий ГИА
+                        </h3>
+                        <p style="
+                            font-size: 0.82rem;
+                            line-height: 1.5;
+                            color: var(--text-secondary);
+                        ">
+                            Концентрированный лекционный материал без «воды» по всем 124 экзаменационным темам Си, C#, Сетей и ИБ. Мгновенные интерактивные экспресс-тесты для самопроверки.
+                        </p>
+                    </div>
+                </div>
+
+                <a href="articles.html" style="
+                    background: linear-gradient(135deg, var(--accent-pink), var(--accent-primary));
+                    border: none;
+                    border-radius: 10px;
+                    padding: 12px 20px;
+                    color: #050508;
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    text-decoration: none;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.25);
+                    transition: all var(--transition-speed);
+                    cursor: pointer;
+                    white-space: nowrap;
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(236, 72, 153, 0.4)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(236, 72, 153, 0.25)';">
+                    Открыть Лекторий <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+
+        </div>
+
+        <!-- Quizzes Grid -->
+        <div class="cards-grid">
+            
+            <!-- Card 1: C# OOP -->
+            <div class="quiz-card" style="--card-color: #a78bfa; --card-color-glow: rgba(167, 139, 250, 0.4); --card-border-hover: rgba(167, 139, 250, 0.5);">
+                <div class="quiz-card-header">
+                    <div class="quiz-card-title-area">
+                        <span class="quiz-card-tag">Дисциплина 01</span>
+                        <h3 class="quiz-card-title">Объектно-ориентированное программирование (C#)</h3>
+                    </div>
+                    <div class="quiz-card-icon">
+                        <i class="fa-brands fa-microsoft"></i>
+                    </div>
+                </div>
+                <p class="quiz-card-desc">
+                    Глубокое изучение парадигм ООП, типов данных (классы vs структуры), упаковки/распаковки, ссылочных типов (ref struct), виртуальных функций (vtable), механизма async/await и продвинутого синтаксиса.
+                </p>
+                <div class="card-progress-section">
+                    <div class="card-progress-stats">
+                        <span>Вопросы: <strong id="csharp-count">0 / 60</strong></span>
+                        <span id="csharp-percent">0%</span>
+                    </div>
+                    <div class="card-progress-bar-bg">
+                        <div class="card-progress-bar-fill" id="csharp-fill"></div>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <a href="csharp_quiz.html" class="btn btn-primary">
+                        <span id="csharp-btn-text">Начать тренировку</span>
+                        <i class="fa-solid fa-circle-play"></i>
+                    </a>
+                    <button class="btn btn-icon-only" onclick="resetProgress('csharp_quiz_progress')" title="Сбросить прогресс по C#">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 2: C++ OOP -->
+            <div class="quiz-card" style="--card-color: #34d399; --card-color-glow: rgba(52, 211, 153, 0.4); --card-border-hover: rgba(52, 211, 153, 0.5);">
+                <div class="quiz-card-header">
+                    <div class="quiz-card-title-area">
+                        <span class="quiz-card-tag">Дисциплина 02</span>
+                        <h3 class="quiz-card-title">Объектно-ориентированное программирование (C++)</h3>
+                    </div>
+                    <div class="quiz-card-icon">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                </div>
+                <p class="quiz-card-desc">
+                    Сложные шаблоны, множественное наследование, таблицы виртуальных методов (vtable), управление ресурсами (RAII), умные указатели (smart pointers), move-семантика и особенности компиляции.
+                </p>
+                <div class="card-progress-section">
+                    <div class="card-progress-stats">
+                        <span>Вопросы: <strong id="cpp-count">0 / 60</strong></span>
+                        <span id="cpp-percent">0%</span>
+                    </div>
+                    <div class="card-progress-bar-bg">
+                        <div class="card-progress-bar-fill" id="cpp-fill"></div>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <a href="cpp_quiz.html" class="btn btn-primary">
+                        <span id="cpp-btn-text">Начать тренировку</span>
+                        <i class="fa-solid fa-circle-play"></i>
+                    </a>
+                    <button class="btn btn-icon-only" onclick="resetProgress('cpp_quiz_progress')" title="Сбросить прогресс по C++">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 3: C Language & Tech -->
+            <div class="quiz-card" style="--card-color: #38bdf8; --card-color-glow: rgba(56, 189, 248, 0.4); --card-border-hover: rgba(56, 189, 248, 0.5);">
+                <div class="quiz-card-header">
+                    <div class="quiz-card-title-area">
+                        <span class="quiz-card-tag">Дисциплина 03</span>
+                        <h3 class="quiz-card-title">Технологии программирования (Язык Си)</h3>
+                    </div>
+                    <div class="quiz-card-icon">
+                        <i class="fa-solid fa-terminal"></i>
+                    </div>
+                </div>
+                <p class="quiz-card-desc">
+                    Адресная арифметика, указатели и функции malloc/free, размещение в сегментах (Stack, Data, BSS), связанные списки, модели жизненного цикла ПО (каскадная, спиральная) и методологии тестирования (черный/белый ящик).
+                </p>
+                <div class="card-progress-section">
+                    <div class="card-progress-stats">
+                        <span>Вопросы: <strong id="c-count">0 / 60</strong></span>
+                        <span id="c-percent">0%</span>
+                    </div>
+                    <div class="card-progress-bar-bg">
+                        <div class="card-progress-bar-fill" id="c-fill"></div>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <a href="c_quiz.html" class="btn btn-primary">
+                        <span id="c-btn-text">Начать тренировку</span>
+                        <i class="fa-solid fa-circle-play"></i>
+                    </a>
+                    <button class="btn btn-icon-only" onclick="resetProgress('c_quiz_progress')" title="Сбросить прогресс по Си">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 4: Information Security -->
+            <div class="quiz-card" style="--card-color: #f87171; --card-color-glow: rgba(248, 113, 113, 0.4); --card-border-hover: rgba(248, 113, 113, 0.5);">
+                <div class="quiz-card-header">
+                    <div class="quiz-card-title-area">
+                        <span class="quiz-card-tag">Дисциплина 04</span>
+                        <h3 class="quiz-card-title">Информационная Безопасность</h3>
+                    </div>
+                    <div class="quiz-card-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                </div>
+                <p class="quiz-card-desc">
+                    Криптографические алгоритмы (симметричное/асимметричное шифрование), хэш-функции, аутентификация, стеганография, угрозы безопасности, политики ИБ компании, социальная инженерия и форензика.
+                </p>
+                <div class="card-progress-section">
+                    <div class="card-progress-stats">
+                        <span>Вопросы: <strong id="security-count">0 / 30</strong></span>
+                        <span id="security-percent">0%</span>
+                    </div>
+                    <div class="card-progress-bar-bg">
+                        <div class="card-progress-bar-fill" id="security-fill"></div>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <a href="security_quiz.html" class="btn btn-primary">
+                        <span id="security-btn-text">Начать тренировку</span>
+                        <i class="fa-solid fa-circle-play"></i>
+                    </a>
+                    <button class="btn btn-icon-only" onclick="resetProgress('security_quiz_progress')" title="Сбросить прогресс по ИБ">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 5: Networks -->
+            <div class="quiz-card" style="--card-color: #f472b6; --card-color-glow: rgba(244, 114, 182, 0.4); --card-border-hover: rgba(244, 114, 182, 0.5); grid-column: span 2;">
+                <div class="quiz-card-header">
+                    <div class="quiz-card-title-area">
+                        <span class="quiz-card-tag">Дисциплина 05</span>
+                        <h3 class="quiz-card-title">Инфокоммуникационные Системы и Сети</h3>
+                    </div>
+                    <div class="quiz-card-icon">
+                        <i class="fa-solid fa-circle-nodes"></i>
+                    </div>
+                </div>
+                <p class="quiz-card-desc">
+                    Модель ISO/OSI и стек TCP/IP, кабельные стандарты (10BaseT), технологии маршрутизации и коммутации, сетевое оборудование (Bridge vs Switch, Repeater, Router, Gateway), контроллеры домена PDC/BDC и прокси-серверы.
+                </p>
+                <div class="card-progress-section">
+                    <div class="card-progress-stats">
+                        <span>Вопросы: <strong id="networks-count">0 / 32</strong></span>
+                        <span id="networks-percent">0%</span>
+                    </div>
+                    <div class="card-progress-bar-bg">
+                        <div class="card-progress-bar-fill" id="networks-fill"></div>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <a href="networks_quiz.html" class="btn btn-primary">
+                        <span id="networks-btn-text">Начать тренировку</span>
+                        <i class="fa-solid fa-circle-play"></i>
+                    </a>
+                    <button class="btn btn-icon-only" onclick="resetProgress('networks_quiz_progress')" title="Сбросить прогресс по Сетям">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Tip of the Day -->
+        <div class="tips-section">
+            <div class="tip-icon">
+                <i class="fa-solid fa-lightbulb"></i>
+            </div>
+            <div class="tip-content">
+                <h4 id="tip-title">Совет дня для ГИА</h4>
+                <p id="tip-body">Загрузка полезного совета по сдаче экзамена...</p>
+            </div>
+        </div>
+
+        <!-- Global Footer -->
+        <footer>
+            <span>Академический Тренажер ГИА ПсковГУ • Профиль «Информационные системы и технологии» • 2026</span>
+            <button class="global-reset-btn" onclick="resetAllProgress()">
+                <i class="fa-solid fa-triangle-exclamation"></i> Сбросить абсолютно весь прогресс во всех тренажерах
+            </button>
+        </footer>
+
+    </div>
+
+    <script>
+        // Define disciplines matching the structure
+        const disciplines = [
+            {
+                key: 'csharp_quiz_progress',
+                id: 'csharp',
+                total: 60
+            },
+            {
+                key: 'cpp_quiz_progress',
+                id: 'cpp',
+                total: 60
+            },
+            {
+                key: 'c_quiz_progress',
+                id: 'c',
+                total: 60
+            },
+            {
+                key: 'security_quiz_progress',
+                id: 'security',
+                total: 30
+            },
+            {
+                key: 'networks_quiz_progress',
+                id: 'networks',
+                total: 32
+            }
+        ];
+
+        // Academic Tips for the exam preparation
+        const tips = [
+            'Помните, что структуры в C# по умолчанию инициализируются конструктором по умолчанию без аргументов, и все их поля должны быть инициализированы. По умолчанию члены структур имеют доступ private.',
+            'На канальном уровне OSI работают мосты (Bridges) и коммутаторы (Switches). Они осуществляют передачу кадров (frames) на основе физических MAC-адресов. Коммутатор — это многопортовый мост, обрабатывающий кадры аппаратно.',
+            'Для вызова конструктора базового класса в C# используется синтаксис : base(x, y) сразу после объявления сигнатуры конструктора производного класса. Использование ключевых слов parent() или super() приведет к ошибке компиляции!',
+            'В языке Си локальный статический класс хранения (static) позволяет переменной сохранять свое значение в промежутках между вызовами функции. Она инициализируется один раз при старте программы в сегменте данных.',
+            'Отказоустойчивость (Fault Tolerance) — это способность сетевой инфраструктуры сохранять полную или частичную работоспособность при аппаратных или программных сбоях в отдельных компонентах.',
+            'Политика безопасности (Security Policy) — это совокупность норм, правил и практических рекомендаций, регламентирующих работу средств защиты информационной системы от заданного множества угроз.',
+            'В C# модификатор доступа internal делает элементы класса видимыми только в пределах текущей сборки (assembly / .dll / .exe), в то время как protected предоставляет доступ только текущему классу и наследникам.',
+            'Спецификация 10BaseT означает: 10 Мбит/с пропускная способность, Base (baseband) — передача в основной полосе частот, T (Twisted pair) — физическая среда в виде витой пары на расстоянии до 100 метров.',
+            'В C++ умные указатели (smart pointers) реализуют паттерн RAII: std::unique_ptr осуществляет монопольное владение, а std::shared_ptr использует атомарный счетчик ссылок для освобождения памяти.',
+            'Белый ящик (структурное тестирование) строит тесты на основе анализа внутренней логики и исходного кода программы. Черный ящик (функциональное тестирование) проверяет соответствие программы внешним спецификациям.'
+        ];
+
+        // Set Exam Date (Let's make it count down to June 18, 2026, which is typical for state exams)
+        const examDate = new Date("June 18, 2026 09:00:00").getTime();
+
+        function updateCountdown() {
+            const now = Date.now();
+            const distance = examDate - now;
+
+            if (distance < 0) {
+                document.getElementById('countdown').innerHTML = "<div style='color: var(--correct-color); font-weight: 700;'>Период экзаменов начался!</div>";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days-box').innerHTML = `${days.toString().padStart(2, '0')}<span>дн</span>`;
+            document.getElementById('hours-box').innerHTML = `${hours.toString().padStart(2, '0')}<span>ч</span>`;
+            document.getElementById('minutes-box').innerHTML = `${minutes.toString().padStart(2, '0')}<span>м</span>`;
+            document.getElementById('seconds-box').innerHTML = `${seconds.toString().padStart(2, '0')}<span>с</span>`;
+        }
+
+        // Render dashboard statistics
+        function renderDashboard() {
+            let totalQuestions = 0;
+            let totalAnswered = 0;
+            let globalCorrect = 0;
+            let globalWrong = 0;
+            let totalTimeSeconds = 0;
+
+            disciplines.forEach(disp => {
+                totalQuestions += disp.total;
+                
+                const raw = localStorage.getItem(disp.key);
+                let answeredCount = 0;
+                let correctCount = 0;
+                let wrongCount = 0;
+                let percent = 0;
+
+                if (raw) {
+                    try {
+                        const data = JSON.parse(raw);
+                        const answeredObj = data.answeredQuestions || {};
+                        answeredCount = Object.keys(answeredObj).length;
+                        correctCount = data.scoreCorrect || 0;
+                        wrongCount = data.scoreWrong || 0;
+                        totalTimeSeconds += data.elapsedSeconds || 0;
+
+                        totalAnswered += answeredCount;
+                        globalCorrect += correctCount;
+                        globalWrong += wrongCount;
+
+                        percent = Math.round((answeredCount / disp.total) * 100);
+                    } catch (e) {
+                        console.error(`Error loading state for ${disp.key}`, e);
+                    }
+                }
+
+                // Update individual DOM elements for the card
+                document.getElementById(`${disp.id}-count`).textContent = `${answeredCount} / ${disp.total}`;
+                document.getElementById(`${disp.id}-percent`).textContent = `${percent}%`;
+                document.getElementById(`${disp.id}-fill`).style.width = `${percent}%`;
+
+                // Update button texts
+                const btnText = document.getElementById(`${disp.id}-btn-text`);
+                if (answeredCount === disp.total) {
+                    btnText.textContent = "Результаты";
+                } else if (answeredCount > 0) {
+                    btnText.textContent = "Продолжить";
+                } else {
+                    btnText.textContent = "Начать тест";
+                }
+            });
+
+            // Calculate global stats
+            const globalPercent = totalQuestions > 0 ? Math.round((totalAnswered / totalQuestions) * 100) : 0;
+            document.getElementById('global-percent').textContent = `${globalPercent}%`;
+            document.getElementById('global-progress-fill').style.width = `${globalPercent}%`;
+
+            document.getElementById('global-correct').textContent = globalCorrect;
+            document.getElementById('global-wrong').textContent = globalWrong;
+
+            // Format total study time
+            const hours = Math.floor(totalTimeSeconds / 3600);
+            const minutes = Math.floor((totalTimeSeconds % 3600) / 60);
+            document.getElementById('global-time').textContent = `${hours} ч ${minutes} м`;
+        }
+
+        // Reset individual quiz progress
+        function resetProgress(key) {
+            let label = "выбранной дисциплине";
+            if (key === 'csharp_quiz_progress') label = "C# ООП";
+            if (key === 'cpp_quiz_progress') label = "C++ ООП";
+            if (key === 'c_quiz_progress') label = "Языку Си";
+            if (key === 'security_quiz_progress') label = "Защите информации";
+            if (key === 'networks_quiz_progress') label = "Инфокоммуникационным сетям";
+
+            if (confirm(`Вы действительно хотите сбросить весь прогресс по дисциплине «${label}» и начать тренировку заново?`)) {
+                localStorage.removeItem(key);
+                renderDashboard();
+            }
+        }
+
+        // Reset absolutely all progress
+        function resetAllProgress() {
+            if (confirm("ВНИМАНИЕ! Это действие удалит прогресс по ВСЕМ дисциплинам без возможности восстановления. Вы действительно хотите полностью сбросить тренажер?")) {
+                disciplines.forEach(disp => {
+                    localStorage.removeItem(disp.key);
+                });
+                renderDashboard();
+                alert("Весь академический прогресс успешно сброшен.");
+            }
+        }
+
+        // Select and display tip of the day
+        function displayTip() {
+            const randomIdx = Math.floor(Math.random() * tips.length);
+            document.getElementById('tip-body').innerHTML = tips[randomIdx];
+        }
+
+        window.onload = function() {
+            renderDashboard();
+            displayTip();
+            
+            // Start countdown
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        };
+    </script>
+</body>
+</html>

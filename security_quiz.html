@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тренажер по Защите Информации — HARD LEVEL</title>
+    
+    <!-- Google Fonts: Outfit for headings, Fira Code for code blocks, Inter for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Outfit:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* CSS Variables - Gold & Crimson Security Theme */
+        :root {
+            --bg-color: #0b0805;
+            --container-bg: rgba(28, 18, 8, 0.75);
+            --card-bg: rgba(38, 25, 12, 0.85);
+            --card-hover-border: rgba(245, 158, 11, 0.5);
+            
+            --accent-purple: #ef4444;
+            --accent-purple-glow: rgba(239, 68, 68, 0.4);
+            --accent-cyan: #f59e0b;
+            --accent-cyan-glow: rgba(245, 158, 11, 0.4);
+            
+            --text-primary: #fdfdfd;
+            --text-secondary: #d1d5db;
+            --text-dark: #1f2937;
+            
+            --correct-color: #10b981;
+            --correct-bg: rgba(16, 185, 129, 0.15);
+            --correct-border: rgba(16, 185, 129, 0.4);
+            
+            --wrong-color: #ef4444;
+            --wrong-bg: rgba(239, 68, 68, 0.15);
+            --wrong-border: rgba(239, 68, 68, 0.4);
+            
+            --sidebar-width: 340px;
+            --transition-speed: 0.3s;
+            --border-radius: 16px;
+        }
+
+        /* Base Resets & Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(245, 158, 11, 0.15) 0px, transparent 45%),
+                radial-gradient(at 90% 90%, rgba(239, 68, 68, 0.1) 0px, transparent 45%),
+                radial-gradient(at 50% 50%, rgba(11, 8, 5, 0.95) 0px, var(--bg-color) 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d0906;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2b1d11;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-cyan);
+        }
+
+        /* App Wrapper */
+        .app-container {
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--container-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+        }
+
+        .header-title-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-icon {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.3));
+        }
+
+        .header-text h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(90deg, #ffffff, #d1d5db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-text p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-badge {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-badge i {
+            font-size: 1.1rem;
+        }
+
+        .stat-badge.correct i { color: var(--correct-color); }
+        .stat-badge.wrong i { color: var(--wrong-color); }
+        .stat-badge.streak {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.2);
+            color: #fde047;
+            animation: pulse-orange 2s infinite;
+        }
+        .stat-badge.streak i { color: #f59e0b; }
+
+        .stat-badge.timer i { color: var(--accent-cyan); }
+
+        /* Main Workspace Layout */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr var(--sidebar-width);
+            gap: 24px;
+            flex-grow: 1;
+        }
+
+        @media (max-width: 1024px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+            .sidebar-toggle-btn {
+                display: block !important;
+            }
+        }
+
+        /* Main Content Panel */
+        .quiz-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Cards Style */
+        .glass-card {
+            background: var(--container-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+            position: relative;
+            transition: border-color var(--transition-speed);
+        }
+
+        /* Question Progress Bar */
+        .progress-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            box-shadow: 0 0 10px var(--accent-cyan-glow);
+            border-radius: 5px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Question Content styling */
+        .question-category {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #fde047;
+            margin-bottom: 16px;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.5;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        /* Answer Options Layout */
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .answer-option {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 16px 20px;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .answer-option:hover:not(.disabled) {
+            background: rgba(82, 53, 29, 0.3);
+            border-color: var(--card-hover-border);
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.15);
+            transform: translateX(4px);
+        }
+
+        .option-marker {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+            transition: all var(--transition-speed);
+        }
+
+        .answer-option:hover:not(.disabled) .option-marker {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            color: var(--text-dark);
+            box-shadow: 0 0 8px var(--accent-cyan-glow);
+        }
+
+        .option-text {
+            font-size: 0.95rem;
+            line-height: 1.45;
+            color: var(--text-secondary);
+            transition: color var(--transition-speed);
+        }
+
+        .answer-option:hover:not(.disabled) .option-text {
+            color: var(--text-primary);
+        }
+
+        /* Option States: Correct / Wrong */
+        .answer-option.correct {
+            background: var(--correct-bg) !important;
+            border-color: var(--correct-border) !important;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1) !important;
+        }
+
+        .answer-option.correct .option-marker {
+            background: var(--correct-color) !important;
+            border-color: var(--correct-color) !important;
+            color: white !important;
+        }
+
+        .answer-option.correct .option-text {
+            color: white !important;
+            font-weight: 600;
+        }
+
+        .answer-option.wrong {
+            background: var(--wrong-bg) !important;
+            border-color: var(--wrong-border) !important;
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.1) !important;
+            animation: shake 0.4s ease;
+        }
+
+        .answer-option.wrong .option-marker {
+            background: var(--wrong-color) !important;
+            border-color: var(--wrong-color) !important;
+            color: white !important;
+        }
+
+        .answer-option.wrong .option-text {
+            color: white !important;
+        }
+
+        .answer-option.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .answer-option.disabled.correct, .answer-option.disabled.wrong {
+            opacity: 1;
+        }
+
+        /* Action Buttons */
+        .actions-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 14px 24px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all var(--transition-speed);
+        }
+
+        .btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            border: none;
+            color: var(--text-primary);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, #f43f5e, #fbbf24);
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        /* Explanation Panel */
+        .explanation-card {
+            background: rgba(28, 18, 8, 0.9);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-left: 5px solid var(--accent-cyan);
+            animation: slideIn 0.4s ease;
+        }
+
+        .explanation-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .explanation-header.correct-text {
+            color: var(--correct-color);
+        }
+
+        .explanation-header.wrong-text {
+            color: var(--wrong-color);
+        }
+
+        .explanation-body {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        /* Sidebar Navigation grid */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .sidebar-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 8px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .grid-item {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .grid-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .grid-item.active {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 8px var(--accent-cyan-glow);
+            color: var(--accent-cyan);
+            font-weight: 700;
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .grid-item.answered-correct {
+            background: rgba(16, 185, 129, 0.1) !important;
+            border-color: rgba(16, 185, 129, 0.3) !important;
+            color: var(--correct-color) !important;
+        }
+
+        .grid-item.answered-wrong {
+            background: rgba(239, 68, 68, 0.1) !important;
+            border-color: rgba(239, 68, 68, 0.3) !important;
+            color: var(--wrong-color) !important;
+        }
+
+        .help-card {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+
+        .help-card ul {
+            padding-left: 16px;
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        /* Results Panel */
+        .results-panel {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 30px;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+
+        .results-circle-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+
+        .results-svg {
+            transform: rotate(-90deg);
+        }
+
+        .results-circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.03);
+            stroke-width: 12;
+        }
+
+        .results-circle-fill {
+            fill: none;
+            stroke: url(#results-gradient);
+            stroke-width: 12;
+            stroke-linecap: round;
+            stroke-dasharray: 565.48; /* 2 * PI * r (r=90) */
+            stroke-dashoffset: 565.48;
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .results-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .results-value span {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: -2px;
+        }
+
+        .results-header h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #ffffff, var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .results-grade {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            margin-bottom: 16px;
+        }
+
+        .results-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            width: 100%;
+        }
+
+        @media (max-width: 600px) {
+            .results-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .results-stats-card {
+                padding: 12px !important;
+            }
+        }
+
+        .results-stats-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .res-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .res-stat-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .res-stat-value.correct { color: var(--correct-color); }
+        .res-stat-value.wrong { color: var(--wrong-color); }
+
+        .wrong-reviews-container {
+            width: 100%;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-top: 10px;
+        }
+
+        .wrong-reviews-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--wrong-color);
+        }
+
+        .wrong-reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .wrong-review-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-secondary);
+        }
+
+        .wrong-review-item:hover {
+            background: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.2);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .sidebar-toggle-btn {
+            display: none;
+        }
+
+        /* Animations */
+        @keyframes pulse-orange {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- App Header -->
+        <header>
+            <div class="header-title-container">
+                <a href="index.html" class="btn" style="padding: 8px 12px; border-radius: 8px; display: flex; align-items: center; gap: 6px; font-size: 0.8rem;">
+                    <i class="fa-solid fa-arrow-left"></i> На главную
+                </a>
+                <div class="header-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div class="header-text">
+                    <h1>Защита Информации</h1>
+                    <p><i class="fa-solid fa-graduation-cap"></i> Подготовка к ГИА 09.03.02 • HARD LEVEL</p>
+                </div>
+            </div>
+            
+            <div class="header-stats">
+                <div class="stat-badge correct" title="Правильные ответы">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span id="correct-count">0</span>
+                </div>
+                <div class="stat-badge wrong" title="Ошибки">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                    <span id="wrong-count">0</span>
+                </div>
+                <div class="stat-badge streak" title="Серия ответов">
+                    <i class="fa-solid fa-fire"></i>
+                    <span id="streak-count">0</span>
+                </div>
+                <div class="stat-badge timer" title="Времени прошло">
+                    <i class="fa-solid fa-clock"></i>
+                    <span id="elapsed-time">00:00</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <div class="workspace">
+            
+            <!-- Left Quiz Area -->
+            <div class="quiz-panel" id="quiz-panel">
+                
+                <!-- Main Glass Card for Quiz -->
+                <div class="glass-card">
+                    <!-- Progress bar -->
+                    <div class="progress-container">
+                        <div class="progress-text">
+                            <span id="completion-percentage">0% выполнено</span>
+                            <span>Вопрос <span id="current-q-index">1</span> из <span id="total-q-count">30</span></span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card for Question Content -->
+                <div class="glass-card" style="margin-top: -12px;">
+                    <span class="question-category" id="question-category">Теория ИБ</span>
+                    
+                    <div class="question-text" id="question-text">
+                        Загрузка вопроса...
+                    </div>
+
+                    <!-- Answer Options -->
+                    <div class="answers-grid" id="answers-grid">
+                        <!-- Options injected dynamically by JS -->
+                    </div>
+                </div>
+
+                <!-- Explanation Box (revealed after selection) -->
+                <div class="glass-card explanation-card" id="explanation-card" style="display: none; margin-top: -12px;">
+                    <div class="explanation-header" id="explanation-header">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Правильный ответ!</span>
+                    </div>
+                    <div class="explanation-body" id="explanation-body">
+                        Здесь будет академическое объяснение...
+                    </div>
+                </div>
+
+                <!-- Actions Bar -->
+                <div class="actions-bar">
+                    <button class="btn btn-danger" onclick="confirmReset()"><i class="fa-solid fa-arrow-rotate-left"></i> Начать заново</button>
+                    <button class="btn sidebar-toggle-btn" onclick="toggleSidebar()"><i class="fa-solid fa-list-ol"></i> Навигация</button>
+                    <button class="btn btn-primary" id="next-btn" onclick="goToNextQuestion()">
+                        <span>Следующий вопрос</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Right Navigation Sidebar -->
+            <div class="glass-card sidebar" id="sidebar-panel">
+                <div>
+                    <h3 class="sidebar-title"><i class="fa-solid fa-compass"></i> Навигатор по тесту</h3>
+                    <div class="grid-container" id="sidebar-grid">
+                        <!-- Navigation items injected by JS -->
+                    </div>
+                </div>
+
+                <div class="help-card" style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 15px; margin-top: auto;">
+                    <h4 style="font-weight: 600; color: white; margin-bottom: 8px;"><i class="fa-solid fa-circle-info"></i> Пояснения к цветам:</h4>
+                    <p>Отвечайте на вопросы в любом порядке. Сетка отображает Ваш текущий прогресс:</p>
+                    <ul>
+                        <li><span style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); margin-right: 6px;"></span> Не начат</li>
+                        <li><span style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--correct-bg); border: 1px solid var(--correct-border); margin-right: 6px;"></span> Правильный ответ</li>
+                        <li><span style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--wrong-bg); border: 1px solid var(--wrong-border); margin-right: 6px;"></span> Неверный ответ</li>
+                        <li><span style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--accent-cyan); margin-right: 6px;"></span> Активный вопрос</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Score / Triumph Panel -->
+            <div class="glass-card results-panel" id="results-panel">
+                <div class="results-header">
+                    <h2 id="results-title">Тест Завершен!</h2>
+                    <p style="color: var(--text-secondary);">Ваш итоговый академический результат:</p>
+                </div>
+
+                <div class="results-circle-container">
+                    <svg class="results-svg" width="200" height="200" viewBox="0 0 200 200">
+                        <defs>
+                            <linearGradient id="results-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="var(--accent-purple)" />
+                                <stop offset="100%" stop-color="var(--accent-cyan)" />
+                            </linearGradient>
+                        </defs>
+                        <circle class="results-circle-bg" cx="100" cy="100" r="90" />
+                        <circle class="results-circle-fill" id="results-circle-fill" cx="100" cy="100" r="90" />
+                    </svg>
+                    <div class="results-value" id="results-percentage">
+                        0%
+                        <span>верно</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="results-grade" id="results-grade">Загрузка звания...</div>
+                    <p style="color: var(--text-secondary); max-width: 500px; font-size: 0.95rem; margin: 0 auto;">
+                        Ваш уровень готовности к сдаче государственного экзамена по дисциплине «Защита информации» определен на основе правильных ответов.
+                    </p>
+                </div>
+
+                <div class="results-stats-grid">
+                    <div class="results-stats-card">
+                        <span class="res-stat-label">Всего отвечено</span>
+                        <span class="res-stat-value" id="res-answered">30</span>
+                    </div>
+                    <div class="results-stats-card">
+                        <span class="res-stat-label">Правильно</span>
+                        <span class="res-stat-value correct" id="res-correct">0</span>
+                    </div>
+                    <div class="results-stats-card">
+                        <span class="res-stat-label">Ошибки</span>
+                        <span class="res-stat-value wrong" id="res-wrong">0</span>
+                    </div>
+                    <div class="results-stats-card">
+                        <span class="res-stat-label">Рекорд серии</span>
+                        <span class="res-stat-value" id="res-streak">0</span>
+                    </div>
+                    <div class="results-stats-card" style="grid-column: span 4;">
+                        <span class="res-stat-label">Затрачено времени</span>
+                        <span class="res-stat-value" id="res-time">00:00</span>
+                    </div>
+                </div>
+
+                <div class="wrong-reviews-container" id="wrong-reviews-container" style="display: none;">
+                    <div class="wrong-reviews-title">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>Вопросы, в которых вы допустили ошибки:</span>
+                    </div>
+                    <div class="wrong-reviews-list" id="wrong-reviews-list">
+                        <!-- Injected by JS -->
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 16px;">
+                    <button class="btn btn-primary" onclick="restartQuiz()"><i class="fa-solid fa-rotate-right"></i> Пройти тест заново</button>
+                    <a href="index.html" class="btn"><i class="fa-solid fa-house"></i> На главную панель</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Canvas Confetti for triumphal explosion -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Quiz Engine & Question Database -->
+    <script>
+        const questions = [
+            {
+                category: "Теория ИБ",
+                text: "Что понимается под понятием «Информационная безопасность»?",
+                options: [
+                    "Защищенность информации и поддерживающей инфраструктуры от случайных или преднамеренных воздействий, способных нанести ущерб владельцам или пользователям информации.",
+                    "Защищенность информации, циркулирующей в информационной системе, от попыток несанкционированного доступа и хищения.",
+                    "Защищенность информационных технологий, используемых в информационной системе, от попыток модификации или разрушения.",
+                    "Защищенность информационной системы от попыток модификации и разрушения.",
+                    "Защищенность информационной системы от попыток закладки вредоносных программ."
+                ],
+                correctIndex: 0,
+                explanation: 'Информационная безопасность охватывает не только сами данные, но и поддерживающую инфраструктуру. Защита ведется как от **преднамеренных атак**, так и от **случайных воздействий** (сбоев оборудования, ошибок персонала, стихийных бедствий), способных нанести ущерб владельцам или пользователям информации.'
+            },
+            {
+                category: "Свойства информации",
+                text: "Какие основные свойства информационных ресурсов обеспечивают комплексную защиту информации?",
+                options: [
+                    "Эффективность, доступность, масштабируемость",
+                    "Конфиденциальность, целостность, доступность",
+                    "Защищенность, неизменяемость, закрытость",
+                    "Секретность, резервируемость, отказоустойчивость",
+                    "Аутентичность, неподменяемость, невидимость"
+                ],
+                correctIndex: 1,
+                explanation: 'Классическая триада информационной безопасности включает: 1) **Конфиденциальность** (доступ только авторизованным лицам); 2) **Целостность** (защита от несанкционированного изменения/удаления); 3) **Доступность** (своевременный доступ к данным для легитимных пользователей).'
+            },
+            {
+                category: "Корпоративная безопасность",
+                text: "Какие современные общие требования не относятся к любым элементам безопасности корпоративной информационной системы?",
+                options: [
+                    "Комплексность и непрерывность защиты",
+                    "Минимизация правовых ограничений и полный отказ от использования средств шифрования для простоты администрирования",
+                    "Требование абсолютной изоляции системы от сети Интернет без возможности удаленной работы для любых категорий сотрудников",
+                    "Законность и соответствие правовым нормам",
+                    "Гибкость управления и простота использования механизмов защиты"
+                ],
+                correctIndex: 2,
+                explanation: 'Требование абсолютной изоляции от сети Интернет является нереалистичным и устаревшим для современных распределенных корпоративных ИС. Безопасность должна быть сбалансированной и обеспечивать работу бизнеса, используя VPN, брандмауэры и шифрование для безопасного удаленного доступа.'
+            },
+            {
+                category: "Технологии защиты",
+                text: "Какие прогрессивные и перспективные технологии информационной защиты должны быть реализованы в системе информационной безопасности?",
+                options: [
+                    "Ручное шифрование файлов перед отправкой на дискетах",
+                    "Криптографическое шифрование данных, брандмауэры (файрволы), системы предотвращения вторжений (IDS/IPS), DLP-системы, SIEM-системы и антивирусный мониторинг",
+                    "Физическая изоляция каждого компьютера в отдельном сейфе",
+                    "Установка паролей на BIOS для всех рабочих станций без сетевой защиты",
+                    "Использование исключительно операционных систем без сетевого стека"
+                ],
+                correctIndex: 1,
+                explanation: 'Комплексная современная ИБ строится на эшелонированной защите: шифрование данных (в покое и транзите), межсетевые экраны, предотвращение вторжений (IPS), контроль утечек данных (DLP) и мониторинг событий безопасности в реальном времени (SIEM).'
+            },
+            {
+                category: "Автоматизированные системы",
+                text: "Какие группы не входят в компоненты автоматизированных систем обработки информации (АСОИ) как защищаемые ресурсы?",
+                options: [
+                    "Технические средства (серверы, рабочие станции, каналы связи)",
+                    "Программное обеспечение (системное и прикладное)",
+                    "Информационное обеспечение (базы данных, файлы, документы)",
+                    "Личные финансовые активы и внешнее имущество сотрудников за пределами предприятия",
+                    "Обслуживающий персонал и пользователи (человеческий фактор)"
+                ],
+                correctIndex: 3,
+                explanation: 'Компоненты АСОИ, подлежащие защите, строго ограничены пределами самой информационной системы: аппаратная база, ПО, циркулирующие данные и персонал (с точки зрения разграничения доступа). Внесистемное имущество сотрудников ИБ предприятия не защищает.'
+            },
+            {
+                category: "Разграничение доступа",
+                text: "Что такое авторизация субъекта?",
+                options: [
+                    "Процесс проверки подлинности пользователя по его паролю",
+                    "Предоставление легитимному субъекту определенных прав доступа к ресурсам и операциям в системе после успешной аутентификации",
+                    "Процесс распознавания уникального идентификатора пользователя (логина)",
+                    "Физическое подписание трудового договора на работу с данными",
+                    "Шифрование трафика между пользователем и сервером"
+                ],
+                correctIndex: 1,
+                explanation: 'Авторизация (authorization) — это процесс **определения и предоставления прав доступа** субъекту к ресурсам системы на основе его роли. Она выполняется строго **после** успешной идентификации (представления логина) и аутентификации (проверки пароля).'
+            },
+            {
+                category: "Угрозы безопасности",
+                text: "Что понимается под угрозой безопасности автоматизированной системы обработки информации?",
+                options: [
+                    "Любое изменение требований заказчика к программе",
+                    "Совокупность условий и факторов, создающих потенциальную или реально существующую опасность нарушения безопасности информации (конфиденциальности, целостности, доступности)",
+                    "Выход из строя блока питания отдельной периферийной клавиатуры",
+                    "Наличие в кодовой базе неиспользуемых комментариев разработчиков",
+                    "Любое обновление операционной системы"
+                ],
+                correctIndex: 1,
+                explanation: 'Угроза — это **потенциальное событие**, которое может негативно повлиять на систему и информацию. Реализация угрозы называется **атакой (инцидентом)**, а слабые места в системе, способствующие этому — **уязвимостями**.'
+            },
+            {
+                category: "Политика безопасности",
+                text: "Что такое политика безопасности?",
+                options: [
+                    "Средства защиты информации, средства контроля эффективности защиты информации, средства и системы управления, предназначенные для обеспечения защиты информации.",
+                    "Техническое, программное средство, вещество и/или материал, предназначенные или используемые для защиты информации.",
+                    "Порядок и правила применения определенных принципов и средств защиты информации.",
+                    "Это совокупность норм, правил и практических рекомендаций, регламентирующих работу средств защиты компьютерной системы от заданного множества угроз."
+                ],
+                correctIndex: 3,
+                explanation: 'Политика безопасности — это **руководящий документ**, определяющий правила игры: кто к каким данным имеет доступ, как обрабатываются инциденты, какие требования предъявляются к паролям, шифрованию и физической защите оборудования.'
+            },
+            {
+                category: "Угрозы ИБ",
+                text: "Какие возможные угрозы информационной безопасности различают по степени преднамеренности проявления?",
+                options: [
+                    "Внутренние и внешние",
+                    "Случайные (непреднамеренные, ошибки персонала, сбои) и преднамеренные (умышленные атаки злоумышленников)",
+                    "Активные и пассивные",
+                    "Сетевые и локальные",
+                    "Программные и аппаратные"
+                ],
+                correctIndex: 1,
+                explanation: 'По фактору преднамеренности угрозы делятся на **случайные** (ошибки администрирования, баги ПО, аварии питания, наводнения) и **преднамеренные** (целенаправленные действия инсайдеров, хакеров, шпионаж, внедрение вредоносного ПО).'
+            },
+            {
+                category: "Социальная инженерия",
+                text: "Что понимается под понятием «Социальная инженерия»?",
+                options: [
+                    "Проектирование эргономики рабочих мест сотрудников",
+                    "Метод несанкционированного доступа к информации, основанный на психологическом манипулировании людьми с целью выведывания паролей, конфиденциальных данных или обхода систем защиты",
+                    "Разработка структуры базы данных отдела кадров",
+                    "Участие в корпоративных мероприятиях компании",
+                    "Автоматическая генерация списков пользователей"
+                ],
+                correctIndex: 1,
+                explanation: 'Социальная инженерия атакует **«человеческий фактор»** — самое слабое звено защиты. Примерами являются фишинг (письма-подделки), претекстинг (выдача себя за админа по телефону) и психологическое давление с целью заставить жертву выдать пароль или запустить вирус.'
+            },
+            {
+                category: "Комплексность защиты",
+                text: "Инструментальная комплексность защиты информации включает:",
+                options: [
+                    "Использование исключительно одного очень мощного антивируса",
+                    "Сочетание организационных мер, физических преград, технических средств, программного обеспечения и криптографических методов для создания эшелонированной обороны",
+                    "Запрет на использование любых языков программирования, кроме Си",
+                    "Отказ от использования беспроводных сетей Wi-Fi",
+                    "Полномочное шифрование только жестких дисков серверов"
+                ],
+                correctIndex: 1,
+                explanation: 'Защитить систему одним средством невозможно. Комплексная защита требует **эшелонирования**: сочетание законов и инструкций (организационный уровень), заборов и пропусков (физический), межсетевых экранов (технический), паролей и прав доступа (программный) и шифрования (криптографический).'
+            },
+            {
+                category: "Обеспечение безопасности",
+                text: "Какие уровни обеспечения безопасности включает среда защиты информации в компьютерных системах?",
+                options: [
+                    "Уровень BIOS и уровень операционной системы",
+                    "Законодательный (правовой), административно-организационный, процедурный (уровень персонала) и программно-технический уровни",
+                    "Пользовательский и административный уровни",
+                    "Уровень локальной сети и глобальной сети",
+                    "Аппаратный уровень и уровень приложений"
+                ],
+                correctIndex: 1,
+                explanation: 'Среда защиты — это многоуровневая структура. Правовой уровень задает рамки законов (ФЗ-152 о персональных данных, УК РФ). Организационный уровень строит регламенты на предприятии. Процедурный уровень обучает сотрудников. Технический уровень внедряет шифрование, IPS и антивирусы.'
+            },
+            {
+                category: "Защищаемые ресурсы",
+                text: "Какие компоненты системы информационного обеспечения предприятия не относятся к защищаемым ресурсам?",
+                options: [
+                    "Базы данных и файлы резервных копий",
+                    "Общедоступные рекламные брошюры, прайс-листы и публичные маркетинговые материалы, официально размещенные на внешнем сайте компании",
+                    "Конфиденциальные документы и коммерческая тайна",
+                    "Системные пароли и ключи шифрования",
+                    "Маршрутизаторы и каналы связи"
+                ],
+                correctIndex: 1,
+                explanation: 'Защищаемыми ресурсами являются объекты, несанкционированный доступ, изменение или уничтожение которых нанесет ущерб предприятию. Публичные рекламные материалы по определению общедоступны, и защищать их конфиденциальность не требуется (хотя их целостность на веб-сервере защищается).'
+            },
+            {
+                category: "Политика безопасности",
+                text: "Политика безопасности – это?",
+                options: [
+                    "Инструкция по установке лицензионных программных продуктов",
+                    "Правила закупки компьютерного оборудования и расходных материалов",
+                    "Нормативный документ, определяющий цели безопасности организации, правила работы сотрудников и технические меры по защите корпоративных ресурсов от угроз",
+                    "Программа защиты персональных компьютеров от скачков напряжения"
+                ],
+                correctIndex: 2,
+                explanation: 'Политика безопасности как нормативно-организационное понятие — это **базовый внутренний документ**, определяющий цели, правила использования ИТ-ресурсов, права и обязанности сотрудников, а также технические механизмы защиты в компании.'
+            },
+            {
+                category: "Угрозы безопасности",
+                text: "Какое из перечисленных событий не считается угрозой?",
+                options: [
+                    "Попытка подбора пароля администратора злоумышленником",
+                    "Своевременное автоматическое обновление антивирусных баз сигнатур по расписанию",
+                    "Сбой в электросети, приведший к отключению серверов без ИБП",
+                    "Случайное удаление базы данных стажером",
+                    "Внедрение троянской программы в локальную сеть"
+                ],
+                correctIndex: 1,
+                explanation: 'Регулярное автоматическое обновление антивирусных баз сигнатур — это штатное **средство защиты**, снижающее риски информационной безопасности, а не угроза.'
+            },
+            {
+                category: "События ИБ",
+                text: "Атакой (нападением, инцидентом) называется?",
+                options: [
+                    "Любое плановое сканирование портов ИБ-отделом",
+                    "Действие, предпринимаемое злоумышленником, которое заключается в поиске и использовании уязвимости системы для нарушения ее безопасности",
+                    "Простая перезагрузка сервера администратором",
+                    "Покупка нового межсетевого экрана",
+                    "Смена пользователем своего пароля"
+                ],
+                correctIndex: 1,
+                explanation: 'Атака — это **активное действие**, направленное на реализацию угрозы. Она состоит из разведки, поиска уязвимости, эксплуатации (внедрения эксплойта) и закрепления в системе с целью кражи данных или нарушения сервисов.'
+            },
+            {
+                category: "Утечки информации",
+                text: "Основными причинами утечки информации не являются?",
+                options: [
+                    "Ошибки разграничения прав доступа администраторами",
+                    "Разговор сотрудников в кафе о коммерческой тайне",
+                    "Применение злоумышленником специализированного шпионского ПО для перехвата паролей в сети",
+                    "Проведение регулярного резервного копирования данных на защищенные сетевые хранилища",
+                    "Выбрасывание черновиков документов в обычную мусорную корзину без шредера"
+                ],
+                correctIndex: 3,
+                explanation: 'Регулярное резервное копирование на защищенные хранилища — это мера обеспечения доступности и сохранности данных. Оно не является каналом утечки, в отличие от халатности персонала (мусорные корзины, разговоры) или ошибок настройки прав.'
+            },
+            {
+                category: "Анализ инцидентов",
+                text: "Какое из перечисленных событий нельзя отнести к поведению информационной системы, находящейся под воздействием атаки хакера?",
+                options: [
+                    "Резкий нетипичный всплеск сетевого трафика на внешних портах",
+                    "Множественные неудачные попытки входа в систему под разными учетными записями в логах",
+                    "Стабильная работа всех служб строго в штатном режиме с минимальным потреблением ресурсов ЦП и памяти",
+                    "Несанкционированное изменение системных конфигурационных файлов",
+                    "Появление неизвестных новых процессов в списке запущенных служб"
+                ],
+                correctIndex: 2,
+                explanation: 'Если система находится под аномальной нагрузкой в результате хакерской атаки, это всегда вызывает резкие аномалии: рост задержек, сбои, всплески трафика. Идеально стабильное и штатное поведение говорит об отсутствии атаки в данный момент.'
+            },
+            {
+                category: "Угрозы архитектуре",
+                text: "Какой из перечисленных вариантов не относится к угрозам архитектуре программного обеспечения?",
+                options: [
+                    "Использование устаревших библиотек с известными уязвимостями",
+                    "Наличие в кодовой базе уязвимости переполнения буфера (Buffer Overflow)",
+                    "Размещение сервера баз данных в серверной комнате с кодовым замком на двери",
+                    "Отсутствие фильтрации входных данных (риск SQL-инъекций)",
+                    "Жестко зашитые (hardcoded) пароли админа в кодовой базе приложений"
+                ],
+                correctIndex: 2,
+                explanation: 'Размещение сервера в серверной комнате с кодовым замком — это мера **физической безопасности** инфраструктуры. К архитектуре и уязвимостям исходного кода ПО она не относится.'
+            },
+            {
+                category: "Угрозы ИБ",
+                text: "Какая из перечисленных потенциальных угроз безопасности программной системы является пассивной?",
+                options: [
+                    "Подмена IP-адресов в пакетах трафика (IP-spoofing)",
+                    "Несанкционированное пассивное прослушивание сетевого трафика (sniffing / wiretapping) с целью перехвата данных без их изменения",
+                    "Внедрение ложных записей в базу данных SQL",
+                    "DDoS-атака, парализующая веб-сервер",
+                    "Удаление системных логов безопасности"
+                ],
+                correctIndex: 1,
+                explanation: 'Пассивные угрозы **не изменяют данные и структуру системы**. Их цель — незаметный перехват и анализ информации (прослушивание трафика сниффером). Активные угрозы (spoofing, удаление логов, SQL-инъекции, DDoS) напрямую воздействуют на ресурсы ИС.'
+            },
+            {
+                category: "Политика безопасности",
+                text: "Что не относится к политикам безопасности и управления защищенной системой?",
+                options: [
+                    "Политика парольной защиты (сложность, время жизни)",
+                    "Политика резервного копирования и восстановления данных",
+                    "Спецификация тактовой частоты ядер процессора в закупаемых серверах",
+                    "Политика разграничения доступа (ролевая модель)",
+                    "Регламент реагирования на инциденты информационной безопасности"
+                ],
+                correctIndex: 2,
+                explanation: 'Тактовая частота процессоров — это чисто технический параметр производительности оборудования. К правилам и политикам безопасности системы он отношения не имеет.'
+            },
+            {
+                category: "Средства защиты",
+                text: "Каких групп средств защиты данных не существует?",
+                options: [
+                    "Технические.",
+                    "Логические.",
+                    "Программные.",
+                    "Криптографические.",
+                    "Организационные."
+                ],
+                correctIndex: 1,
+                explanation: 'В общепринятой классификации средств защиты информации выделяют: организационные, физические, технические (аппаратные), программные и криптографические средства. «Логические средства» отдельно как самостоятельная группа средств защиты не классифицируются.'
+            },
+            {
+                category: "Стеганография",
+                text: "Стеганография – это?",
+                options: [
+                    "Наука о шифровании текстов с помощью секретных ключей",
+                    "Наука о методах скрытой передачи информации путем сохранения в тайне самого факта передачи (например, запись данных в неиспользуемые биты пикселей изображения)",
+                    "Метод аппаратного уничтожения жестких дисков",
+                    "Способ взлома паролей методом перебора (брутфорс)",
+                    "Технология построения оптических сетей связи"
+                ],
+                correctIndex: 1,
+                explanation: 'Стеганография, в отличие от криптографии, скрывает **сам факт существования сообщения**. Сообщение внедряется в контейнер (картинку, аудиофайл, текст) так, чтобы посторонний наблюдатель не заподозрил наличие скрытого послания.'
+            },
+            {
+                category: "Идентификация",
+                text: "Что не относится к механизмам аутентификации?",
+                options: [
+                    "Сравнение хэша введенного пароля с эталоном в базе",
+                    "Считывание отпечатка пальца биометрическим сканером",
+                    "Генерация случайного числа для сеансового ключа шифрования (как самостоятельный метод проверки подлинности)",
+                    "Проверка одноразового кода из SMS-сообщения",
+                    "Проверка электронного USB-токена с закрытым ключом"
+                ],
+                correctIndex: 2,
+                explanation: 'Генерация сеансового ключа — это криптографический шаг обеспечения защиты канала. Сама по себе генерация случайного числа не проверяет личность (подлинность) пользователя, в отличие от паролей, SMS-кодов, токенов и биометрии.'
+            },
+            {
+                category: "Аутентификация",
+                text: "Какой из механизмов аутентификации объектов безопасности требует наличия дополнительных аппаратных элементов?",
+                options: [
+                    "Ввод классического статического пароля",
+                    "Аутентификация с помощью физических USB-токенов или смарт-карт",
+                    "Проверка по имени пользователя (логину)",
+                    "Использование графического пароля на экране монитора",
+                    "Проверка адреса электронной почты"
+                ],
+                correctIndex: 1,
+                explanation: 'Смарт-карты и USB-токены (например, Рутокен, YubiKey) представляют собой аппаратные устройства, содержащие криптографический чип. Для их чтения пользователю необходимы сами физические ключи и считыватели (USB-порт, NFC или картридер).'
+            },
+            {
+                category: "Криптография",
+                text: "Какие из перечисленных парольных механизмов использует хэш-функцию?",
+                options: [
+                    "Хранение паролей в открытом текстовом файле",
+                    "Хранение односторонних сверток (хэшей) паролей с солью в файле учетных записей ОС (например, /etc/shadow)",
+                    "Хранение паролей в архиве ZIP без пароля",
+                    "Запись паролей в буфер обмена перед вводом"
+                ],
+                correctIndex: 1,
+                explanation: 'Современные операционные системы и веб-сервисы хранят в базах данных не сами пароли, а их односторонние криптографические свертки (хэши, часто с солью / salt), вычисляемые через хэш-функции. Это исключает компрометацию исходных паролей при утечке базы.'
+            },
+            {
+                category: "Криптография",
+                text: "Криптография – это?",
+                options: [
+                    "Передача конфиденциальной информации по закрытым каналам связи.",
+                    "Наука о методах обеспечения конфиденциальности, целостности данных, аутентификации, а также невозможности отказа от авторства.",
+                    "Наука о скрытой передаче информации путём сохранения в тайне самого факта передачи.",
+                    "Методы, обеспечивающие доступ к информации находящейся в компьютерной среде по секретному паролю.",
+                    "Шифрование баз конфиденциальных данных в корпоративной локальной вычислительной сети."
+                ],
+                correctIndex: 1,
+                explanation: 'Криптография — математическая наука, охватывающая шифрование (конфиденциальность), хэширование (целостность), электронную подпись (аутентификация и неотрекаемость) и управление ключами.'
+            },
+            {
+                category: "Криптография",
+                text: "Какие из перечисленных понятий не относится к криптографическим механизмам защиты?",
+                options: [
+                    "Симметричное шифрование",
+                    "Асимметричное шифрование",
+                    "Хэш-функции и электронная подпись",
+                    "Физическая экранировка медного кабеля витой пары фольгой",
+                    "Инфраструктура открытых ключей (PKI)"
+                ],
+                correctIndex: 3,
+                explanation: 'Экранировка кабеля — это чисто **физический и электротехнический метод защиты** от наводок и утечки за счет излучений. К математической криптографии он не имеет никакого отношения.'
+            },
+            {
+                category: "Криптография",
+                text: "Какая из перечисленных схем применения ключей шифрования используется в системах криптографической защиты с ассиметричным шифрованием?",
+                options: [
+                    "Один общий секретный ключ для обеих сторон",
+                    "Пара из двух математически связанных ключей: открытого (публичного) для шифрования и закрытого (секретного) для расшифрования",
+                    "Использование исключительно динамических одноразовых блокнотов без ключей",
+                    "Использование трех ключей для каждого получателя"
+                ],
+                correctIndex: 1,
+                explanation: 'Асимметричная криптография базируется на **паре ключей**. Любой отправитель может зашифровать сообщение с помощью общедоступного **открытого** ключа получателя, но прочитать его сможет только легитимный получатель с помощью своего **закрытого** ключа.'
+            },
+            {
+                category: "Форензика",
+                text: "Что понимается под понятием «Форензика»?",
+                options: [
+                    "Наука о методах создания безопасного сетевого трафика",
+                    "Компьютерная криминалистика — прикладная наука о раскрытии ИТ-преступлений, связанная с исследованием цифровых следов, сбором, анализом и фиксацией цифровых доказательств для судебного разбирательства",
+                    "Методология написания защищенного кода на C++",
+                    "Тестирование ИС на проникновение (Penetration Testing)"
+                ],
+                correctIndex: 1,
+                explanation: 'Форензика занимается исследованием **компьютерных инцидентов и преступлений**. Специалисты собирают образы жестких дисков, дампы оперативной памяти, анализируют логи и восстанавливают удаленные файлы, строго соблюдая процедуру, чтобы доказательства имели силу в суде.'
+            }
+        ];
+
+        // State variables
+        let currentQuestionIndex = 0;
+        let scoreCorrect = 0;
+        let scoreWrong = 0;
+        let currentStreak = 0;
+        let maxStreak = 0;
+        let answeredQuestions = {}; // Maps index -> { chosenIndex: int, isCorrect: bool }
+        let startTime = Date.now();
+        let timerInterval = null;
+        let timeOffset = 0; // In case of resume from LocalStorage
+        let wrongAnswersList = [];
+
+        // Elements
+        const currentQIndexEl = document.getElementById('current-q-index');
+        const totalQCountEl = document.getElementById('total-q-count');
+        const completionPercentageEl = document.getElementById('completion-percentage');
+        const progressFillEl = document.getElementById('progress-fill');
+        const questionCategoryEl = document.getElementById('question-category');
+        const questionTextEl = document.getElementById('question-text');
+        
+        const answersGridEl = document.getElementById('answers-grid');
+        
+        const explanationCardEl = document.getElementById('explanation-card');
+        const explanationHeaderEl = document.getElementById('explanation-header');
+        const explanationBodyEl = document.getElementById('explanation-body');
+        const nextBtnEl = document.getElementById('next-btn');
+        
+        const correctCountEl = document.getElementById('correct-count');
+        const wrongCountEl = document.getElementById('wrong-count');
+        const streakCountEl = document.getElementById('streak-count');
+        const elapsedTimeEl = document.getElementById('elapsed-time');
+        
+        const sidebarGridEl = document.getElementById('sidebar-grid');
+        const answeredCountEl = document.getElementById('answered-count');
+        
+        const quizPanelEl = document.getElementById('quiz-panel');
+        const resultsPanelEl = document.getElementById('results-panel');
+        const sidebarPanelEl = document.getElementById('sidebar-panel');
+
+        // Initialize Web App
+        function initApp() {
+            totalQCountEl.textContent = questions.length;
+            loadProgress();
+            buildSidebarGrid();
+            startTimer();
+            displayQuestion(currentQuestionIndex);
+            updateStats();
+        }
+
+        // Start Elapsed Time counter
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                const elapsedMs = Date.now() - startTime + (timeOffset * 1000);
+                const totalSec = Math.floor(elapsedMs / 1000);
+                const minutes = Math.floor(totalSec / 60).toString().padStart(2, '0');
+                const seconds = (totalSec % 60).toString().padStart(2, '0');
+                elapsedTimeEl.textContent = `${minutes}:${seconds}`;
+            }, 1000);
+        }
+
+        // Build questions sidebar navigation grid
+        function buildSidebarGrid() {
+            sidebarGridEl.innerHTML = "";
+            for (let i = 0; i < questions.length; i++) {
+                const btn = document.createElement('div');
+                btn.className = 'grid-item';
+                btn.textContent = i + 1;
+                btn.id = `grid-item-${i}`;
+                
+                if (answeredQuestions[i]) {
+                    if (answeredQuestions[i].isCorrect) {
+                        btn.classList.add('answered-correct');
+                    } else {
+                        btn.classList.add('answered-wrong');
+                    }
+                }
+                
+                if (i === currentQuestionIndex) {
+                    btn.classList.add('active');
+                }
+                
+                btn.onclick = () => jumpToQuestion(i);
+                sidebarGridEl.appendChild(btn);
+            }
+            
+            const answeredCount = Object.keys(answeredQuestions).length;
+            answeredCountEl.textContent = answeredCount;
+        }
+
+        // Display current question card content
+        function displayQuestion(index) {
+            document.querySelectorAll('.grid-item').forEach(item => item.classList.remove('active'));
+            const currentGridItem = document.getElementById(`grid-item-${index}`);
+            if (currentGridItem) currentGridItem.classList.add('active');
+
+            const q = questions[index];
+            currentQIndexEl.textContent = index + 1;
+            questionCategoryEl.textContent = q.category;
+            questionTextEl.textContent = q.text;
+
+            answersGridEl.innerHTML = "";
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+            
+            q.options.forEach((opt, idx) => {
+                const optBtn = document.createElement('button');
+                optBtn.className = 'answer-option';
+                optBtn.innerHTML = `
+                    <div class="option-marker">${letters[idx] || (idx + 1)}</div>
+                    <div class="option-text">${opt.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
+                `;
+                
+                if (answeredQuestions[index]) {
+                    optBtn.classList.add('disabled');
+                    const answered = answeredQuestions[index];
+                    if (idx === q.correctIndex) {
+                        optBtn.classList.add('correct');
+                    } else if (idx === answered.chosenIndex) {
+                        optBtn.classList.add('wrong');
+                    }
+                } else {
+                    optBtn.onclick = () => selectAnswer(idx);
+                }
+                answersGridEl.appendChild(optBtn);
+            });
+
+            if (answeredQuestions[index]) {
+                const answered = answeredQuestions[index];
+                showExplanationBlock(answered.isCorrect, q.explanation);
+            } else {
+                explanationCardEl.style.display = "none";
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Process answer selection
+        function selectAnswer(chosenIdx) {
+            if (answeredQuestions[currentQuestionIndex]) return;
+
+            const q = questions[currentQuestionIndex];
+            const isCorrect = chosenIdx === q.correctIndex;
+
+            answeredQuestions[currentQuestionIndex] = {
+                chosenIndex: chosenIdx,
+                isCorrect: isCorrect
+            };
+
+            if (isCorrect) {
+                scoreCorrect++;
+                currentStreak++;
+                if (currentStreak > maxStreak) maxStreak = currentStreak;
+                triggerSuccessAnimation();
+            } else {
+                scoreWrong++;
+                currentStreak = 0;
+                wrongAnswersList.push({
+                    questionIndex: currentQuestionIndex,
+                    text: q.text
+                });
+                triggerWrongAnimation();
+            }
+
+            const options = answersGridEl.children;
+            for (let i = 0; i < options.length; i++) {
+                options[i].classList.add('disabled');
+                if (i === q.correctIndex) {
+                    options[i].classList.add('correct');
+                } else if (i === chosenIdx) {
+                    options[i].classList.add('wrong');
+                }
+            }
+
+            const gridItem = document.getElementById(`grid-item-${currentQuestionIndex}`);
+            if (gridItem) {
+                gridItem.classList.remove('answered-correct', 'answered-wrong');
+                gridItem.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+            }
+
+            showExplanationBlock(isCorrect, q.explanation);
+            updateStats();
+            saveProgress();
+            
+            if (Object.keys(answeredQuestions).length === questions.length) {
+                nextBtnEl.innerHTML = `<span>Показать результаты</span> <i class="fa-solid fa-square-poll-vertical"></i>`;
+            }
+        }
+
+        function showExplanationBlock(isCorrect, text) {
+            explanationCardEl.style.display = "block";
+            if (isCorrect) {
+                explanationHeaderEl.className = "explanation-header correct-text";
+                explanationHeaderEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>Правильный ответ!</span>`;
+            } else {
+                explanationHeaderEl.className = "explanation-header wrong-text";
+                explanationHeaderEl.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <span>Неверно</span>`;
+            }
+            explanationBodyEl.innerHTML = text;
+        }
+
+        function triggerSuccessAnimation() {
+            const correctBadge = document.querySelector('.stat-badge.correct');
+            correctBadge.style.transform = "scale(1.2)";
+            setTimeout(() => correctBadge.style.transform = "scale(1)", 200);
+            
+            if (currentStreak > 0 && currentStreak % 5 === 0) {
+                confetti({
+                    particleCount: 50,
+                    spread: 60,
+                    origin: { y: 0.8 }
+                });
+            }
+        }
+
+        function triggerWrongAnimation() {
+            const wrongBadge = document.querySelector('.stat-badge.wrong');
+            wrongBadge.style.transform = "scale(1.2)";
+            setTimeout(() => wrongBadge.style.transform = "scale(1)", 200);
+        }
+
+        function goToNextQuestion() {
+            if (Object.keys(answeredQuestions).length === questions.length) {
+                showResultsPanel();
+                return;
+            }
+
+            let nextIndex = (currentQuestionIndex + 1) % questions.length;
+            while (answeredQuestions[nextIndex] && nextIndex !== currentQuestionIndex) {
+                nextIndex = (nextIndex + 1) % questions.length;
+            }
+
+            jumpToQuestion(nextIndex);
+        }
+
+        function jumpToQuestion(index) {
+            currentQuestionIndex = index;
+            displayQuestion(currentQuestionIndex);
+            
+            quizPanelEl.style.display = "flex";
+            resultsPanelEl.style.display = "none";
+            sidebarPanelEl.style.display = "flex";
+            
+            if (Object.keys(answeredQuestions).length === questions.length) {
+                nextBtnEl.innerHTML = `<span>Показать результаты</span> <i class="fa-solid fa-square-poll-vertical"></i>`;
+            } else {
+                nextBtnEl.innerHTML = `<span>Следующий вопрос</span> <i class="fa-solid fa-arrow-right"></i>`;
+            }
+        }
+
+        function updateStats() {
+            correctCountEl.textContent = scoreCorrect;
+            wrongCountEl.textContent = scoreWrong;
+            streakCountEl.textContent = currentStreak;
+
+            const answeredCount = Object.keys(answeredQuestions).length;
+            answeredCountEl.textContent = answeredCount;
+
+            const percent = Math.round((answeredCount / questions.length) * 100);
+            completionPercentageEl.textContent = `${percent}% выполнено`;
+            progressFillEl.style.width = `${percent}%`;
+        }
+
+        function showResultsPanel() {
+            clearInterval(timerInterval);
+
+            quizPanelEl.style.display = "none";
+            sidebarPanelEl.style.display = "none";
+            resultsPanelEl.style.display = "flex";
+
+            const total = questions.length;
+            const percentage = Math.round((scoreCorrect / total) * 100);
+            resultsPercentageEl.textContent = `${percentage}%`;
+
+            const circleFill = document.getElementById('results-circle-fill');
+            const radius = 90;
+            const circumference = 2 * Math.PI * radius;
+            const offset = circumference - (percentage / 100) * circumference;
+            
+            setTimeout(() => {
+                circleFill.style.strokeDashoffset = offset;
+            }, 100);
+
+            let grade = "";
+            let title = "Тест Завершен!";
+            
+            if (percentage >= 90) {
+                grade = "CISO Specialist 👑 (Директор по безопасности)";
+                title = "Потрясающий результат!";
+                triggerCelebrationConfetti();
+            } else if (percentage >= 75) {
+                grade = "Security Engineer 🛡️ (Инженер по безопасности)";
+                title = "Отличная работа!";
+                triggerCelebrationConfetti();
+            } else if (percentage >= 50) {
+                grade = "Security Analyst 💻 (Аналитик ИБ)";
+                title = "Неплохой результат!";
+            } else {
+                grade = "Junior Copy-Paster 📋 (Копипастер-стажер)";
+                title = "Нужно подучить теорию!";
+            }
+
+            document.getElementById('results-title').textContent = title;
+            document.getElementById('results-grade').textContent = grade;
+            
+            document.getElementById('res-correct').textContent = scoreCorrect;
+            document.getElementById('res-wrong').textContent = scoreWrong;
+            document.getElementById('res-streak').textContent = maxStreak;
+            document.getElementById('res-time').textContent = elapsedTimeEl.textContent;
+
+            const wrongReviewListEl = document.getElementById('wrong-reviews-list');
+            const reviewsContainer = document.getElementById('wrong-reviews-container');
+            wrongReviewListEl.innerHTML = "";
+
+            if (wrongAnswersList.length > 0) {
+                reviewsContainer.style.display = "block";
+                wrongAnswersList.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = 'wrong-review-item';
+                    row.innerHTML = `
+                        <span>Вопрос ${item.questionIndex + 1}: ${item.text.substring(0, 75)}...</span>
+                        <i class="fa-solid fa-chevron-right" style="font-size: 0.8rem; opacity: 0.7;"></i>
+                    `;
+                    row.onclick = () => jumpToQuestion(item.questionIndex);
+                    wrongReviewListEl.appendChild(row);
+                });
+            } else {
+                reviewsContainer.style.display = "none";
+            }
+        }
+
+        function triggerCelebrationConfetti() {
+            const end = Date.now() + (3 * 1000);
+            const colors = ['#f59e0b', '#ef4444', '#10b981'];
+
+            (function frame() {
+                confetti({
+                    particleCount: 4,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: colors
+                });
+                confetti({
+                    particleCount: 4,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: colors
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        function saveProgress() {
+            const elapsedMs = Date.now() - startTime + (timeOffset * 1000);
+            const progressData = {
+                answeredQuestions: answeredQuestions,
+                scoreCorrect: scoreCorrect,
+                scoreWrong: scoreWrong,
+                currentStreak: currentStreak,
+                maxStreak: maxStreak,
+                elapsedSeconds: Math.floor(elapsedMs / 1000),
+                currentQuestionIndex: currentQuestionIndex,
+                wrongAnswersList: wrongAnswersList
+            };
+            localStorage.setItem('security_quiz_progress', JSON.stringify(progressData));
+        }
+
+        function loadProgress() {
+            const raw = localStorage.getItem('security_quiz_progress');
+            if (raw) {
+                try {
+                    const data = JSON.parse(raw);
+                    answeredQuestions = data.answeredQuestions || {};
+                    scoreCorrect = data.scoreCorrect || 0;
+                    scoreWrong = data.scoreWrong || 0;
+                    currentStreak = data.currentStreak || 0;
+                    maxStreak = data.maxStreak || 0;
+                    timeOffset = data.elapsedSeconds || 0;
+                    currentQuestionIndex = data.currentQuestionIndex || 0;
+                    wrongAnswersList = data.wrongAnswersList || [];
+                    
+                    if (Object.keys(answeredQuestions).length === questions.length) {
+                        showResultsPanel();
+                    }
+                } catch (e) {
+                    console.error("Failed to parse stored progress", e);
+                }
+            }
+        }
+
+        function confirmReset() {
+            if (confirm("Вы действительно хотите сбросить текущий прогресс теста по Защите информации и начать заново?")) {
+                restartQuiz();
+            }
+        }
+
+        function restartQuiz() {
+            localStorage.removeItem('security_quiz_progress');
+            answeredQuestions = {};
+            scoreCorrect = 0;
+            scoreWrong = 0;
+            currentStreak = 0;
+            maxStreak = 0;
+            startTime = Date.now();
+            timeOffset = 0;
+            currentQuestionIndex = 0;
+            wrongAnswersList = [];
+
+            quizPanelEl.style.display = "flex";
+            resultsPanelEl.style.display = "none";
+            sidebarPanelEl.style.display = "flex";
+            
+            initApp();
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar-panel');
+            if (sidebar.style.display === "none" || sidebar.style.display === "") {
+                sidebar.style.display = "flex";
+            } else {
+                sidebar.style.display = "none";
+            }
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>

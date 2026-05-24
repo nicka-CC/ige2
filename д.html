@@ -1,0 +1,574 @@
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>C# / .NET Critical Test</title>
+
+  <style>
+
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      padding:30px;
+      background:#0f172a;
+      color:white;
+      font-family:Arial,sans-serif;
+    }
+
+    .container{
+      max-width:1200px;
+      margin:auto;
+    }
+
+    h1{
+      text-align:center;
+      font-size:42px;
+      margin-bottom:10px;
+    }
+
+    .subtitle{
+      text-align:center;
+      color:#94a3b8;
+      margin-bottom:40px;
+      font-size:18px;
+    }
+
+    .question{
+      background:#1e293b;
+      border:1px solid #334155;
+      border-radius:18px;
+      padding:25px;
+      margin-bottom:25px;
+      transition:.3s;
+    }
+
+    .question:hover{
+      border-color:#3b82f6;
+      transform:translateY(-2px);
+    }
+
+    .question h3{
+      margin-top:0;
+      line-height:1.6;
+    }
+
+    .answers{
+      margin-top:20px;
+    }
+
+    .answers label{
+      display:block;
+      padding:14px;
+      margin-bottom:10px;
+      border-radius:12px;
+      background:#0f172a;
+      cursor:pointer;
+      transition:.2s;
+    }
+
+    .answers label:hover{
+      background:#162033;
+    }
+
+    button{
+      width:100%;
+      padding:20px;
+      border:none;
+      border-radius:16px;
+      background:#2563eb;
+      color:white;
+      font-size:20px;
+      font-weight:bold;
+      cursor:pointer;
+      transition:.3s;
+    }
+
+    button:hover{
+      background:#1d4ed8;
+    }
+
+    .result{
+      display:none;
+      margin-top:40px;
+      background:#111827;
+      padding:30px;
+      border-radius:18px;
+      text-align:center;
+    }
+
+    .score{
+      font-size:54px;
+      font-weight:bold;
+      margin:20px 0;
+    }
+
+    .good{
+      color:#22c55e;
+    }
+
+    .bad{
+      color:#ef4444;
+    }
+
+    code{
+      display:block;
+      margin-top:15px;
+      background:#020617;
+      color:#38bdf8;
+      padding:15px;
+      border-radius:10px;
+      overflow:auto;
+      white-space:pre-wrap;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>☠️ C# / .NET Critical Test</h1>
+
+  <div class="subtitle">
+    30 вопросов • C# • .NET • ООП • async/await • LINQ • GC • Stack/Heap • циклы • inheritance
+  </div>
+
+  <form id="quiz"></form>
+
+  <button onclick="checkAnswers()">
+    Проверить результат
+  </button>
+
+  <div class="result" id="result">
+    <h2>Результат теста</h2>
+    <div class="score" id="score"></div>
+    <div id="message"></div>
+  </div>
+
+</div>
+
+<script>
+
+  const questions = [
+
+    {
+      q:"1. Что выведет код?",
+      code:`int a = 5;
+Console.WriteLine(a++ + ++a);`,
+      a:["10","11","12","Ошибка"],
+      correct:"c"
+    },
+
+    {
+      q:"2. Что выведет код?",
+      code:`string s = null;
+Console.WriteLine(s?.Length);`,
+      a:["0","null","Ошибка","undefined"],
+      correct:"b"
+    },
+
+    {
+      q:"3. Где обычно хранятся value type?",
+      a:["Heap","Stack","SSD","GPU"],
+      correct:"b"
+    },
+
+    {
+      q:"4. Что делает async?",
+      a:[
+        "Создает поток",
+        "Позволяет использовать await",
+        "Ускоряет процессор",
+        "Вызывает GC"
+      ],
+      correct:"b"
+    },
+
+    {
+      q:"5. Что делает await?",
+      a:[
+        "Ожидает завершения Task",
+        "Останавливает приложение",
+        "Создает новый поток",
+        "Удаляет память"
+      ],
+      correct:"a"
+    },
+
+    {
+      q:"6. Что такое boxing?",
+      a:[
+        "Преобразование value type в object",
+        "Удаление объекта",
+        "Создание массива",
+        "Компиляция кода"
+      ],
+      correct:"a"
+    },
+
+    {
+      q:"7. Что такое unboxing?",
+      a:[
+        "Преобразование object обратно в value type",
+        "Удаление памяти",
+        "Работа с async",
+        "Создание потока"
+      ],
+      correct:"a"
+    },
+
+    {
+      q:"8. Что выведет код?",
+      code:`Console.WriteLine(10 / 3);`,
+      a:["3","3.33","4","Ошибка"],
+      correct:"a"
+    },
+
+    {
+      q:"9. Что делает garbage collector?",
+      a:[
+        "Удаляет неиспользуемую память",
+        "Создает классы",
+        "Ускоряет LINQ",
+        "Удаляет файлы"
+      ],
+      correct:"a"
+    },
+
+    {
+      q:"10. Что такое инкапсуляция?",
+      a:[
+        "Скрытие внутренней реализации",
+        "Удаление объекта",
+        "Создание интерфейса",
+        "Тип цикла"
+      ],
+      correct:"a"
+    },
+
+    {
+      q:"11. Что такое наследование?",
+      a:[
+        "Получение функциональности базового класса",
+        "Удаление класса",
+        "Тип массива",
+        "Сжатие памяти"
+      ],
+      correct:"a"
+    },
+
+    {
+      q:"12. Что такое полиморфизм?",
+      a:[
+        "Один интерфейс — много реализаций",
+        "Удаление методов",
+        "Тип цикла",
+        "Создание массива"
+      ],
+      correct:"a"
+    },
+
+    {
+      q:"13. Что такое interface?",
+      a:[
+        "Класс с реализацией",
+        "Контракт без реализации",
+        "Тип цикла",
+        "Коллекция"
+      ],
+      correct:"b"
+    },
+
+    {
+      q:"14. Что такое abstract class?",
+      a:[
+        "Класс который нельзя создать напрямую",
+        "Удаленный класс",
+        "Тип массива",
+        "Интерфейс"
+      ],
+      correct:"a"
+    },
+
+    {
+      q:"15. Что делает virtual?",
+      a:[
+        "Запрещает наследование",
+        "Позволяет переопределять метод",
+        "Удаляет метод",
+        "Создает поток"
+      ],
+      correct:"b"
+    },
+
+    {
+      q:"16. Что делает override?",
+      a:[
+        "Удаляет метод",
+        "Переопределяет метод базового класса",
+        "Создает новый класс",
+        "Останавливает поток"
+      ],
+      correct:"b"
+    },
+
+    {
+      q:"17. Что такое delegate?",
+      a:[
+        "Указатель на метод",
+        "Тип массива",
+        "GC",
+        "Поток"
+      ],
+      correct:"a"
+    },
+
+    {
+      q:"18. Что такое LINQ?",
+      a:[
+        "Язык запросов к коллекциям",
+        "База данных",
+        "Тип цикла",
+        "IDE"
+      ],
+      correct:"a"
+    },
+
+    {
+      q:"19. Что делает ToList()?",
+      a:[
+        "Удаляет список",
+        "Преобразует IEnumerable в List",
+        "Создает поток",
+        "Сортирует массив"
+      ],
+      correct:"b"
+    },
+
+    {
+      q:"20. Что такое IEnumerable?",
+      a:[
+        "Интерфейс перебора коллекции",
+        "Тип массива",
+        "База данных",
+        "GC модуль"
+      ],
+      correct:"a"
+    },
+
+    {
+      q:"21. Что выведет код?",
+      code:`for(int i = 0; i < 3; i++)
+{
+    Console.Write(i);
+}`,
+      a:["012","123","3","Ошибка"],
+      correct:"a"
+    },
+
+    {
+      q:"22. Что выведет код?",
+      code:`int x = 5;
+int y = x++;
+Console.WriteLine(y);`,
+      a:["5","6","4","Ошибка"],
+      correct:"a"
+    },
+
+    {
+      q:"23. Что делает using?",
+      a:[
+        "Автоматически освобождает ресурсы",
+        "Создает namespace",
+        "Удаляет объект",
+        "Создает поток"
+      ],
+      correct:"a"
+    },
+
+    {
+      q:"24. Что такое nullable type?",
+      a:[
+        "Тип который может хранить null",
+        "Удаленный тип",
+        "Stack тип",
+        "Интерфейс"
+      ],
+      correct:"a"
+    },
+
+    {
+      q:"25. Разница между ref и out?",
+      a:[
+        "ref требует инициализацию",
+        "out требует инициализацию",
+        "Разницы нет",
+        "Работают только с массивами"
+      ],
+      correct:"a"
+    },
+
+    {
+      q:"26. Что такое dependency injection?",
+      a:[
+        "Внедрение зависимостей",
+        "Тип LINQ",
+        "Удаление памяти",
+        "Создание Task"
+      ],
+      correct:"a"
+    },
+
+    {
+      q:"27. Что такое middleware в ASP.NET Core?",
+      a:[
+        "HTTP pipeline компонент",
+        "GC",
+        "Тип массива",
+        "Компилятор"
+      ],
+      correct:"a"
+    },
+
+    {
+      q:"28. Что такое CLR?",
+      a:[
+        "Среда выполнения .NET",
+        "База данных",
+        "Компилятор CSS",
+        "Тип коллекции"
+      ],
+      correct:"a"
+    },
+
+    {
+      q:"29. Что выведет код?",
+      code:`Console.WriteLine(typeof(int).IsValueType);`,
+      a:["true","false","null","Ошибка"],
+      correct:"a"
+    },
+
+    {
+      q:"30. Что такое lambda expression?",
+      a:[
+        "Короткая запись функции",
+        "Тип массива",
+        "Сборщик мусора",
+        "Тип класса"
+      ],
+      correct:"a"
+    }
+
+  ];
+
+  const quiz = document.getElementById("quiz");
+
+  questions.forEach((item,index)=>{
+
+    const div = document.createElement("div");
+
+    div.className = "question";
+
+    div.innerHTML = `
+        <h3>
+            ${item.q}
+
+            ${item.code ? `<code>${item.code}</code>` : ""}
+        </h3>
+
+        <div class="answers">
+
+            <label>
+                <input type="radio" name="q${index}" value="a">
+                ${item.a[0]}
+            </label>
+
+            <label>
+                <input type="radio" name="q${index}" value="b">
+                ${item.a[1]}
+            </label>
+
+            <label>
+                <input type="radio" name="q${index}" value="c">
+                ${item.a[2]}
+            </label>
+
+            <label>
+                <input type="radio" name="q${index}" value="d">
+                ${item.a[3]}
+            </label>
+
+        </div>
+    `;
+
+    quiz.appendChild(div);
+
+  });
+
+  function checkAnswers(){
+
+    let score = 0;
+
+    questions.forEach((q,index)=>{
+
+      const answer = document.querySelector(
+              `input[name="q${index}"]:checked`
+      );
+
+      if(answer && answer.value === q.correct){
+        score++;
+      }
+
+    });
+
+    const result = document.getElementById("result");
+    const scoreBlock = document.getElementById("score");
+    const message = document.getElementById("message");
+
+    result.style.display = "block";
+
+    scoreBlock.innerHTML = `${score} / 30`;
+
+    if(score >= 26){
+
+      scoreBlock.className = "score good";
+
+      message.innerHTML =
+              "☠️ Ты .NET монстр уровня senior";
+
+    }
+    else if(score >= 18){
+
+      scoreBlock.className = "score";
+
+      message.innerHTML =
+              "⚡ Очень хороший уровень";
+
+    }
+    else{
+
+      scoreBlock.className = "score bad";
+
+      message.innerHTML =
+              "💀 CLR уже знает твой адрес";
+    }
+
+    window.scrollTo({
+      top:document.body.scrollHeight,
+      behavior:"smooth"
+    });
+
+  }
+
+</script>
+
+</body>
+</html>
+```

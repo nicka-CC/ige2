@@ -1,0 +1,2292 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тренажер по языку Си и Проектированию — HARD LEVEL</title>
+    
+    <!-- Google Fonts: Outfit for headings, Fira Code for code blocks, Inter for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Outfit:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* CSS Variables - Ocean Blue Cyberpunk C Theme */
+        :root {
+            --bg-color: #050b14;
+            --container-bg: rgba(7, 18, 36, 0.75);
+            --card-bg: rgba(10, 26, 51, 0.85);
+            --card-hover-border: rgba(0, 180, 216, 0.5);
+            
+            --accent-purple: #0077b6;
+            --accent-purple-glow: rgba(0, 119, 182, 0.4);
+            --accent-cyan: #00f5d4;
+            --accent-cyan-glow: rgba(0, 245, 212, 0.4);
+            
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --text-dark: #1f2937;
+            
+            --correct-color: #10b981;
+            --correct-bg: rgba(16, 185, 129, 0.15);
+            --correct-border: rgba(16, 185, 129, 0.4);
+            
+            --wrong-color: #ef4444;
+            --wrong-bg: rgba(239, 68, 68, 0.15);
+            --wrong-border: rgba(239, 68, 68, 0.4);
+            
+            --sidebar-width: 340px;
+            --transition-speed: 0.3s;
+            --border-radius: 16px;
+        }
+
+        /* Base Resets & Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(0, 119, 182, 0.2) 0px, transparent 45%),
+                radial-gradient(at 90% 90%, rgba(0, 245, 212, 0.1) 0px, transparent 45%),
+                radial-gradient(at 50% 50%, rgba(5, 11, 20, 0.95) 0px, var(--bg-color) 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #040810;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0f223f;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-purple);
+        }
+
+        /* App Wrapper */
+        .app-container {
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--container-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+        }
+
+        .header-title-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-icon {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 8px rgba(0, 180, 216, 0.3));
+        }
+
+        .header-text h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(90deg, #ffffff, #d1d5db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-text p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-badge {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-badge i {
+            font-size: 1.1rem;
+        }
+
+        .stat-badge.correct i { color: var(--correct-color); }
+        .stat-badge.wrong i { color: var(--wrong-color); }
+        .stat-badge.streak {
+            background: rgba(249, 115, 22, 0.1);
+            border-color: rgba(249, 115, 22, 0.2);
+            color: #fdba74;
+            animation: pulse-orange 2s infinite;
+        }
+        .stat-badge.streak i { color: #f97316; }
+
+        .stat-badge.timer i { color: var(--accent-cyan); }
+
+        /* Main Workspace Layout */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr var(--sidebar-width);
+            gap: 24px;
+            flex-grow: 1;
+        }
+
+        @media (max-width: 1024px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+            .sidebar-toggle-btn {
+                display: block !important;
+            }
+        }
+
+        /* Main Content Panel */
+        .quiz-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Cards Style */
+        .glass-card {
+            background: var(--container-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+            position: relative;
+            transition: border-color var(--transition-speed);
+        }
+
+        /* Question Progress Bar */
+        .progress-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            box-shadow: 0 0 10px var(--accent-purple-glow);
+            border-radius: 5px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Question Content styling */
+        .question-category {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(0, 180, 216, 0.15);
+            border: 1px solid rgba(0, 180, 216, 0.3);
+            color: #90e0ef;
+            margin-bottom: 16px;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.5;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        /* Beautiful Code Snippet Container */
+        .code-container {
+            position: relative;
+            background: #03060f;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            margin-bottom: 24px;
+            font-family: 'Fira Code', monospace;
+            box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .code-header .lang-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            color: #90e0ef;
+        }
+
+        .code-header .copy-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+        }
+
+        .code-header .copy-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .code-wrapper {
+            display: flex;
+            overflow-x: auto;
+            padding: 16px;
+        }
+
+        .line-numbers {
+            text-align: right;
+            padding-right: 12px;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            color: #243b5e;
+            user-select: none;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .code-body {
+            padding-left: 16px;
+            color: #e5e7eb;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            white-space: pre;
+            flex-grow: 1;
+        }
+
+        /* Syntax Highlighting Colors */
+        .code-body .keyword { color: #00f5d4; font-weight: 600; }
+        .code-body .type { color: #38bdf8; }
+        .code-body .method { color: #fbbf24; }
+        .code-body .string { color: #34d399; }
+        .code-body .number { color: #fb923c; }
+        .code-body .comment { color: #4e6587; font-style: italic; }
+        .code-body .operator { color: #90e0ef; }
+
+        /* Answer Options Layout */
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .answer-option {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 16px 20px;
+            text-align: left;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .answer-option:hover:not(.disabled) {
+            transform: translateY(-2px);
+            border-color: var(--card-hover-border);
+            box-shadow: 0 6px 15px rgba(0, 180, 216, 0.15);
+            background: rgba(14, 35, 69, 0.85);
+        }
+
+        .answer-option:active:not(.disabled) {
+            transform: translateY(0);
+        }
+
+        .option-marker {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .answer-option:hover:not(.disabled) .option-marker {
+            background: var(--accent-purple);
+            color: #ffffff;
+            border-color: var(--accent-purple);
+        }
+
+        /* Option States after selection */
+        .answer-option.correct {
+            background: var(--correct-bg);
+            border-color: var(--correct-color);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
+        }
+
+        .answer-option.correct .option-marker {
+            background: var(--correct-color);
+            color: #ffffff;
+            border-color: var(--correct-color);
+        }
+
+        .answer-option.wrong {
+            background: var(--wrong-bg);
+            border-color: var(--wrong-color);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.1);
+            animation: shake 0.4s ease-in-out;
+        }
+
+        .answer-option.wrong .option-marker {
+            background: var(--wrong-color);
+            color: #ffffff;
+            border-color: var(--wrong-color);
+        }
+
+        .answer-option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Feedback Explanation Alert Block */
+        .explanation-card {
+            background: rgba(8, 20, 38, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-top: 24px;
+            display: none;
+            animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .explanation-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .explanation-header.correct-text { color: var(--correct-color); }
+        .explanation-header.wrong-text { color: var(--wrong-color); }
+
+        .explanation-body {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .explanation-body strong {
+            color: var(--text-primary);
+        }
+
+        .next-btn {
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 28px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
+        }
+
+        .next-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 119, 182, 0.45);
+        }
+
+        /* Sidebar Navigation Grid */
+        .sidebar-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-header {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-primary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 12px;
+        }
+
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            max-height: 480px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .grid-item {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .grid-item:hover {
+            border-color: var(--accent-purple);
+            color: var(--text-primary);
+            background: rgba(0, 119, 182, 0.1);
+        }
+
+        .grid-item.active {
+            box-shadow: 0 0 0 2px var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            font-weight: 800;
+        }
+
+        .grid-item.answered-correct {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: var(--correct-color);
+            color: var(--correct-color);
+        }
+
+        .grid-item.answered-wrong {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: var(--wrong-color);
+            color: var(--wrong-color);
+        }
+
+        .sidebar-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .reset-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px;
+            color: #ef4444;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .reset-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Results Screen View */
+        .results-panel {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 30px;
+            animation: scale-up 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .results-circle-wrapper {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+
+        .results-circle-svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .results-circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.03);
+            stroke-width: 12;
+        }
+
+        .results-circle-fill {
+            fill: none;
+            stroke: url(#cyan-purple-grad);
+            stroke-width: 12;
+            stroke-linecap: round;
+            stroke-dasharray: 565.48; /* 2 * pi * r (r=90) */
+            stroke-dashoffset: 565.48;
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .results-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #ffffff, #d1d5db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .results-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .results-grade {
+            font-size: 1.25rem;
+            color: var(--accent-cyan);
+            font-weight: 700;
+            margin-top: -10px;
+        }
+
+        .results-stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .result-stat-card {
+            flex: 1;
+            min-width: 120px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .result-stat-card .val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .result-stat-card .label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .wrong-reviews-container {
+            width: 100%;
+            max-width: 700px;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 10px;
+        }
+
+        .wrong-reviews-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .wrong-reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .wrong-review-item {
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .wrong-review-item:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Confetti Container */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        /* Mobile Adjustments */
+        .sidebar-toggle-btn {
+            display: none;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Animations */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scale-up {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pulse-orange {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 180, 216, 0.2); }
+            50% { box-shadow: 0 0 0 8px rgba(0, 180, 216, 0); }
+        }
+
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 30px 10px 10px 10px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: var(--accent-purple);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- Header -->
+        <header>
+            <div class="header-title-container">
+                <i class="fa-solid fa-microchip header-icon"></i>
+                <div class="header-text">
+                    <h1>C Architecture & Low-Level Trainer</h1>
+                    <p><i class="fa-solid fa-code-branch"></i> Дисциплина: Алгоритмы и программирование (Язык Си) — HARD LEVEL</p>
+                </div>
+            </div>
+            
+            <div class="header-stats">
+                <button class="sidebar-toggle-btn" id="sidebar-toggle" onclick="toggleSidebar()">
+                    <i class="fa-solid fa-list-ol"></i> Сетка
+                </button>
+                <div class="stat-badge timer">
+                    <i class="fa-solid fa-hourglass-half"></i> <span id="elapsed-time">00:00</span>
+                </div>
+                <div class="stat-badge streak" id="streak-badge" title="Серия верных ответов">
+                    <i class="fa-solid fa-fire"></i> <span id="streak-count">0</span>
+                </div>
+                <div class="stat-badge correct" title="Правильно">
+                    <i class="fa-solid fa-circle-check"></i> <span id="correct-count">0</span>
+                </div>
+                <div class="stat-badge wrong" title="Неправильно">
+                    <i class="fa-solid fa-circle-xmark"></i> <span id="wrong-count">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <div class="workspace">
+            
+            <!-- Quiz Panel (Left) -->
+            <div class="quiz-panel" id="quiz-panel">
+                
+                <!-- Main Card -->
+                <div class="glass-card">
+                    <!-- Progress Section -->
+                    <div class="progress-container">
+                        <div class="progress-text">
+                            <span>Вопрос <strong id="current-q-index">1</strong> из <strong id="total-q-count">60</strong></span>
+                            <span id="completion-percentage">0% выполнено</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progress-fill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Question Block -->
+                    <div class="question-section" style="margin-top: 15px;">
+                        <span class="question-category" id="question-category">Типы и синтаксис</span>
+                        <div class="question-text" id="question-text">
+                            Загрузка вопроса...
+                        </div>
+                        
+                        <!-- Beautiful Code Block -->
+                        <div class="code-container" id="code-container" style="display: none;">
+                            <div class="code-header">
+                                <span class="lang-badge"><i class="fa-solid fa-code"></i> C Source</span>
+                                <button class="copy-btn" onclick="copyCode()"><i class="fa-solid fa-copy"></i> Копировать</button>
+                            </div>
+                            <div class="code-wrapper">
+                                <div class="line-numbers" id="line-numbers">1</div>
+                                <pre class="code-body" id="code-body"><code>// Фрагмент кода</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- Answers Option Grid -->
+                        <div class="answers-grid" id="answers-grid">
+                            <!-- Injected dynamically by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explanation / Feedback Sliding Alert -->
+                <div class="explanation-card" id="explanation-card">
+                    <div class="explanation-header" id="explanation-header">
+                        <i class="fa-solid fa-circle-check"></i> <span>Правильный ответ!</span>
+                    </div>
+                    <div class="explanation-body" id="explanation-body">
+                        Пояснение к вопросу...
+                    </div>
+                    <button class="next-btn" id="next-btn" onclick="goToNextQuestion()">
+                        <span>Следующий вопрос</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Quiz Results View (Initially Hidden) -->
+            <div class="glass-card results-panel" id="results-panel">
+                <div class="results-circle-wrapper">
+                    <svg class="results-circle-svg" viewBox="0 0 200 200">
+                        <defs>
+                            <linearGradient id="cyan-purple-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="var(--accent-cyan)" />
+                                <stop offset="100%" stop-color="var(--accent-purple)" />
+                            </linearGradient>
+                        </defs>
+                        <circle class="results-circle-bg" cx="100" cy="100" r="90" />
+                        <circle class="results-circle-fill" id="results-circle-fill" cx="100" cy="100" r="90" />
+                    </svg>
+                    <div class="results-percentage" id="results-percentage">85%</div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div class="results-title" id="results-title">Тест Завершен!</div>
+                    <div class="results-grade" id="results-grade">C Kernel Developer 🛡️</div>
+                </div>
+
+                <div class="results-stats-row">
+                    <div class="result-stat-card">
+                        <div class="label">Правильно</div>
+                        <div class="val" style="color: var(--correct-color);" id="res-correct">45</div>
+                    </div>
+                    <div class="result-stat-card">
+                        <div class="label">Неправильно</div>
+                        <div class="val" style="color: var(--wrong-color);" id="res-wrong">15</div>
+                    </div>
+                    <div class="result-stat-card">
+                        <div class="label">Время</div>
+                        <div class="val" style="color: #60a5fa;" id="res-time">12:34</div>
+                    </div>
+                    <div class="result-stat-card">
+                        <div class="label">Макс. Серия</div>
+                        <div class="val" style="color: #f97316;" id="res-streak">8</div>
+                    </div>
+                </div>
+
+                <!-- Wrong Answers Review List -->
+                <div class="wrong-reviews-container" id="wrong-reviews-container">
+                    <div class="wrong-reviews-title">
+                        <i class="fa-solid fa-triangle-exclamation" style="color: #f59e0b;"></i>
+                        <span>Вопросы с ошибками (кликните для просмотра):</span>
+                    </div>
+                    <div class="wrong-reviews-list" id="wrong-reviews-list">
+                        <!-- Injected dynamically -->
+                    </div>
+                </div>
+
+                <div style="margin-top: 10px; display: flex; gap: 15px;">
+                    <button class="next-btn" onclick="restartQuiz()"><i class="fa-solid fa-rotate-right"></i> Начать заново</button>
+                </div>
+            </div>
+
+            <!-- Navigation Sidebar (Right) -->
+            <div class="sidebar-panel glass-card" id="sidebar-panel">
+                <div class="sidebar-header">
+                    <span>Сетка вопросов</span>
+                    <span style="font-size: 0.8rem; opacity: 0.7;"><span id="answered-count">0</span> / 60</span>
+                </div>
+                
+                <div class="questions-grid" id="questions-grid">
+                    <!-- 60 Grid Items Injected by JS -->
+                </div>
+
+                <div class="sidebar-actions">
+                    <button class="reset-btn" onclick="confirmReset()"><i class="fa-solid fa-trash-can"></i> Сбросить текущий прогресс</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            Разработано в рамках обучения языку Си и системному программированию | <a href="#" onclick="confirmReset()">Сбросить прогресс</a>
+        </footer>
+
+    </div>
+
+    <!-- Canvas for Confetti -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Confetti Library via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Core Javascript Code containing 60 highly distinct C questions -->
+    <script>
+        const questions = [
+            {
+                category: "Многофайловые программы",
+                text: "Применимо ли к программам на Си выражение «многофайловая программа»?",
+                options: [
+                    "Нет, программа организована в виде одного файла, содержащего все директивы, прототипы и функцию main()",
+                    "Да, каждая функция оформляется строго в виде отдельного физического файла с расширением .c",
+                    "Да, функции программы могут быть собраны в одном или нескольких файлах, которые транслируются независимо и затем связываются линкером",
+                    "Да, функции программы могут быть собраны в нескольких файлах, но директивы #include должны быть только в одном главном файле",
+                    "Все ответы неверны"
+                ],
+                correctIndex: 2,
+                explanation: 'В языке Си концепция многофайловой программы является стандартной. Функции и глобальные переменные могут быть объявлены и определены в разных исходных файлах (.c). Каждый файл компилируется независимо в объектный файл (.obj/.o), после чего <strong>компоновщик (linker)</strong> связывает их в единый исполняемый файл.'
+            },
+            {
+                category: "Классы хранения данных",
+                text: "Каковы предпосылки использования локального статического (static) класса хранения данных для переменной внутри функции в языке Си?",
+                options: [
+                    "Нужен исключительно для оптимизации размера кода компилятором",
+                    "Служит признаком хорошего стиля программирования, автоматически предотвращая утечки памяти",
+                    "Позволяет переменной сохранять свое значение в промежутках между вызовами содержащего ее блока (функции), инициализируясь ровно один раз",
+                    "Ускоряет доступ к переменной, так как компилятор обязан хранить ее в регистре центрального процессора",
+                    "Требуется для обеспечения соответствия стандарту POSIX"
+                ],
+                correctIndex: 2,
+                explanation: 'Ключевое слово <code>static</code> для локальной переменной внутри функции указывает, что переменная размещается в <strong>сегменте статических данных</strong>, а не в стеке. Она инициализируется один раз при первом входе в функцию и сохраняет свое значение между всеми последующими вызовами этой функции.'
+            },
+            {
+                category: "Вычисление индексов",
+                text: "При значении х = 4 какое действие описывает выражение А [ x ++ ] при обращении к одномерному массиву А?",
+                options: [
+                    "Обращение к четвертому элементу массива А (индекс 3)",
+                    "Обращение к пятому элементу массива А (индекс 4)",
+                    "Обращение к элементу массива А с индексом 4+1 (индекс 5)",
+                    "Обращение к элементу массива А[5]",
+                    "Вызовет синтаксическую ошибку компилятора"
+                ],
+                correctIndex: 1,
+                explanation: 'Давайте разберем пошагово. При значении <code>x = 4</code> выражение <code>A[x++]</code> использует постфиксный инкремент. Постфиксный инкремент сначала возвращает текущее значение операнда (то есть 4) для операции индексирования, а уже затем увеличивает переменную <code>x</code> до 5. Индексация в Си начинается с нуля, следовательно, <code>A[4]</code> — это обращение к <strong>пятому элементу</strong> массива А.'
+            },
+            {
+                category: "Сегменты памяти",
+                text: "Из каких основных логических сегментов состоит работающая программа на языке Си в оперативной памяти?",
+                options: [
+                    "Только из функции main() и области внешних библиотек",
+                    "Из сегментов text, data, stack, main",
+                    "По крайней мере из сегментов кода (text), стека (stack) и статических данных (data/bss)",
+                    "Обязательно из сегментов кода, стека, статических данных и динамических данных (heap)",
+                    "Программа состоит не из сегментов, а из операторов и переменных"
+                ],
+                correctIndex: 3,
+                explanation: 'В оперативной памяти виртуальное адресное пространство процесса Си состоит из четырех ключевых сегментов: 1) <strong>Code/Text Segment</strong> (код программы); 2) <strong>Data/BSS Segments</strong> (статические и глобальные данные); 3) <strong>Stack</strong> (локальные переменные функций и стек вызовов); 4) <strong>Heap</strong> (динамически выделяемая память через malloc/calloc).'
+            },
+            {
+                category: "Алфавит языка Си",
+                text: "Какие символы входят в официальный алфавит стандарта языка Си (С99/С11)?",
+                options: [
+                    "Только латинские буквы, цифры и знаки препинания",
+                    "Латинские прописные и строчные буквы, десятичные цифры, пробельные символы и специальные графические символы (операторы и знаки пунктуации)",
+                    "Буквы любого национального алфавита, включая кириллицу, без ограничений",
+                    "Только символы из таблицы ASCII с кодами от 0 до 127",
+                    "Любые отображаемые символы Unicode"
+                ],
+                correctIndex: 1,
+                explanation: 'Официальный алфавит языка Си включает латинские буквы (A-Z, a-z), цифры (0-9), графические спецсимволы (такие как `+`, `-`, `*`, `/`, `=`, `&`, `{`, `}`, `[`, `]`, `;` и др.) и пробельные символы. Кириллица и другие символы могут присутствовать в комментариях и строковых литералах, но не в идентификаторах стандарта.'
+            },
+            {
+                category: "Базовые типы",
+                text: "Какое из утверждений о размере базовых целочисленных типов данных в языке Си является верным согласно стандарту ANSI C?",
+                options: [
+                    "Размер int всегда равен ровно 4 байтам на любой архитектуре",
+                    "Размеры типов жестко фиксированы: char = 1 байт, short = 2 байта, int = 4 байта, long = 8 байтов",
+                    "Стандарт гарантирует только соотношение: sizeof(char) == 1 и sizeof(char) <= sizeof(short) <= sizeof(int) <= sizeof(long)",
+                    "Размер типа int всегда совпадает с размером указателя void*",
+                    "Размер short всегда равен половине размера int"
+                ],
+                correctIndex: 2,
+                explanation: 'Стандарт Си намеренно не фиксирует точный размер типов в байтах (кроме `char`, который всегда равен 1 байту/1 байтовому слову). Стандарт гарантирует лишь минимальные диапазоны значений и соотношение размеров: **char <= short <= int <= long <= long long**.'
+            },
+            {
+                category: "Константы",
+                text: "Как компилятор Си интерпретирует целочисленную константу, записанную с ведущим нулем, например `012`?",
+                options: [
+                    "Как десятичное число 12",
+                    "Как восьмеричное число, равное десятичному числу 10",
+                    "Как шестнадцатеричное число, равное десятичному числу 18",
+                    "Как ошибку синтаксиса из-за некорректного ведущего нуля",
+                    "Как двоичное число 12"
+                ],
+                correctIndex: 1,
+                explanation: 'В Си целочисленная константа, начинающаяся с нуля (например, `012`), интерпретируется компилятором как **восьмеричное число (octal)**. Восьмеричное `012` вычисляется как <code>1 * 8^1 + 2 * 8^0 = 10</code> в десятичной системе.'
+            },
+            {
+                category: "Константы",
+                text: "Каков тип вещественной константы `3.14`, если к ней не добавлен никакой суффикс?",
+                options: [
+                    "float",
+                    "double",
+                    "long double",
+                    "int",
+                    "System.Decimal"
+                ],
+                correctIndex: 1,
+                explanation: 'По умолчанию в языке Си все вещественные литералы с плавающей точкой (например, `3.14`) имеют тип **double**. Чтобы сделать литерал типом `float`, необходимо явно добавить суффикс `f` или `F` (например, `3.14f`).'
+            },
+            {
+                category: "Арифметические операции",
+                text: "Чему равен результат целочисленного деления `7 / -3` в соответствии со стандартом C99/C11?",
+                options: [
+                    "-3",
+                    "-2",
+                    "2",
+                    "Имеет неопределенное поведение (UB)",
+                    "-2.333"
+                ],
+                correctIndex: 1,
+                explanation: 'Начиная со стандарта C99, деление целых чисел округляется **в сторону нуля (truncation toward zero)**. Результат деления `7` на `-3` равен `-2.333...`, что при округлении в сторону нуля дает ровно `-2`.'
+            },
+            {
+                category: "Арифметические операции",
+                text: "Чему равен результат выражения `17 % -5` в языке Си по стандарту C99?",
+                options: [
+                    "2",
+                    "-2",
+                    "3",
+                    "-3",
+                    "Неопределенное поведение (UB)"
+                ],
+                correctIndex: 0,
+                explanation: 'В C99 остаток от деления `%` определяется через формулу: `(a/b)*b + a%b == a`. Так как `17 / -5` равно `-3`, то `(-3) * (-5) + 17%-5 == 17`, откуда `15 + 17%-5 == 17`, следовательно остаток равен **2**. Знак остатка всегда совпадает со знаком делимого (левого операнда).'
+            },
+            {
+                category: "Логические операции",
+                text: "Каким образом целочисленные переменные интерпретируются в логических выражениях (например, в операторе `if`) в языке Си?",
+                options: [
+                    "Значения 0 и 1 трактуются как истина, остальные вызывают ошибку",
+                    "Только значение 1 считается истиной (true), а 0 — ложью (false)",
+                    "Значение 0 интерпретируется как ложь (false), а любое ненулевое значение (включая отрицательные числа) — как истина (true)",
+                    "Переменные типа int вообще нельзя использовать в логических проверках без приведения к типу bool",
+                    "Истиной считаются только положительные числа"
+                ],
+                correctIndex: 2,
+                explanation: 'В языке Си исторически нет встроенного логического типа на уровне ядра (в C99 добавлен `_Bool`, но поведение сохранено). Любое целочисленное или указательное выражение, вычисляющееся в **0 (или NULL)**, трактуется как **ложь (false)**. Любое **ненулевое значение** трактуется как **истина (true)**.'
+            },
+            {
+                category: "Логические операции",
+                text: "Что выведет данный фрагмент кода на Си, использующий короткозамкнутые вычисления?",
+                code: `int a = 0;\nint b = 5;\nif (a && ++b) {\n    b += 2;\n}\nprintf("a=%d b=%d", a, b);`,
+                options: [
+                    "a=0 b=6",
+                    "a=0 b=5",
+                    "a=0 b=7",
+                    "a=0 b=8",
+                    "Ошибка компиляции"
+                ],
+                correctIndex: 1,
+                explanation: 'В Си логические операции `&&` (И) и `||` (ИЛИ) используют **короткозамкнутое вычисление (short-circuit evaluation)**. В выражении `a && ++b` левый операнд `a` равен 0 (false). Среда понимает, что все выражение И гарантированно будет ложным, поэтому правый операнд `++b` **не вычисляется вообще**. Переменная `b` сохраняет свое значение **5**.'
+            },
+            {
+                category: "Приведение типов",
+                text: "Какое автоматическое преобразование типов произойдет при вычислении выражения `double x = 5 / 2;`?",
+                options: [
+                    "Числа 5 и 2 неявно приведутся к double, и результат будет 2.5",
+                    "Произойдет целочисленное деление в типе int (результат 2), после чего результат неявно приведется к double и станет 2.0",
+                    "Выдаст ошибку компиляции из-за несоответствия типов",
+                    "Произойдет переполнение стека",
+                    "Значение 2 приведется к double, а 5 останется int"
+                ],
+                correctIndex: 1,
+                explanation: 'Оператор деления `/` применяется к двум операндам типа `int` (5 и 2). Вычисляется целочисленное деление, возвращающее `int` со значением `2`. Затем при присваивании переменной `x` типа `double` значение `2` неявно приводится к вещественному типу и записывается как `2.0`.'
+            },
+            {
+                category: "Ветвления",
+                text: "Чему будет равен `y` после выполнения следующего тернарного выражения?",
+                code: `int x = 10;\nint y = (x > 5) ? (x < 15 ? 1 : 2) : 3;`,
+                options: [
+                    "1",
+                    "2",
+                    "3",
+                    "10",
+                    "Вызовет ошибку компиляции"
+                ],
+                correctIndex: 0,
+                explanation: 'Выражение использует вложенный тернарный оператор. <br>1) Вычисляется внешнее условие `x > 10` (10 > 5 — истина).<br>2) Выполняется ветка true: `x < 15 ? 1 : 2`. Условие `10 < 15` истинно, возвращается `1`. Итог: `y = 1`.'
+            },
+            {
+                category: "Организация циклов",
+                text: "В чем заключается ключевое отличие цикла `do-while` от циклов `while` и `for` в языке Си?",
+                options: [
+                    "Цикл do-while работает значительно быстрее",
+                    "Тело цикла do-while гарантированно выполнится хотя бы один раз, так как проверка условия осуществляется на выходе (пост-условие)",
+                    "В цикле do-while запрещено использовать оператор break",
+                    "В do-while нельзя использовать сложные логические проверки",
+                    "Do-while выполняется в фоновом потоке выполнения"
+                ],
+                correctIndex: 1,
+                explanation: 'Цикл `do-while` является циклом с **пост-условием**. Это означает, что код тела цикла сначала выполняется один раз, и только после этого проверяется условие продолжения цикла. Циклы `for` и `while` имеют пред-условие и могут не выполниться ни разу.'
+            },
+            {
+                category: "Организация циклов",
+                text: "Что произойдет при выполнении оператора `continue` внутри тела цикла в языке Си?",
+                options: [
+                    "Немедленный выход из цикла с завершением его работы",
+                    "Пропуск всех оставшихся операторов в текущей итерации цикла и переход к следующей итерации (включая инкремент в цикле for)",
+                    "Перезапуск программы с функции main()",
+                    "Очистка стека локальных переменных функции",
+                    "Приостановка выполнения цикла до нажатия клавиши"
+                ],
+                correctIndex: 1,
+                explanation: 'Оператор <code>continue</code> досрочно завершает **текущую итерацию** цикла. Управление передается в конец тела цикла, после чего в цикле `for` выполняется шаг инкремента, а в `while` проверяется условие продолжения.'
+            },
+            {
+                category: "Указатели",
+                text: "Каков размер переменной-указателя на тип `char` (char*) по сравнению с указателем на структуру (struct Node*) на 64-битной архитектуре в Си?",
+                options: [
+                    "char* занимает 1 байт, struct Node* занимает 8 байтов",
+                    "char* занимает 2 байта, struct Node* занимает 4 байта",
+                    "Размеры всех указателей на данные одинаковы и составляют 8 байтов на 64-битной архитектуре",
+                    "Указатели на структуры занимают динамический объем памяти в зависимости от полей",
+                    "char* не является полноценным указателем"
+                ],
+                correctIndex: 2,
+                explanation: 'Любой указатель в Си хранит адрес ячейки физической или виртуальной оперативной памяти. На конкретной аппаратной платформе размер адреса фиксирован. Для 64-битной адресации **все типы указателей** (`char*`, `int*`, `void*`, `struct Node*`) занимают в памяти ровно **8 байтов**.'
+            },
+            {
+                category: "Указатели",
+                text: "Что представляет собой нетипизированный указатель `void*` в языке Си?",
+                options: [
+                    "Указатель, который всегда равен NULL",
+                    "Указатель на неиспользуемый сектор дисковой памяти",
+                    "Универсальный указатель, способный хранить адрес объекта любого типа данных. К нему неприменима адресная арифметика и разыменование без предварительного приведения типов",
+                    "Указатель, который автоматически удаляет данные при выходе из функции",
+                    "Указатель на сегмент кода text"
+                ],
+                correctIndex: 2,
+                explanation: 'Указатель `void*` — это **универсальный указатель на нетипизированную память**. В него можно записать адрес любого объекта без явного приведения. Однако, поскольку размер типа void неизвестен, к `void*` **нельзя применить операцию разыменования `*` или адресную арифметику** без приведения к конкретному типу (например, `int*` или `char*`).'
+            },
+            {
+                category: "Массивы",
+                text: "Как в языке Си компилятор обрабатывает имя массива при его передаче в качестве аргумента в функцию?",
+                options: [
+                    "Копирует весь массив целиком в стек функции (передача по значению)",
+                    "Передает имя массива как строковый литерал",
+                    "Неявно преобразует имя массива в указатель на его первый элемент (decay to pointer), передавая адрес начала массива в памяти",
+                    "Генерирует ошибку компиляции, массивы нельзя передавать в функции",
+                    "Упаковывает массив в системную структуру"
+                ],
+                correctIndex: 2,
+                explanation: 'В Си имя массива при передаче в функцию подвергается процессу **сокращения до указателя (pointer decay)**. Функция принимает обычный указатель на первый элемент массива (например, `int*`), теряя информацию о реальной размерности массива.'
+            },
+            {
+                category: "Динамическая память",
+                text: "Какое действие производит функция `malloc(size_t size)` при успешном выполнении в языке Си?",
+                options: [
+                    "Выделяет блок памяти в стеке и заполняет его нулями",
+                    "Выделяет непрерывный блок памяти указанного размера (в байтах) в управляемой куче (heap), возвращая void* на начало этого блока; содержимое памяти остается неинициализированным (мусор)",
+                    "Создает новый поток выполнения с выделением стека",
+                    "Увеличивает размер статического сегмента данных bss",
+                    "Выделяет блок памяти в куче и гарантированно зануляет его"
+                ],
+                correctIndex: 1,
+                explanation: 'Функция `malloc` выделяет динамическую память в куче. Выделенная память **не зануляется** и содержит случайные данные (мусор). В отличие от нее, функция `calloc` обнуляет выделенную память.'
+            },
+            {
+                category: "Динамическая память",
+                text: "Что произойдет, если вызвать функцию `free(ptr)` для указателя, который уже был освобожден ранее (double free)?",
+                options: [
+                    "Среда выполнения безопасно проигнорирует этот вызов",
+                    "Произойдет очистка кэша процессора",
+                    "Программа демонстрирует неопределенное поведение (Undefined Behavior), что чаще всего приводит к сбою диспетчера кучи (heap corruption) или уязвимости безопасности",
+                    "Память выделится повторно",
+                    "Указатель автоматически примет значение NULL"
+                ],
+                correctIndex: 2,
+                explanation: 'Повторное освобождение памяти (double free) — это серьезная ошибка, приводящая к **неопределенному поведению (UB)**. Это нарушает внутренние структуры данных диспетчера кучи и может стать причиной падения программы (`SIGSEGV`) или создания критических уязвимостей безопасности.'
+            },
+            {
+                category: "Препроцессор",
+                text: "Что произойдет при использовании следующего макроса: `#define MULTIPLY(a, b) a * b` при вызове `int res = MULTIPLY(2 + 3, 4);`?",
+                options: [
+                    "res будет равен 20 (т.е. 5 * 4)",
+                    "res будет равен 14 (т.е. 2 + 3 * 4)",
+                    "res будет равен 24",
+                    "Случится ошибка компиляции",
+                    "res будет равен 0"
+                ],
+                correctIndex: 1,
+                explanation: 'Препроцессор выполняет простую текстовую подстановку. Строка `MULTIPLY(2 + 3, 4)` превратится в `2 + 3 * 4`. Согласно приоритету математических операций, сначала выполняется умножение: `3 * 4 = 12`, затем сложение: `2 + 12 = 14`. Правильный макрос должен содержать скобки: `#define MULTIPLY(a, b) ((a) * (b))`.'
+            },
+            {
+                category: "Область видимости",
+                text: "Какое время жизни и область видимости имеет глобальная переменная, объявленная с ключевым словом static вне всех функций?",
+                options: [
+                    "Динамическое время жизни, видима во всех файлах проекта",
+                    "Статическое время жизни (весь период работы программы), видима во всем проекте через extern",
+                    "Статическое время жизни, но область видимости ограничена только текущим файлом исходного кода (файловая область видимости)",
+                    "Время жизни ограничено функцией main()",
+                    "Локальное время жизни, видима в пределах текущего блока {}"
+                ],
+                correctIndex: 2,
+                explanation: 'Спецификатор `static` для глобальных переменных и функций ограничивает их **видимость рамками текущего файла трансляции**. Такие переменные имеют статическое время жизни, но не могут быть импортированы в другие файлы через объявление `extern`, предотвращая конфликты имен.'
+            },
+            {
+                category: "Модели Жизненного Цикла",
+                text: "Какое ключевое отличие спиральной модели жизненного цикла ПО от каскадной (водопадной) является определяющим?",
+                options: [
+                    "Спиральная модель не требует тестирования кода",
+                    "Спиральная модель ориентирована на жесткие сроки без изменений требований",
+                    "Спиральная модель делает упор на постоянный анализ рисков, итеративную разработку и создание прототипов на каждом витке",
+                    "Каскадная модель является итеративной, а спиральная — линейной",
+                    "Спиральная модель предназначена только для веб-разработки"
+                ],
+                correctIndex: 2,
+                explanation: 'Спиральная модель Боэма ориентирована на **анализ рисков**. Проект развивается витками (итерациями), на каждом из которых создается прототип, оцениваются риски и принимается решение о переходе к следующему этапу. Каскадная модель — линейная, с переходом на следующий шаг только после завершения предыдущего.'
+            },
+            {
+                category: "Проектирование ПО",
+                text: "В чем заключается основное назначение этапа внешнего проектирования при создании программного продукта?",
+                options: [
+                    "В написании низкоуровневых алгоритмов на Си",
+                    "В отладке синтаксических ошибок в коде",
+                    "В определении требований к системе, описании архитектуры с точки зрения пользователя и заказчика, спецификации интерфейсов и поведения системы без углубления во внутреннюю реализацию",
+                    "В оптимизации работы с физической оперативной памятью",
+                    "В проведении модульного тестирования"
+                ],
+                correctIndex: 2,
+                explanation: 'Внешнее проектирование (анализ требований и системный дизайн) направлено на **описание системы «извне»**. На этом этапе формируется ТЗ, проектируются пользовательские сценарии, интерфейсы и форматы взаимодействия с другими системами, что позволяет согласовать цели с заказчиком до написания кода.'
+            },
+            {
+                category: "Модульное программирование",
+                text: "Какое из определений модуля в программировании сформулировано верно, и какими ключевыми свойствами он должен обладать?",
+                options: [
+                    "Модуль — это любая функция, содержащая более 100 строк кода",
+                    "Модуль — это логически независимый программный блок, обладающий свойствами слабой связанности с другими модулями (low coupling) и высокой функциональной сплоченности внутри себя (high cohesion)",
+                    "Модуль — это файл с расширением .h, содержащий только макросы",
+                    "Модуль — это динамическая библиотека ОС Windows (.dll)",
+                    "Модуль — это объект класса в ООП"
+                ],
+                correctIndex: 1,
+                explanation: 'Модульность — фундаментальный принцип проектирования. Модуль должен быть **черным ящиком** с четким интерфейсом. Для хорошей архитектуры критичны свойства: **слабое зацепление (low coupling)** с другими частями системы и **высокая прочность/связность (high cohesion)** внутри модуля.'
+            },
+            {
+                category: "Тестирование ПО",
+                text: "В чем разница между структурным (white box) и функциональным (black box) тестированием ПО?",
+                options: [
+                    "Структурное тестирование проводится только на суперкомпьютерах",
+                    "Функциональное тестирование исследует внутреннюю структуру кода и пути выполнения; структурное — только внешние интерфейсы",
+                    "Структурное тестирование (белый ящик) основывается на знании внутреннего устройства кода и проверяет пути его выполнения, циклы, условия. Функциональное тестирование (черный ящик) основывается только на спецификации требований и проверяет соответствие внешнего поведения системы ТЗ",
+                    "При черном ящике исходный код программы компилируется без оптимизации",
+                    "Различий нет, это синонимы"
+                ],
+                correctIndex: 2,
+                explanation: 'При тестировании **белого ящика (структурном)** тесты составляются на основе исходного кода (проверяются все ветки условий, циклы, покрытия операторов). При тестировании **черного ящика (функциональном)** код скрыт, тесты пишутся на основе ТЗ и входных/выходных спецификаций для проверки бизнес-логики.'
+            },
+            {
+                category: "Структуры данных",
+                text: "Каково основное структурное отличие динамического связного списка от вектора (динамического массива) в оперативной памяти?",
+                options: [
+                    "Связный список хранит данные в файлах на диске",
+                    "Элементы вектора располагаются в памяти непрерывно друг за другом, обеспечивая доступ за O(1), но требуя O(N) при вставке в середину. Элементы связного списка разбросаны в куче и связаны указателями, позволяя быстро выполнять вставку за O(1), но требуя O(N) для поиска по индексу",
+                    "В векторе можно хранить только целые числа, а в списке — любые",
+                    "Связный список всегда располагается исключительно в стеке",
+                    "Вектор не поддерживает динамическое изменение размера"
+                ],
+                correctIndex: 1,
+                explanation: 'Массив (вектор) гарантирует **непрерывное (contiguous)** расположение элементов в памяти. Это дает произвольный доступ по индексу за O(1), но делает вставку/удаление дорогими (O(N) из-за сдвига). Список состоит из **узлов в куче, связанных указателями**. Доступ к элементу требует обхода с начала списка (O(N)), но вставка узла по известному адресу происходит за O(1) перестановкой ссылок.'
+            },
+            {
+                category: "Алгоритмы поиска",
+                text: "Какое обязательное граничное условие должно соблюдаться для применимости алгоритма двоичного поиска (половинным делением) к вектору?",
+                options: [
+                    "Массив должен содержать только положительные нечетные числа",
+                    "Вектор должен быть строго упорядочен (отсортирован) по возрастанию или убыванию",
+                    "Размер вектора должен быть строго равен степени двойки",
+                    "Вектор должен быть размещен в статическом сегменте данных bss",
+                    "Алгоритм применим к любым неотсортированным массивам"
+                ],
+                correctIndex: 1,
+                explanation: 'Бинарный поиск (половинным делением) работает путем постоянного деления диапазона поиска пополам. Чтобы знать, в какой половине (левой или правой) находится искомый элемент, **массив обязан быть предварительно отсортирован**.'
+            },
+            {
+                category: "Адресная арифметика",
+                text: "Чему будет равен указатель `p2 - p1` после выполнения следующего кода C на 32-битной системе?",
+                code: `int arr[5] = {10, 20, 30, 40, 50};\nint *p1 = &arr[1];\nint *p2 = &arr[4];\nprintf("%td", p2 - p1);`,
+                options: [
+                    "12 (т.е. разница в 12 байт)",
+                    "3 (разница в элементах типа int)",
+                    "6",
+                    "Ошибка компиляции: вычитание указателей запрещено",
+                    "Неопределенное поведение (UB)"
+                ],
+                correctIndex: 1,
+                explanation: 'В Си разность двух указателей на элементы одного массива вычисляется в **количестве элементов**, а не байтов. Указатель `p2` указывает на `arr[4]`, а `p1` на `arr[1]`. Разность `p2 - p1` дает расстояние в элементах: `4 - 1 = 3`. Тип результата — `ptrdiff_t`.'
+            },
+            
+            // QUESTIONS 31 TO 60 (Hard code compilation, memory segments, pointer arithmetic)
+            {
+                category: "Адресная арифметика",
+                text: "Что выведет данный фрагмент кода на Си, работающий с указателем на массив?",
+                code: `int arr[3] = {10, 20, 30};\nint *p = arr;\nprintf("%d ", *p++);\nprintf("%d", *p);`,
+                options: [
+                    "10 10",
+                    "10 20",
+                    "20 20",
+                    "20 30",
+                    "Ошибка компиляции"
+                ],
+                correctIndex: 1,
+                explanation: 'Выражение `*p++` вычисляется с учетом приоритетов. Постфиксный инкремент `++` имеет более высокий приоритет, чем разыменование `*`. Однако, будучи постфиксным, `p++` увеличивает указатель `p` на 1 (на следующий int), но возвращает **исходное значение** указателя для разыменования. Таким образом, `*p++` возвращает значение первого элемента (`10`), а указатель сдвигается на второй элемент. Следующий вызов `*p` выводит уже `20`.'
+            },
+            {
+                category: "Указатели на указатели",
+                text: "Что будет выведено при выполнении кода с двойным указателем?",
+                code: `int x = 5;\nint *ptr = &x;\nint **pptr = &ptr;\n**pptr += 10;\nprintf("%d", x);`,
+                options: [
+                    "5",
+                    "15",
+                    "Адрес переменной x",
+                    "Ошибка компиляции из-за несовместимости типов",
+                    "Неопределенное поведение"
+                ],
+                correctIndex: 1,
+                explanation: 'Переменная `pptr` — это указатель на указатель `ptr`. Разыменование `*pptr` возвращает указатель `ptr` (адрес `x`). Двойное разыменование `**pptr` дает доступ непосредственно к значению переменной `x`. Выражение `**pptr += 10` эквивалентно `x += 10`, что изменяет значение `x` с 5 на 15.'
+            },
+            {
+                category: "Динамическая память",
+                text: "В чем разница между вызовами функций `malloc(size)` и `calloc(num, size)` в стандартной библиотеке Си?",
+                options: [
+                    "malloc работает с диском, calloc — только с ОЗУ",
+                    "malloc выделяет память в куче, а calloc — в стеке",
+                    "calloc не только выделяет память под num элементов размера size, но и гарантированно инициализирует весь блок нулями. malloc оставляет память неинициализированной",
+                    "calloc автоматически освобождает память при выходе из функции",
+                    "Разницы нет, это устаревшие названия одной функции"
+                ],
+                correctIndex: 2,
+                explanation: 'Функция `calloc` принимает два параметра (количество элементов и размер каждого в байтах) и **гарантированно зануляет выделенную память** перед возвратом указателя. Функция `malloc` только выделяет память, оставляя в ней произвольный мусор.'
+            },
+            {
+                category: "Приведение типов",
+                text: "Что выведет данный код на Си из-за неявного расширения знака?",
+                code: `char a = 0xFF;\nint b = a;\nprintf("%d", b);`,
+                options: [
+                    "255",
+                    "-1",
+                    "0",
+                    "Ошибка компиляции",
+                    "Неопределенное поведение"
+                ],
+                correctIndex: 1,
+                explanation: 'По умолчанию на большинстве платформ тип `char` является знаковым (`signed char`). Значение `0xFF` в дополнительном коде знакового 8-битного целого соответствует числу `-1`. При присваивании `int b = a` происходит **расширение знака (sign extension)** до 32 бит, сохраняя значение `-1`.'
+            },
+            {
+                category: "Битовые операции",
+                text: "Чему будет равен результат выражения `a ^ b` (побитовый XOR) в Си?",
+                code: `unsigned char a = 0b1100;\nunsigned char b = 0b1010;\nunsigned char res = a ^ b;`,
+                options: [
+                    "0b1110 (14)",
+                    "0b1000 (8)",
+                    "0b0110 (6)",
+                    "0b0000 (0)",
+                    "0b1111 (15)"
+                ],
+                correctIndex: 2,
+                explanation: 'Оператор `^` выполняет побитовое исключающее ИЛИ (XOR). Бит результата равен 1, если биты операндов различны, и 0, если они одинаковы. <br>1100 ^ 1010 дает **0110** (десятичное 6).'
+            },
+            {
+                category: "Битовые операции",
+                text: "Что делает следующая битовая маска в выражении: `x = x & ~(1 << n)`?",
+                options: [
+                    "Устанавливает n-й бит числа x в 1",
+                    "Сбрасывает (устанавливает в 0) n-й бит числа x, оставляя остальные без изменений",
+                    "Инвертирует все биты числа x",
+                    "Сдвигает число x влево на n бит",
+                    "Проверяет, равен ли n-й бит единице"
+                ],
+                correctIndex: 1,
+                explanation: 'Выражение `1 << n` создает маску, где только n-й бит равен 1. Побитовое отрицание `~` инвертирует ее: n-й бит становится 0, а все остальные — 1. Применение побитового И (`&`) с этой инвертированной маской гарантированно **сбрасывает n-й бит** переменной `x` в 0, сохраняя все остальные биты.'
+            },
+            {
+                category: "Директивы препроцессора",
+                text: "Какое назначение имеет директива `#pragma once` в заголовочных файлах на языке Си?",
+                options: [
+                    "Оптимизирует скорость компиляции функции main()",
+                    "Предотвращает повторное включение (double inclusion) заголовочного файла в одном файле трансляции, заменяя классические include guards",
+                    "Указывает компилятору скомпилировать файл в один проход",
+                    "Запрещает использовать глобальные переменные в текущем файле",
+                    "Обеспечивает совместимость с языком C++"
+                ],
+                correctIndex: 1,
+                explanation: 'Директива `#pragma once` — это современная и поддерживаемая практически всеми компиляторами директива, которая гарантирует, что данный заголовочный файл будет **включен компилятором в файл трансляции ровно один раз**. Это предотвращает ошибки повторного объявления типов и структур (дублирует функционал классических `#ifndef/#define/#endif`).'
+            },
+            {
+                category: "Управление памятью",
+                text: "Что произойдет при вызове функции `realloc(ptr, 0)` в языке Си?",
+                options: [
+                    "Вызовет ошибку компиляции",
+                    "Функция эквивалентна вызову free(ptr) и освобождает выделенный блок памяти, возвращая NULL (в соответствии с историческим стандартом)",
+                    "Перераспределяет память, зануляя все данные внутри",
+                    "Удваивает размер выделенной памяти",
+                    "Вызовет утечку памяти"
+                ],
+                correctIndex: 1,
+                explanation: 'В стандартной библиотеке Си вызов `realloc(ptr, 0)` при ненулевом указателе `ptr` исторически эквивалентен вызову `free(ptr)`. Память освобождается, и функция возвращает `NULL`. (Примечание: в стандарте C23 это поведение признано устаревшим / UB, но для старых спецификаций это стандартный метод освобождения).'
+            },
+            {
+                category: "Приведение типов",
+                text: "Каков результат вычисления выражения `sizeof(char)` в Си согласно официальному стандарту ISO C?",
+                options: [
+                    "Зависит от архитектуры процессора (может быть 1, 2 или 4)",
+                    "Всегда равен ровно 1 на любой архитектуре и платформе",
+                    "Всегда равен 8 байтам",
+                    "Зависит от настроек компилятора",
+                    "В стандарте Си операция sizeof не применима к char"
+                ],
+                correctIndex: 1,
+                explanation: 'Согласно спецификации языка Си, тип `char` является базовой единицей измерения памяти. Результат операции `sizeof(char)` **гарантированно равен 1** на абсолютно любой платформе, компиляторе и архитектуре.'
+            },
+            {
+                category: "Адресная арифметика",
+                text: "Что произойдет при выполнении следующего фрагмента кода с разыменованием указателя?",
+                code: `int arr[4] = {1, 2, 3, 4};\nint *p = arr;\nprintf("%d", *(p + 2));`,
+                options: [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "Ошибка компиляции"
+                ],
+                correctIndex: 2,
+                explanation: 'Адресная арифметика учитывает размер типа данных. Выражение `p + 2` сдвигает указатель на два элемента типа `int` вперед от начала массива (т.е. на индекс 2). Разыменование `*(p + 2)` возвращает значение элемента `arr[2]`, которое равно **3**.'
+            },
+            {
+                category: "Типы данных",
+                text: "Какой диапазон значений может гарантированно хранить тип `signed char` в языке Си на любой стандартной платформе?",
+                options: [
+                    "От 0 до 255",
+                    "От -128 до 127",
+                    "От -32768 до 32767",
+                    "От -127 до 127",
+                    "Диапазон не ограничен"
+                ],
+                correctIndex: 3,
+                explanation: 'Стандарт Си гарантирует, что знаковый 8-битный тип `signed char` может хранить значения как минимум в диапазоне **от -127 до 127** (это сделано для совместимости с редкими компьютерами, использующими обратный код вместо дополнительного). На современных компьютерах с дополнительным кодом диапазон составляет от -128 до 127.'
+            },
+            {
+                category: "Алгоритмы",
+                text: "В каком случае алгоритм поиска элемента половинным делением (бинарный поиск) в массиве НЕ может быть применен?",
+                options: [
+                    "Если массив отсортирован по возрастанию",
+                    "Если массив расположен в динамической памяти кучи",
+                    "Если массив представлен в виде связного списка, а не непрерывного вектора в памяти",
+                    "Если размер массива не кратен 10",
+                    "Если массив содержит отрицательные числа"
+                ],
+                correctIndex: 2,
+                explanation: 'Бинарный поиск критически требует возможности **произвольного доступа (random access) за O(1)** к любому элементу диапазона (чтобы мгновенно прочитать средний элемент). В связном списке нет произвольного доступа (чтобы найти середину, надо пройти весь список с начала за O(N)), что делает бинарный поиск в списках неэффективным.'
+            },
+            {
+                category: "Сегменты памяти",
+                text: "В каком сегменте оперативной памяти выделяется память под переменную `x`, объявленную как `int x;` внутри функции, если не указаны другие модификаторы?",
+                options: [
+                    "В сегменте кода text",
+                    "В сегменте неинициализированных данных bss",
+                    "В стеке (stack)",
+                    "В куче (heap)",
+                    "В сегменте инициализированных статических данных data"
+                ],
+                correctIndex: 2,
+                explanation: 'Локальные переменные функций по умолчанию относятся к автоматическому классу хранения (`auto`). Память под них выделяется **в стеке (stack)** при входе в функцию (или блок) и автоматически освобождается при выходе.'
+            },
+            {
+                category: "Константы",
+                text: "Укажите корректный синтаксический вид шестнадцатеричной вещественной константы в языке Си.",
+                options: [
+                    "0x1.5",
+                    "0x1.5p3",
+                    "0x1.5h",
+                    "1.5e3",
+                    "0x15f"
+                ],
+                correctIndex: 1,
+                explanation: 'В Си шестнадцатеричные вещественные константы записываются с префиксом `0x`, за которым следует дробная часть в 16-ричном виде, а затем **обязательный экспоненциальный маркер p (или P)** с десятичным показателем степени двойки, например: `0x1.5p3` (означает 1.3125 * 2^3).'
+            },
+            {
+                category: "Приведение типов",
+                text: "Что произойдет при попытке присвоить значение типа double переменной типа int в Си?",
+                options: [
+                    "Произойдет ошибка компиляции",
+                    "Дробная часть вещественного числа будет отброшена (произойдет усечение/truncation toward zero), и в int запишется только целая часть",
+                    "Число автоматически округлится по математическим правилам к ближайшему целому",
+                    "Произойдет переполнение буфера",
+                    "Значение переменной станет равным нулю"
+                ],
+                correctIndex: 1,
+                explanation: 'При неявном приведении из вещественного типа (`double/float`) в целочисленный (`int`) дробная часть **отбрасывается (усечение)**. Например, `int x = 3.99;` запишет в `x` значение `3`.'
+            },
+            {
+                category: "Директивы препроцессора",
+                text: "Что делает макрос `#ifdef MY_MACRO` в коде на Си?",
+                options: [
+                    "Удаляет макрос из таблицы компиляции",
+                    "Проверяет, было ли ранее определено имя MY_MACRO с помощью директивы #define. Если да, компилятор включает последующий блок кода в компиляцию",
+                    "Вызывает ошибку компиляции, если макрос не определен",
+                    "Заменяет MY_MACRO на системный путь к файлу",
+                    "Объявляет макрос MY_MACRO глобальным"
+                ],
+                correctIndex: 1,
+                explanation: 'Директива препроцессора `#ifdef` (сокращение от if defined) проверяет существование макроса. Если макрос был объявлен (даже без конкретного значения), компилятор берет код до соответствующего `#endif`.'
+            },
+            {
+                category: "Ветвления в Си",
+                text: "Что будет результатом вычисления переменной `res` в следующем тернарном коде?",
+                code: `int x = 5;\nint res = (x == 5) ? (x = 10, x + 2) : 20;`,
+                options: [
+                    "5",
+                    "12",
+                    "20",
+                    "10",
+                    "Ошибка компиляции"
+                ],
+                correctIndex: 1,
+                explanation: 'Условие `x == 5` истинно. Вычисляется левое выражение тернарного оператора: `(x = 10, x + 2)`. Здесь используется **оператор запятая (comma operator)**. Выражения вычисляются последовательно: сначала `x` присваивается 10, затем вычисляется `x + 2`, что дает 12. Результатом всей группы является последнее значение — **12**.'
+            },
+            {
+                category: "Указатели",
+                text: "Что произойдет при попытке разыменовать неинициализированный локальный указатель `int *p;`?",
+                options: [
+                    "В консоль выведется 0",
+                    "Программа продемонстрирует неопределенное поведение (UB), что на современных ОС чаще всего приводит к аварийному завершению программы с ошибкой Segmentation Fault",
+                    "Сборщик мусора автоматически выделит память под int",
+                    "Указатель автоматически перенаправится на временную переменную",
+                    "Компилятор запретит компиляцию такого кода"
+                ],
+                correctIndex: 1,
+                explanation: 'Неинициализированный локальный указатель содержит **случайный адрес (мусор)**. Попытка его разыменования `*p` — критическая ошибка, вызывающая неопределенное поведение (UB). Операционная система обычно прерывает процесс из-за попытки доступа к чужой или защищенной странице памяти (Segmentation Fault).'
+            },
+            {
+                category: "Массивы",
+                text: "Каким образом в памяти компьютера размещается многомерный массив в языке Си (например, `int matrix[2][3]`)?",
+                options: [
+                    "Каждая строка хранится в отдельном несвязанном секторе кучи",
+                    "Строки массива размещаются в памяти непрерывно одна за другой (row-major order)",
+                    "Столбцы массива размещаются непрерывно один за другим (column-major order)",
+                    "В памяти размещаются только указатели на элементы",
+                    "Массив хранится в виде связанного графа"
+                ],
+                correctIndex: 1,
+                explanation: 'В языке Си многомерные массивы располагаются в памяти **линейно и непрерывно**. Элементы укладываются **по строкам (row-major order)**: сначала все элементы первой строки, затем все элементы второй строки и т.д.'
+            },
+            {
+                category: "Динамическая память",
+                text: "В чем опасность отсутствия вызова функции `free(ptr)` для динамически выделенной памяти перед завершением работы долгоживущего сервиса в Си?",
+                options: [
+                    "Память физически сгорит на материнской плате",
+                    "Произойдет утечка памяти (memory leak): ОС не сможет переиспользовать эту память для других нужд, что приведет к постепенному исчерпанию ОЗУ и падению системы",
+                    "Компилятор выдаст синтаксическую ошибку",
+                    "Куча автоматически заблокирует все файлы проекта",
+                    "Никакой опасности нет, ОС сама очищает память внутри процесса"
+                ],
+                correctIndex: 1,
+                explanation: 'Если память выделяется динамически и указатель на нее теряется без вызова `free`, происходит **утечка памяти (memory leak)**. В долгоработающих программах (серверах) это приводит к постоянному росту потребления ОЗУ и, в конце концов, к принудительному убийству процесса операционной системой (OOM Killer).'
+            },
+            {
+                category: "Жизненный цикл ПО",
+                text: "Какое основное преимущество имеет каскадная (водопадная) модель жизненного цикла ПО?",
+                options: [
+                    "Она позволяет изменять требования к продукту на любом этапе",
+                    "Простота управления и четкая определенность каждого этапа (каждый этап имеет понятные сроки, требования и фиксированные выходные документы)",
+                    "Она всегда приводит к созданию прототипов",
+                    "Она не требует этапа тестирования",
+                    "Она ориентирована исключительно на экстремальное программирование"
+                ],
+                correctIndex: 1,
+                explanation: 'Главное достоинство каскадной модели — **простота планирования и прозрачность управления**. Каждый этап (анализ, проектирование, кодирование, тестирование) выполняется строго последовательно, имеет фиксированные критерии начала и окончания, что упрощает контроль.'
+            },
+            {
+                category: "Модульное программирование",
+                text: "Что означает свойство слабой связанности (low coupling) модулей при проектировании ПО?",
+                options: [
+                    "Модули должны быть написаны разными программистами",
+                    "Модули должны иметь минимальную зависимость друг от друга, взаимодействуя только через простые и хорошо документированные интерфейсы",
+                    "Модули должны компилироваться в разные исполняемые файлы",
+                    "Внутри модуля должно быть не более двух функций",
+                    "Модули не должны содержать операторов переходов"
+                ],
+                correctIndex: 1,
+                explanation: 'Свойство **слабой связанности (low coupling)** означает, что изменения внутри одного модуля не должны приводить к лавинообразным изменениям в других модулях. Это достигается за счет скрытия деталей реализации и минимизации точек соприкосновения.'
+            },
+            {
+                category: "Тестирование ПО",
+                text: "Каким образом строятся тесты при структурном тестировании (метод «белого ящика»)?",
+                options: [
+                    "Исключительно на основе фантазии тестировщика",
+                    "На основании анализа исходного кода программы с целью покрытия всех операторов, условий, циклов и ветвей выполнения алгоритма",
+                    "На основании изучения отзывов будущих пользователей",
+                    "Посредством случайной генерации входных параметров",
+                    "Только на основе спецификации системных требований ТЗ"
+                ],
+                correctIndex: 1,
+                explanation: 'Тестирование «белого ящика» полностью базируется на **анализе внутренней логики исходного кода**. Тест-кейсы проектируются так, чтобы гарантировать выполнение максимального процента путей, условий и операторов в программе.'
+            },
+            {
+                category: "Структуры данных",
+                text: "Каким образом устроен кольцевой связный список (circular list)?",
+                options: [
+                    "Список, элементы которого хранятся по кругу в массиве",
+                    "Список, у которого указатель последнего элемента ссылается на первый элемент списка, образуя кольцо",
+                    "Список, поддерживающий только 10 элементов",
+                    "Список, хранящий данные во временном буфере процессора",
+                    "Двумерный массив указателей"
+                ],
+                correctIndex: 1,
+                explanation: 'В **кольцевом списке** (circular list) адресное поле последнего узла содержит указатель не на NULL, а на **первый узел (голову) списка**. Это позволяет осуществлять бесконечный обход элементов по кругу.'
+            },
+            {
+                category: "Алгоритмы",
+                text: "Напишите корректную реализацию функции нахождения индекса максимального элемента в массиве целых чисел размера N на Си.",
+                code: `int find_max_idx(int arr[], int n) {\n    int max_idx = 0;\n    for(int i = 1; i < n; i++) {\n        if(arr[i] > arr[max_idx]) {\n            max_idx = i;\n        }\n    }\n    return max_idx;\n}`,
+                options: [
+                    "Реализация содержит ошибку выхода за границы массива",
+                    "Реализация абсолютно верна и находит индекс максимального элемента за O(N)",
+                    "Функция найдет минимальный элемент вместо максимального",
+                    "Цикл должен начинаться строго с i = 0",
+                    "В Си запрещено передавать массив в функцию без указания точного размера"
+                ],
+                correctIndex: 1,
+                explanation: 'Данный алгоритм является классическим линейным поиском максимального элемента. Мы инициализируем `max_idx` нулем и проходим массив со второго элемента (`i = 1`), обновляя индекс максимума при нахождении большего элемента. Сложность алгоритма — **O(N)**, реализация полностью корректна.'
+            },
+            {
+                category: "Сегменты памяти",
+                text: "В каком сегменте памяти будет находиться глобальная переменная, инициализированная при объявлении, например: `int global_var = 100;`?",
+                options: [
+                    "В сегменте стека stack",
+                    "В сегменте неинициализированных статических данных bss",
+                    "В сегменте инициализированных статических данных data",
+                    "В динамической куче heap",
+                    "В сегменте кода text"
+                ],
+                correctIndex: 2,
+                explanation: 'Глобальные и статические переменные, которые явно **инициализированы** начальным значением при объявлении, размещаются компилятором в **сегменте инициализированных данных (data segment)**.'
+            },
+            {
+                category: "Сегменты памяти",
+                text: "В каком сегменте памяти будет находиться глобальная переменная, НЕ инициализированная явно при объявлении, например: `int global_var;`?",
+                options: [
+                    "В сегменте инициализированных данных data",
+                    "В сегменте неинициализированных статических данных bss (заполняется нулями при старте)",
+                    "В стеке stack",
+                    "В куче heap",
+                    "В сегменте кода text"
+                ],
+                correctIndex: 1,
+                explanation: 'Глобальные и статические переменные, которые **не инициализированы** явно в кодовой базе, помещаются в **сегмент BSS (Block Started by Symbol)**. Среда выполнения CLR/OS гарантированно зануляет этот сегмент при старте приложения.'
+            },
+            {
+                category: "Алфавит Си",
+                text: "Относится ли символ кириллической буквы 'Я' к официальным алфавитным символам токенов компилятора в C99?",
+                options: [
+                    "Да, Си полностью поддерживает русские буквы в идентификаторах",
+                    "Нет, использование букв национальных алфавитов (кроме базовой латиницы) в именах переменных и функций стандартами ANSI C/C99 напрямую запрещено",
+                    "Да, но только в блоках препроцессора",
+                    "Да, если подключена библиотека locale.h",
+                    "Да, в безопасном режиме компиляции"
+                ],
+                correctIndex: 1,
+                explanation: 'Стандарт Си (ANSI C / C99) строго ограничивает алфавит имен идентификаторов **латинскими буквами, десятичными цифрами и знаком подчеркивания**. Символы кириллицы (например, "Я") запрещены в именах переменных и функций, хотя их можно безопасно хранить внутри строковых литералов.'
+            },
+            {
+                category: "Ветвления",
+                text: "Что произойдет при вычислении сложного условного выражения в Си?",
+                code: `int x = 5;\nint y = 0;\nif (x == 5 || (y = 10)) {\n    x += y;\n}\nprintf("x=%d y=%d", x, y);`,
+                options: [
+                    "x=15 y=10",
+                    "x=5 y=0",
+                    "x=5 y=10",
+                    "x=15 y=0",
+                    "Ошибка компиляции"
+                ],
+                correctIndex: 1, // Wait: x == 5 || (y = 10) -> x == 5 is true, so || short circuits!
+                explanation: 'Благодаря **короткозамкнутому вычислению (short-circuit evaluation)** оператора логического ИЛИ `||`, если левый операнд истинен (`5 == 5`), правый операнд `(y = 10)` **не вычисляется вообще**. Переменная `y` остается равной 0. В теле условия выполняется `x += y` (т.е. `5 += 0`), поэтому `x` становится равен 5. Итог: **x=5 y=0**.'
+            },
+            {
+                category: "Адресная арифметика",
+                text: "Что будет напечатано при выполнении следующей программы, использующей сложную адресную арифметику Си?",
+                code: `char *s = "Cyberpunk";\nprintf("%c", *(s + 5) - 32);`,
+                options: [
+                    "p",
+                    "P",
+                    "cyberpunk",
+                    "Ошибка выполнения",
+                    "Пустой символ"
+                ],
+                correctIndex: 1,
+                explanation: 'Строковый литерал `s` указывает на массив символов. <br>1) Выражение `s + 5` дает адрес 6-го символа (индекс 5), который равен букве `p` (ASCII код 112).<br>2) Разыменование `*(s+5)` возвращает символ `p`. <br>3) Вычитание `112 - 32` дает `80`, что в таблице ASCII соответствует заглавной букве **P**. Программа напечатает **P**.'
+            }
+        ];
+
+        // State variables
+        let currentQuestionIndex = 0;
+        let scoreCorrect = 0;
+        let scoreWrong = 0;
+        let currentStreak = 0;
+        let maxStreak = 0;
+        let answeredQuestions = {}; // Maps index -> { chosenIndex: int, isCorrect: bool }
+        let startTime = Date.now();
+        let timerInterval = null;
+        let timeOffset = 0; // In case of resume from LocalStorage
+        let wrongAnswersList = [];
+
+        // Elements
+        const currentQIndexEl = document.getElementById('current-q-index');
+        const totalQCountEl = document.getElementById('total-q-count');
+        const completionPercentageEl = document.getElementById('completion-percentage');
+        const progressFillEl = document.getElementById('progress-fill');
+        const questionCategoryEl = document.getElementById('question-category');
+        const questionTextEl = document.getElementById('question-text');
+        
+        const codeContainerEl = document.getElementById('code-container');
+        const lineNumbersEl = document.getElementById('line-numbers');
+        const codeBodyEl = document.getElementById('code-body');
+        
+        const answersGridEl = document.getElementById('answers-grid');
+        
+        const explanationCardEl = document.getElementById('explanation-card');
+        const explanationHeaderEl = document.getElementById('explanation-header');
+        const explanationBodyEl = document.getElementById('explanation-body');
+        const nextBtnEl = document.getElementById('next-btn');
+        
+        const correctCountEl = document.getElementById('correct-count');
+        const wrongCountEl = document.getElementById('wrong-count');
+        const streakCountEl = document.getElementById('streak-count');
+        const elapsedTimeEl = document.getElementById('elapsed-time');
+        const streakBadgeEl = document.getElementById('streak-badge');
+        
+        const questionsGridEl = document.getElementById('questions-grid');
+        const answeredCountEl = document.getElementById('answered-count');
+        
+        const quizPanelEl = document.getElementById('quiz-panel');
+        const resultsPanelEl = document.getElementById('results-panel');
+        const sidebarPanelEl = document.getElementById('sidebar-panel');
+
+        // Color syntax highlighting helper for code view
+        function highlightCsharpCode(codeStr) {
+            if (!codeStr) return "";
+            
+            // Clean HTML tags first
+            let escaped = codeStr
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+            
+            // Simple C syntax highlighting
+            const keywords = /\b(int|char|float|double|struct|void|unsigned|signed|short|long|static|extern|register|auto|if|else|for|while|do|break|continue|return|sizeof|define|include|ifdef|endif|printf)\b/g;
+
+            escaped = escaped.replace(/(\/\/.*)/g, '<span class="comment">$1</span>');
+            
+            escaped = escaped.replace(keywords, function(match) {
+                return '<span class="keyword">' + match + '</span>';
+            });
+            
+            escaped = escaped.replace(/\b(arr|matrix|find_max_idx|global_var)\b/g, '<span class="type">$1</span>');
+            
+            return escaped;
+        }
+
+        // Initialize Web App
+        function initApp() {
+            totalQCountEl.textContent = questions.length;
+            loadProgress();
+            buildSidebarGrid();
+            startTimer();
+            displayQuestion(currentQuestionIndex);
+            updateStats();
+        }
+
+        // Start Elapsed Time counter
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                const elapsedMs = Date.now() - startTime + (timeOffset * 1000);
+                const totalSec = Math.floor(elapsedMs / 1000);
+                const minutes = Math.floor(totalSec / 60).toString().padStart(2, '0');
+                const seconds = (totalSec % 60).toString().padStart(2, '0');
+                elapsedTimeEl.textContent = `${minutes}:${seconds}`;
+            }, 1000);
+        }
+
+        // Build 60 questions sidebar navigation grid
+        function buildSidebarGrid() {
+            questionsGridEl.innerHTML = "";
+            for (let i = 0; i < questions.length; i++) {
+                const btn = document.createElement('div');
+                btn.className = 'grid-item';
+                btn.textContent = i + 1;
+                btn.id = `grid-item-${i}`;
+                
+                if (answeredQuestions[i]) {
+                    if (answeredQuestions[i].isCorrect) {
+                        btn.classList.add('answered-correct');
+                    } else {
+                        btn.classList.add('answered-wrong');
+                    }
+                }
+                
+                if (i === currentQuestionIndex) {
+                    btn.classList.add('active');
+                }
+                
+                btn.onclick = () => jumpToQuestion(i);
+                questionsGridEl.appendChild(btn);
+            }
+            
+            const answeredCount = Object.keys(answeredQuestions).length;
+            answeredCountEl.textContent = answeredCount;
+        }
+
+        // Display current question card content
+        function displayQuestion(index) {
+            document.querySelectorAll('.grid-item').forEach(item => item.classList.remove('active'));
+            const currentGridItem = document.getElementById(`grid-item-${index}`);
+            if (currentGridItem) currentGridItem.classList.add('active');
+
+            const q = questions[index];
+            currentQIndexEl.textContent = index + 1;
+            questionCategoryEl.textContent = q.category;
+            questionTextEl.textContent = q.text;
+
+            if (q.code) {
+                codeContainerEl.style.display = "block";
+                const highlighted = highlightCsharpCode(q.code);
+                codeBodyEl.innerHTML = `<code>${highlighted}</code>`;
+                
+                const linesCount = q.code.split('\n').length;
+                let numStr = "";
+                for (let i = 1; i <= linesCount; i++) {
+                    numStr += i + "<br>";
+                }
+                lineNumbersEl.innerHTML = numStr;
+            } else {
+                codeContainerEl.style.display = "none";
+            }
+
+            answersGridEl.innerHTML = "";
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+            
+            q.options.forEach((opt, idx) => {
+                const optBtn = document.createElement('button');
+                optBtn.className = 'answer-option';
+                optBtn.innerHTML = `
+                    <div class="option-marker">${letters[idx] || (idx + 1)}</div>
+                    <div class="option-text">${opt.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
+                `;
+                
+                if (answeredQuestions[index]) {
+                    optBtn.classList.add('disabled');
+                    const answered = answeredQuestions[index];
+                    if (idx === q.correctIndex) {
+                        optBtn.classList.add('correct');
+                    } else if (idx === answered.chosenIndex) {
+                        optBtn.classList.add('wrong');
+                    }
+                } else {
+                    optBtn.onclick = () => selectAnswer(idx);
+                }
+                answersGridEl.appendChild(optBtn);
+            });
+
+            if (answeredQuestions[index]) {
+                const answered = answeredQuestions[index];
+                showExplanationBlock(answered.isCorrect, q.explanation);
+            } else {
+                explanationCardEl.style.display = "none";
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Process answer selection
+        function selectAnswer(chosenIdx) {
+            if (answeredQuestions[currentQuestionIndex]) return;
+
+            const q = questions[currentQuestionIndex];
+            const isCorrect = chosenIdx === q.correctIndex;
+
+            answeredQuestions[currentQuestionIndex] = {
+                chosenIndex: chosenIdx,
+                isCorrect: isCorrect
+            };
+
+            if (isCorrect) {
+                scoreCorrect++;
+                currentStreak++;
+                if (currentStreak > maxStreak) maxStreak = currentStreak;
+                triggerSuccessAnimation();
+            } else {
+                scoreWrong++;
+                currentStreak = 0;
+                wrongAnswersList.push({
+                    questionIndex: currentQuestionIndex,
+                    text: q.text
+                });
+                triggerWrongAnimation();
+            }
+
+            const options = answersGridEl.children;
+            for (let i = 0; i < options.length; i++) {
+                options[i].classList.add('disabled');
+                if (i === q.correctIndex) {
+                    options[i].classList.add('correct');
+                } else if (i === chosenIdx) {
+                    options[i].classList.add('wrong');
+                }
+            }
+
+            const gridItem = document.getElementById(`grid-item-${currentQuestionIndex}`);
+            if (gridItem) {
+                gridItem.classList.remove('answered-correct', 'answered-wrong');
+                gridItem.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+            }
+
+            showExplanationBlock(isCorrect, q.explanation);
+            updateStats();
+            saveProgress();
+            
+            if (Object.keys(answeredQuestions).length === questions.length) {
+                nextBtnEl.innerHTML = `<span>Показать результаты</span> <i class="fa-solid fa-square-poll-vertical"></i>`;
+            }
+        }
+
+        function showExplanationBlock(isCorrect, text) {
+            explanationCardEl.style.display = "block";
+            if (isCorrect) {
+                explanationHeaderEl.className = "explanation-header correct-text";
+                explanationHeaderEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>Правильный ответ!</span>`;
+            } else {
+                explanationHeaderEl.className = "explanation-header wrong-text";
+                explanationHeaderEl.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <span>Неверно</span>`;
+            }
+            explanationBodyEl.innerHTML = text;
+        }
+
+        function triggerSuccessAnimation() {
+            const correctBadge = document.querySelector('.stat-badge.correct');
+            correctBadge.style.transform = "scale(1.2)";
+            setTimeout(() => correctBadge.style.transform = "scale(1)", 200);
+            
+            if (currentStreak > 0 && currentStreak % 5 === 0) {
+                confetti({
+                    particleCount: 50,
+                    spread: 60,
+                    origin: { y: 0.8 }
+                });
+            }
+        }
+
+        function triggerWrongAnimation() {
+            const wrongBadge = document.querySelector('.stat-badge.wrong');
+            wrongBadge.style.transform = "scale(1.2)";
+            setTimeout(() => wrongBadge.style.transform = "scale(1)", 200);
+        }
+
+        function goToNextQuestion() {
+            if (Object.keys(answeredQuestions).length === questions.length) {
+                showResultsPanel();
+                return;
+            }
+
+            let nextIndex = (currentQuestionIndex + 1) % questions.length;
+            while (answeredQuestions[nextIndex] && nextIndex !== currentQuestionIndex) {
+                nextIndex = (nextIndex + 1) % questions.length;
+            }
+
+            jumpToQuestion(nextIndex);
+        }
+
+        function jumpToQuestion(index) {
+            currentQuestionIndex = index;
+            displayQuestion(currentQuestionIndex);
+            
+            quizPanelEl.style.display = "flex";
+            resultsPanelEl.style.display = "none";
+            sidebarPanelEl.style.display = "flex";
+            
+            if (Object.keys(answeredQuestions).length === questions.length) {
+                nextBtnEl.innerHTML = `<span>Показать результаты</span> <i class="fa-solid fa-square-poll-vertical"></i>`;
+            } else {
+                nextBtnEl.innerHTML = `<span>Следующий вопрос</span> <i class="fa-solid fa-arrow-right"></i>`;
+            }
+        }
+
+        function updateStats() {
+            correctCountEl.textContent = scoreCorrect;
+            wrongCountEl.textContent = scoreWrong;
+            streakCountEl.textContent = currentStreak;
+
+            const answeredCount = Object.keys(answeredQuestions).length;
+            answeredCountEl.textContent = answeredCount;
+
+            const percent = Math.round((answeredCount / questions.length) * 100);
+            completionPercentageEl.textContent = `${percent}% выполнено`;
+            progressFillEl.style.width = `${percent}%`;
+        }
+
+        function showResultsPanel() {
+            clearInterval(timerInterval);
+
+            quizPanelEl.style.display = "none";
+            sidebarPanelEl.style.display = "none";
+            resultsPanelEl.style.display = "flex";
+
+            const total = questions.length;
+            const percentage = Math.round((scoreCorrect / total) * 100);
+            resultsPercentageEl.textContent = `${percentage}%`;
+
+            const circleFill = document.getElementById('results-circle-fill');
+            const radius = 90;
+            const circumference = 2 * Math.PI * radius;
+            const offset = circumference - (percentage / 100) * circumference;
+            
+            setTimeout(() => {
+                circleFill.style.strokeDashoffset = offset;
+            }, 100);
+
+            let grade = "";
+            let title = "Тест Завершен!";
+            
+            if (percentage >= 90) {
+                grade = "C Kernel Developer 👑 (Гуру архитектуры Си)";
+                title = "Потрясающий результат!";
+                triggerCelebrationConfetti();
+            } else if (percentage >= 75) {
+                grade = "System Programmer 🛡️ (Системный программист)";
+                title = "Отличная работа!";
+                triggerCelebrationConfetti();
+            } else if (percentage >= 50) {
+                grade = "Application Developer 💻 (Прикладной разработчик)";
+                title = "Неплохой результат!";
+            } else {
+                grade = "Junior Copy-Paster 📋 (Копипастер-стажер)";
+                title = "Нужно подучить теорию!";
+            }
+
+            document.getElementById('results-title').textContent = title;
+            document.getElementById('results-grade').textContent = grade;
+            
+            document.getElementById('res-correct').textContent = scoreCorrect;
+            document.getElementById('res-wrong').textContent = scoreWrong;
+            document.getElementById('res-streak').textContent = maxStreak;
+            document.getElementById('res-time').textContent = elapsedTimeEl.textContent;
+
+            const wrongReviewListEl = document.getElementById('wrong-reviews-list');
+            const reviewsContainer = document.getElementById('wrong-reviews-container');
+            wrongReviewListEl.innerHTML = "";
+
+            if (wrongAnswersList.length > 0) {
+                reviewsContainer.style.display = "block";
+                wrongAnswersList.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = 'wrong-review-item';
+                    row.innerHTML = `
+                        <span>Вопрос ${item.questionIndex + 1}: ${item.text.substring(0, 75)}...</span>
+                        <i class="fa-solid fa-chevron-right" style="font-size: 0.8rem; opacity: 0.7;"></i>
+                    `;
+                    row.onclick = () => jumpToQuestion(item.questionIndex);
+                    wrongReviewListEl.appendChild(row);
+                });
+            } else {
+                reviewsContainer.style.display = "none";
+            }
+        }
+
+        function triggerCelebrationConfetti() {
+            const end = Date.now() + (3 * 1000);
+            const colors = ['#0077b6', '#00f5d4', '#10b981'];
+
+            (function frame() {
+                confetti({
+                    particleCount: 4,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: colors
+                });
+                confetti({
+                    particleCount: 4,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: colors
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        function copyCode() {
+            const currentCode = questions[currentQuestionIndex].code;
+            if (!currentCode) return;
+            
+            navigator.clipboard.writeText(currentCode).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.innerHTML = `<i class="fa-solid fa-check"></i> Скопировано!`;
+                setTimeout(() => {
+                    btn.innerHTML = `<i class="fa-solid fa-copy"></i> Копировать`;
+                }, 2000);
+            });
+        }
+
+        function saveProgress() {
+            const elapsedMs = Date.now() - startTime + (timeOffset * 1000);
+            const progressData = {
+                answeredQuestions: answeredQuestions,
+                scoreCorrect: scoreCorrect,
+                scoreWrong: scoreWrong,
+                currentStreak: currentStreak,
+                maxStreak: maxStreak,
+                elapsedSeconds: Math.floor(elapsedMs / 1000),
+                currentQuestionIndex: currentQuestionIndex,
+                wrongAnswersList: wrongAnswersList
+            };
+            localStorage.setItem('c_quiz_progress', JSON.stringify(progressData));
+        }
+
+        function loadProgress() {
+            const raw = localStorage.getItem('c_quiz_progress');
+            if (raw) {
+                try {
+                    const data = JSON.parse(raw);
+                    answeredQuestions = data.answeredQuestions || {};
+                    scoreCorrect = data.scoreCorrect || 0;
+                    scoreWrong = data.scoreWrong || 0;
+                    currentStreak = data.currentStreak || 0;
+                    maxStreak = data.maxStreak || 0;
+                    timeOffset = data.elapsedSeconds || 0;
+                    currentQuestionIndex = data.currentQuestionIndex || 0;
+                    wrongAnswersList = data.wrongAnswersList || [];
+                    
+                    if (Object.keys(answeredQuestions).length === questions.length) {
+                        showResultsPanel();
+                    }
+                } catch (e) {
+                    console.error("Failed to parse stored progress", e);
+                }
+            }
+        }
+
+        function confirmReset() {
+            if (confirm("Вы действительно хотите сбросить текущий прогресс теста по языку Си и начать заново?")) {
+                restartQuiz();
+            }
+        }
+
+        function restartQuiz() {
+            localStorage.removeItem('c_quiz_progress');
+            answeredQuestions = {};
+            scoreCorrect = 0;
+            scoreWrong = 0;
+            currentStreak = 0;
+            maxStreak = 0;
+            startTime = Date.now();
+            timeOffset = 0;
+            currentQuestionIndex = 0;
+            wrongAnswersList = [];
+
+            quizPanelEl.style.display = "flex";
+            resultsPanelEl.style.display = "none";
+            sidebarPanelEl.style.display = "flex";
+            
+            initApp();
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar-panel');
+            if (sidebar.style.display === "none" || sidebar.style.display === "") {
+                sidebar.style.display = "flex";
+            } else {
+                sidebar.style.display = "none";
+            }
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>

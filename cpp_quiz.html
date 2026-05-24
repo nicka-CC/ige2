@@ -1,0 +1,2313 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тренажер по языку C++ и ООП — HARD LEVEL</title>
+    
+    <!-- Google Fonts: Outfit for headings, Fira Code for code blocks, Inter for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Outfit:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* CSS Variables - Emerald Green & Violet Cyberpunk C++ Theme */
+        :root {
+            --bg-color: #030712;
+            --container-bg: rgba(17, 24, 39, 0.75);
+            --card-bg: rgba(31, 41, 55, 0.85);
+            --card-hover-border: rgba(16, 185, 129, 0.5);
+            
+            --accent-purple: #8b5cf6;
+            --accent-purple-glow: rgba(139, 92, 246, 0.4);
+            --accent-cyan: #10b981;
+            --accent-cyan-glow: rgba(16, 185, 129, 0.4);
+            
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --text-dark: #1f2937;
+            
+            --correct-color: #10b981;
+            --correct-bg: rgba(16, 185, 129, 0.15);
+            --correct-border: rgba(16, 185, 129, 0.4);
+            
+            --wrong-color: #ef4444;
+            --wrong-bg: rgba(239, 68, 68, 0.15);
+            --wrong-border: rgba(239, 68, 68, 0.4);
+            
+            --sidebar-width: 340px;
+            --transition-speed: 0.3s;
+            --border-radius: 16px;
+        }
+
+        /* Base Resets & Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(139, 92, 246, 0.15) 0px, transparent 45%),
+                radial-gradient(at 90% 90%, rgba(16, 185, 129, 0.12) 0px, transparent 45%),
+                radial-gradient(at 50% 50%, rgba(3, 7, 18, 0.95) 0px, var(--bg-color) 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f293d;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-cyan);
+        }
+
+        /* App Wrapper */
+        .app-container {
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--container-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+        }
+
+        .header-title-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-icon {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.3));
+        }
+
+        .header-text h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(90deg, #ffffff, #d1d5db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-text p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-badge {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-badge i {
+            font-size: 1.1rem;
+        }
+
+        .stat-badge.correct i { color: var(--correct-color); }
+        .stat-badge.wrong i { color: var(--wrong-color); }
+        .stat-badge.streak {
+            background: rgba(249, 115, 22, 0.1);
+            border-color: rgba(249, 115, 22, 0.2);
+            color: #fdba74;
+            animation: pulse-orange 2s infinite;
+        }
+        .stat-badge.streak i { color: #f97316; }
+
+        .stat-badge.timer i { color: var(--accent-cyan); }
+
+        /* Main Workspace Layout */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr var(--sidebar-width);
+            gap: 24px;
+            flex-grow: 1;
+        }
+
+        @media (max-width: 1024px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+            .sidebar-toggle-btn {
+                display: block !important;
+            }
+        }
+
+        /* Main Content Panel */
+        .quiz-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Cards Style */
+        .glass-card {
+            background: var(--container-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+            position: relative;
+            transition: border-color var(--transition-speed);
+        }
+
+        /* Question Progress Bar */
+        .progress-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            box-shadow: 0 0 10px var(--accent-purple-glow);
+            border-radius: 5px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Question Content styling */
+        .question-category {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+            margin-bottom: 16px;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.5;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        /* Beautiful Code Snippet Container */
+        .code-container {
+            position: relative;
+            background: #020308;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            margin-bottom: 24px;
+            font-family: 'Fira Code', monospace;
+            box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .code-header .lang-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            color: #6ee7b7;
+        }
+
+        .code-header .copy-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+        }
+
+        .code-header .copy-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .code-wrapper {
+            display: flex;
+            overflow-x: auto;
+            padding: 16px;
+        }
+
+        .line-numbers {
+            text-align: right;
+            padding-right: 12px;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            color: #2b3952;
+            user-select: none;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .code-body {
+            padding-left: 16px;
+            color: #e5e7eb;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            white-space: pre;
+            flex-grow: 1;
+        }
+
+        /* Syntax Highlighting Colors */
+        .code-body .keyword { color: #8b5cf6; font-weight: 600; }
+        .code-body .type { color: #10b981; }
+        .code-body .method { color: #fbbf24; }
+        .code-body .string { color: #34d399; }
+        .code-body .number { color: #fb923c; }
+        .code-body .comment { color: #505c74; font-style: italic; }
+        .code-body .operator { color: #6ee7b7; }
+
+        /* Answer Options Layout */
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .answer-option {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 16px 20px;
+            text-align: left;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .answer-option:hover:not(.disabled) {
+            transform: translateY(-2px);
+            border-color: var(--card-hover-border);
+            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.15);
+            background: rgba(36, 48, 74, 0.85);
+        }
+
+        .answer-option:active:not(.disabled) {
+            transform: translateY(0);
+        }
+
+        .option-marker {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .answer-option:hover:not(.disabled) .option-marker {
+            background: var(--accent-cyan);
+            color: #ffffff;
+            border-color: var(--accent-cyan);
+        }
+
+        /* Option States after selection */
+        .answer-option.correct {
+            background: var(--correct-bg);
+            border-color: var(--correct-color);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
+        }
+
+        .answer-option.correct .option-marker {
+            background: var(--correct-color);
+            color: #ffffff;
+            border-color: var(--correct-color);
+        }
+
+        .answer-option.wrong {
+            background: var(--wrong-bg);
+            border-color: var(--wrong-color);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.1);
+            animation: shake 0.4s ease-in-out;
+        }
+
+        .answer-option.wrong .option-marker {
+            background: var(--wrong-color);
+            color: #ffffff;
+            border-color: var(--wrong-color);
+        }
+
+        .answer-option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Feedback Explanation Alert Block */
+        .explanation-card {
+            background: rgba(14, 20, 37, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-top: 24px;
+            display: none;
+            animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .explanation-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .explanation-header.correct-text { color: var(--correct-color); }
+        .explanation-header.wrong-text { color: var(--wrong-color); }
+
+        .explanation-body {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .explanation-body strong {
+            color: var(--text-primary);
+        }
+
+        .next-btn {
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 28px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .next-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.45);
+        }
+
+        /* Sidebar Navigation Grid */
+        .sidebar-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-header {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-primary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 12px;
+        }
+
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            max-height: 480px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .grid-item {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .grid-item:hover {
+            border-color: var(--accent-cyan);
+            color: var(--text-primary);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .grid-item.active {
+            box-shadow: 0 0 0 2px var(--accent-purple);
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+            font-weight: 800;
+        }
+
+        .grid-item.answered-correct {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: var(--correct-color);
+            color: var(--correct-color);
+        }
+
+        .grid-item.answered-wrong {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: var(--wrong-color);
+            color: var(--wrong-color);
+        }
+
+        .sidebar-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .reset-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px;
+            color: #ef4444;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .reset-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Results Screen View */
+        .results-panel {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 30px;
+            animation: scale-up 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .results-circle-wrapper {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+
+        .results-circle-svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .results-circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.03);
+            stroke-width: 12;
+        }
+
+        .results-circle-fill {
+            fill: none;
+            stroke: url(#cyan-purple-grad);
+            stroke-width: 12;
+            stroke-linecap: round;
+            stroke-dasharray: 565.48; /* 2 * pi * r (r=90) */
+            stroke-dashoffset: 565.48;
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .results-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #ffffff, #d1d5db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .results-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .results-grade {
+            font-size: 1.25rem;
+            color: var(--accent-cyan);
+            font-weight: 700;
+            margin-top: -10px;
+        }
+
+        .results-stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .result-stat-card {
+            flex: 1;
+            min-width: 120px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .result-stat-card .val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .result-stat-card .label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .wrong-reviews-container {
+            width: 100%;
+            max-width: 700px;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 10px;
+        }
+
+        .wrong-reviews-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .wrong-reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .wrong-review-item {
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .wrong-review-item:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Confetti Container */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        /* Mobile Adjustments */
+        .sidebar-toggle-btn {
+            display: none;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Animations */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scale-up {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pulse-orange {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.2); }
+            50% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+        }
+
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 30px 10px 10px 10px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: var(--accent-purple);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- Header -->
+        <header>
+            <div class="header-title-container">
+                <i class="fa-solid fa-graduation-cap header-icon"></i>
+                <div class="header-text">
+                    <h1>C++ & Object-Oriented Master</h1>
+                    <p><i class="fa-solid fa-shapes"></i> Дисциплина: Объектно-ориентированное программирование (Язык C++) — HARD LEVEL</p>
+                </div>
+            </div>
+            
+            <div class="header-stats">
+                <button class="sidebar-toggle-btn" id="sidebar-toggle" onclick="toggleSidebar()">
+                    <i class="fa-solid fa-list-ol"></i> Сетка
+                </button>
+                <div class="stat-badge timer">
+                    <i class="fa-solid fa-hourglass-half"></i> <span id="elapsed-time">00:00</span>
+                </div>
+                <div class="stat-badge streak" id="streak-badge" title="Серия верных ответов">
+                    <i class="fa-solid fa-fire"></i> <span id="streak-count">0</span>
+                </div>
+                <div class="stat-badge correct" title="Правильно">
+                    <i class="fa-solid fa-circle-check"></i> <span id="correct-count">0</span>
+                </div>
+                <div class="stat-badge wrong" title="Неправильно">
+                    <i class="fa-solid fa-circle-xmark"></i> <span id="wrong-count">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <div class="workspace">
+            
+            <!-- Quiz Panel (Left) -->
+            <div class="quiz-panel" id="quiz-panel">
+                
+                <!-- Main Card -->
+                <div class="glass-card">
+                    <!-- Progress Section -->
+                    <div class="progress-container">
+                        <div class="progress-text">
+                            <span>Вопрос <strong id="current-q-index">1</strong> из <strong id="total-q-count">60</strong></span>
+                            <span id="completion-percentage">0% выполнено</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progress-fill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Question Block -->
+                    <div class="question-section" style="margin-top: 15px;">
+                        <span class="question-category" id="question-category">Объекты и Классы</span>
+                        <div class="question-text" id="question-text">
+                            Загрузка вопроса...
+                        </div>
+                        
+                        <!-- Beautiful Code Block -->
+                        <div class="code-container" id="code-container" style="display: none;">
+                            <div class="code-header">
+                                <span class="lang-badge"><i class="fa-solid fa-code"></i> C++ Source</span>
+                                <button class="copy-btn" onclick="copyCode()"><i class="fa-solid fa-copy"></i> Копировать</button>
+                            </div>
+                            <div class="code-wrapper">
+                                <div class="line-numbers" id="line-numbers">1</div>
+                                <pre class="code-body" id="code-body"><code>// Фрагмент кода</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- Answers Option Grid -->
+                        <div class="answers-grid" id="answers-grid">
+                            <!-- Injected dynamically by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explanation / Feedback Sliding Alert -->
+                <div class="explanation-card" id="explanation-card">
+                    <div class="explanation-header" id="explanation-header">
+                        <i class="fa-solid fa-circle-check"></i> <span>Правильный ответ!</span>
+                    </div>
+                    <div class="explanation-body" id="explanation-body">
+                        Пояснение к вопросу...
+                    </div>
+                    <button class="next-btn" id="next-btn" onclick="goToNextQuestion()">
+                        <span>Следующий вопрос</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Quiz Results View (Initially Hidden) -->
+            <div class="glass-card results-panel" id="results-panel">
+                <div class="results-circle-wrapper">
+                    <svg class="results-circle-svg" viewBox="0 0 200 200">
+                        <defs>
+                            <linearGradient id="cyan-purple-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="var(--accent-cyan)" />
+                                <stop offset="100%" stop-color="var(--accent-purple)" />
+                            </linearGradient>
+                        </defs>
+                        <circle class="results-circle-bg" cx="100" cy="100" r="90" />
+                        <circle class="results-circle-fill" id="results-circle-fill" cx="100" cy="100" r="90" />
+                    </svg>
+                    <div class="results-percentage" id="results-percentage">85%</div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div class="results-title" id="results-title">Тест Завершен!</div>
+                    <div class="results-grade" id="results-grade">C++ Architecture Guru 👑</div>
+                </div>
+
+                <div class="results-stats-row">
+                    <div class="result-stat-card">
+                        <div class="label">Правильно</div>
+                        <div class="val" style="color: var(--correct-color);" id="res-correct">45</div>
+                    </div>
+                    <div class="result-stat-card">
+                        <div class="label">Неправильно</div>
+                        <div class="val" style="color: var(--wrong-color);" id="res-wrong">15</div>
+                    </div>
+                    <div class="result-stat-card">
+                        <div class="label">Время</div>
+                        <div class="val" style="color: #60a5fa;" id="res-time">12:34</div>
+                    </div>
+                    <div class="result-stat-card">
+                        <div class="label">Макс. Серия</div>
+                        <div class="val" style="color: #f97316;" id="res-streak">8</div>
+                    </div>
+                </div>
+
+                <!-- Wrong Answers Review List -->
+                <div class="wrong-reviews-container" id="wrong-reviews-container">
+                    <div class="wrong-reviews-title">
+                        <i class="fa-solid fa-triangle-exclamation" style="color: #f59e0b;"></i>
+                        <span>Вопросы с ошибками (кликните для просмотра):</span>
+                    </div>
+                    <div class="wrong-reviews-list" id="wrong-reviews-list">
+                        <!-- Injected dynamically -->
+                    </div>
+                </div>
+
+                <div style="margin-top: 10px; display: flex; gap: 15px;">
+                    <button class="next-btn" onclick="restartQuiz()"><i class="fa-solid fa-rotate-right"></i> Начать заново</button>
+                </div>
+            </div>
+
+            <!-- Navigation Sidebar (Right) -->
+            <div class="sidebar-panel glass-card" id="sidebar-panel">
+                <div class="sidebar-header">
+                    <span>Сетка вопросов</span>
+                    <span style="font-size: 0.8rem; opacity: 0.7;"><span id="answered-count">0</span> / 60</span>
+                </div>
+                
+                <div class="questions-grid" id="questions-grid">
+                    <!-- 60 Grid Items Injected by JS -->
+                </div>
+
+                <div class="sidebar-actions">
+                    <button class="reset-btn" onclick="confirmReset()"><i class="fa-solid fa-trash-can"></i> Сбросить текущий прогресс</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            Разработано в рамках изучения языка C++ и объектно-ориентированного программирования | <a href="#" onclick="confirmReset()">Сбросить прогресс</a>
+        </footer>
+
+    </div>
+
+    <!-- Canvas for Confetti -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Confetti Library via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Core Javascript Code containing 60 C++ questions -->
+    <script>
+        const questions = [
+            {
+                category: "Разрушение объектов",
+                text: "Каковы последствия отсутствия виртуального деструктора в базовом классе A при удалении объекта производного класса B через указатель типа A*?",
+                options: [
+                    "Вызовется ошибка времени компиляции (compiler error)",
+                    "Среда CLR автоматически выполнит полную очистку всей кучи",
+                    "Вызовется только деструктор базового класса A; деструктор производного класса B вызван не будет, что приведет к утечке ресурсов и памяти, выделенных в B (неопределенное поведение)",
+                    "Автоматически вызовутся оба деструктора в правильном порядке благодаря RTTI",
+                    "Объект B станет неудаляемым синглтоном"
+                ],
+                correctIndex: 2,
+                explanation: 'Если класс имеет виртуальные функции, его деструктор **обязан быть виртуальным**. При удалении объекта наследника через указатель на базовый класс без виртуального деструктора компилятор выполняет статическое связывание и вызывает только деструктор базы. Код освобождения ресурсов дочернего класса не выполняется, что ведет к утечкам памяти и **неопределенному поведению (UB)**.'
+            },
+            {
+                category: "Множественное наследование",
+                text: "Каким образом решается проблема ромбовидного наследования (diamond problem) в C++ для исключения дублирования членов общего предка?",
+                options: [
+                    "Запретом множественного наследования на уровне стандарта",
+                    "Использованием ключевого слова override при объявлении классов",
+                    "Применением виртуального наследования (virtual inheritance) с использованием ключевого слова virtual в списке базовых классов у промежуточных наследников",
+                    "Размещением общего предка исключительно в стеке",
+                    "Использованием пространств имен (namespaces)"
+                ],
+                correctIndex: 2,
+                explanation: 'Ромбовидное наследование возникает, когда классы B и C наследуют A, а класс D наследует и B, и C. Без мер предосторожности D получит две копии членов A. Объявление наследования как <code>class B : virtual public A</code> гарантирует, что в D будет существовать **ровно один (общий) экземпляр базового класса A**.'
+            },
+            {
+                category: "Полиморфизм и vtable",
+                text: "Как устроен механизм динамического полиморфизма в C++ на системном уровне (vtable)?",
+                options: [
+                    "Для каждого объекта создается отдельный поток выполнения",
+                    "Для каждого класса, содержащего виртуальные функции, компилятор создает статическую таблицу указателей на виртуальные методы (vtable), а в объекты этого класса неявно добавляется указатель на эту таблицу (vptr)",
+                    "Виртуальные методы транслируются в текстовые макросы препроцессора",
+                    "Полиморфизм реализуется через рефлексию во время выполнения (runtime reflection)",
+                    "Все виртуальные вызовы обрабатываются операционной системой напрямую"
+                ],
+                correctIndex: 1,
+                explanation: 'Механизм **vtable (virtual method table)** — стандартная реализация полиморфизма в C++. При вызове виртуального метода программа берет указатель `vptr` из объекта, переходит по нему в таблицу `vtable` класса и вызывает функцию по соответствующему смещению. Это обеспечивает O(1) скорость динамического диспетчеризирования, но добавляет накладные расходы по памяти (размер одного указателя на объект).'
+            },
+            {
+                category: "Управление памятью",
+                text: "В чем разница между вызовами операторов delete и delete[] в C++?",
+                options: [
+                    "delete[] работает асинхронно",
+                    "delete освобождает память одиночного объекта и вызывает его деструктор. delete[] освобождает память массива объектов, предварительно вызывая деструкторы для каждого элемента массива",
+                    "delete предназначен только для структур, delete[] — только для классов",
+                    "delete[] используется только при работе с неуправляемыми файлами",
+                    "Разницы нет, компилятор сам подставляет нужный оператор"
+                ],
+                correctIndex: 1,
+                explanation: 'Использование неправильного оператора (например, `delete` вместо `delete[]` для массива) ведет к **неопределенному поведению (UB)**. Оператор `delete[]` считывает размер массива (обычно хранящийся в заголовке выделенного блока кучи) и последовательно вызывает деструктор для каждого созданного элемента перед освобождением памяти.'
+            },
+            {
+                category: "Ссылки и Указатели",
+                text: "Какое утверждение о различиях между ссылкой (reference) и указателем (pointer) в C++ является абсолютно верным?",
+                options: [
+                    "Ссылки работают медленнее указателей",
+                    "Ссылки могут быть неинициализированными",
+                    "Ссылка является синонимом (алиасом) уже существующего объекта, обязана быть инициализирована при создании, не может быть переназначена на другой объект и не может быть нулевой (без UB)",
+                    "Ссылки занимают в куче в два раза больше места, чем указатели",
+                    "Указатели нельзя передавать в функции"
+                ],
+                correctIndex: 2,
+                explanation: 'Ссылка в C++ — это **синтаксически безопасный алиас объекта**. В отличие от указателя, ссылка не может существовать сама по себе (без привязки к объекту), ее нельзя переназначить на другую область памяти после инициализации, и для нее отсутствует концепция «нулевой ссылки».'
+            },
+            {
+                category: "Управление памятью",
+                text: "Что представляет собой механизм Placement New в языке C++?",
+                options: [
+                    "Оператор, который размещает объект в глобальной статической памяти",
+                    "Специальный синтаксис оператора new, позволяющий сконструировать объект в уже выделенном ранее буфере памяти по указанному адресу без выделения новой памяти в куче",
+                    "Способ автоматического удаления неиспользуемых объектов",
+                    "Создание объекта в памяти видеокарты",
+                    "В C++ такой синтаксис отсутствует"
+                ],
+                correctIndex: 1,
+                explanation: 'Конструкция Placement New (размещающий new) записывается как <code>new (buffer) MyClass(args)</code>. Она не выделяет память, а просто вызывает конструктор класса `MyClass` на базе уже подготовленной памяти по адресу `buffer`. Это критически важно при написании кастомных аллокаторов и контейнеров (например, внутри `std::vector`).'
+            },
+            {
+                category: "Умные указатели",
+                text: "Каким образом работает умный указатель std::unique_ptr в C++?",
+                options: [
+                    "Осуществляет подсчет ссылок на объект из разных потоков",
+                    "Монопольно владеет ресурсом. Копирование unique_ptr запрещено (конструктор копирования удален), поддерживается только перемещение владения через std::move",
+                    "Автоматически зануляет объект каждые 5 секунд",
+                    "Предназначен только для работы с классами без деструкторов",
+                    "Хранит ссылку на объект в разделяемой памяти процессов"
+                ],
+                correctIndex: 1,
+                explanation: '`std::unique_ptr` реализует концепцию **строгого монопольного владения**. Чтобы гарантировать уникальность владельца ресурса, у этого умного указателя **запрещено копирование**. Передать ресурс другому `unique_ptr` можно только с помощью перемещающей семантики: `std::move()`.'
+            },
+            {
+                category: "Умные указатели",
+                text: "Как std::shared_ptr отслеживает необходимость уничтожения управляемого объекта?",
+                options: [
+                    "Использует фоновый поток сборки мусора",
+                    "Реализует подсчет ссылок через разделяемый блок управления (control block). Когда счетчик сильных ссылок (strong references) падает до нуля, объект уничтожается и память освобождается",
+                    "Проверяет состояние оперативной памяти ОС",
+                    "shared_ptr не удаляет объекты, это делает программист",
+                    "Через встроенную рефлексию"
+                ],
+                correctIndex: 1,
+                explanation: '`std::shared_ptr` реализует **совместное владение**. Он хранит указатель на объект и указатель на блок управления в куче, содержащий счетчики ссылок. Каждый новый `shared_ptr`, скопированный от исходного, увеличивает счетчик. При разрушении указателя счетчик уменьшается. При достижении нуля вызывается деструктор объекта.'
+            },
+            {
+                category: "Умные указатели",
+                text: "Какое назначение имеет умный указатель std::weak_ptr в C++?",
+                options: [
+                    "Указатель, который работает медленнее, чем unique_ptr",
+                    "Служит невладеющим наблюдателем за объектом, управляемым std::shared_ptr. Не увеличивает счетчик сильных ссылок, предотвращая проблему циклических зависимостей (circular references)",
+                    "Используется для работы в unsafe секторах кода",
+                    "Удаляет объект сразу после его первого использования",
+                    "Умный указатель для работы со стеком"
+                ],
+                correctIndex: 1,
+                explanation: '`std::weak_ptr` решает проблему **циклических ссылок**, когда два объекта ссылаются друг на друга через `shared_ptr`, из-за чего их счетчики никогда не упадут до нуля и возникнет утечка памяти. `weak_ptr` не держит объект, но позволяет безопасно проверить его существование и временно захватить владение через метод `.lock()`.'
+            },
+            {
+                category: "Перемещающая семантика",
+                text: "Что делает стандартная функция std::move в C++?",
+                options: [
+                    "Физически перемещает байты объекта в другой сектор оперативной памяти",
+                    "Выполняет приведение типа аргумента к rvalue-ссылке (&&), делая объект кандидатом на вызов конструктора перемещения или перемещающего оператора присваивания",
+                    "Запускает асинхронный поток копирования объекта",
+                    "Удаляет объект из текущей области видимости",
+                    "Преобразует объект в структуру std::vector"
+                ],
+                correctIndex: 1,
+                explanation: 'Функция `std::move` **не перемещает никаких данных и не генерирует процессорных инструкций**. Все, что она делает — это статическое приведение типа `static_cast<T&&>(var)`. Это сообщает компилятору, что объект можно «обокрасть» (забрать его ресурсы), вызвав конструктор перемещения вместо копирования.'
+            },
+            {
+                category: "Спецификаторы классов",
+                text: "В чем разница между объявлением типа через class и через struct в языке C++?",
+                options: [
+                    "struct не может иметь методов и конструкторов",
+                    "В struct члены и базовые классы по умолчанию имеют уровень доступа public, а в class — private",
+                    "struct располагается только в стеке, а class — только в куче",
+                    "В struct запрещено использовать виртуальные функции",
+                    "Различий нет, это полные синонимы на уровне компилятора"
+                ],
+                correctIndex: 1,
+                explanation: 'В C++ разница между `class` и `struct` минимальна: это **уровень доступа по умолчанию**. У структур по умолчанию все члены и наследование являются `public`, а у классов — `private`. Во всем остальном они функционально идентичны (могут иметь конструкторы, виртуальные методы, шаблоны).'
+            },
+            {
+                category: "Шаблоны (Templates)",
+                text: "Каким образом происходит инстанцирование шаблонов (templates) в C++?",
+                options: [
+                    "Шаблоны интерпретируются во время выполнения программы (runtime)",
+                    "Компилятор генерирует конкретный код класса или функции для каждого набора шаблонных параметров на этапе компиляции (code generation / monomorphization)",
+                    "Шаблоны преобразуются в макросы препроцессора",
+                    "Инстанцированием занимается линкер при сборке",
+                    "Шаблоны выполняются в виртуальной машине .NET"
+                ],
+                correctIndex: 1,
+                explanation: 'Шаблоны в C++ — это средство **метапрограммирования на этапе компиляции**. Компилятор при встрече с конкретным использованием шаблона (например, `std::vector<int>`) автоматически генерирует (инстанцирует) полноценный класс для данного типа. Это обеспечивает максимальную скорость (без накладных расходов), но раздувает бинарный файл.'
+            },
+            {
+                category: "Приведение типов",
+                text: "Какой из операторов приведения типов C++ предназначен для безопасного нисходящего приведения по иерархии классов (downcasting) с проверкой типа во время выполнения через RTTI?",
+                options: [
+                    "static_cast",
+                    "reinterpret_cast",
+                    "const_cast",
+                    "dynamic_cast",
+                    "C-style cast (type)"
+                ],
+                correctIndex: 3,
+                explanation: '`dynamic_cast` используется для **безопасного полиморфного приведения типов**. Он проверяет информацию о типах во время выполнения (RTTI). Если приведение указателя невозможно, он возвращает `nullptr`. Если приведение ссылки невозможно, он генерирует исключение `std::bad_cast`.'
+            },
+            {
+                category: "Концепция RAII",
+                text: "В чем заключается фундаментальный принцип проектирования RAII (Resource Acquisition Is Initialization) в C++?",
+                options: [
+                    "Ресурсы должны выделяться только в функции main()",
+                    "Управление жизненным циклом ресурса (выделение и освобождение) привязывается к времени жизни владеющего им локального объекта. Выделение ресурса происходит в конструкторе, а гарантированное освобождение — в деструкторе при выходе объекта из области видимости",
+                    "Все ресурсы должны быть глобальными константами",
+                    "Программа обязана использовать сборщик мусора",
+                    "Ресурсы освобождаются только по сигналу операционной системы"
+                ],
+                correctIndex: 1,
+                explanation: 'RAII — важнейшая идиома C++. Связывая ресурс (память, файл, мьютекс) с **временем жизни объекта на стеке**, мы гарантируем освобождение ресурса в деструкторе, даже если метод завершился аварийно из-за исключения. Это основа написания безопасного и чистого C++ кода.'
+            },
+            {
+                category: "Исключения",
+                text: "Какую гарантию безопасности исключений (exception safety guarantee) дает спецификатор noexcept у функции в C++?",
+                options: [
+                    "Функция никогда не будет вызываться при возникновении ошибок",
+                    "Функция гарантирует, что она не выбрасывает никаких исключений. Если исключение все же покинет функцию noexcept, среда выполнения немедленно вызовет std::terminate() для аварийного завершения программы",
+                    "Функция автоматически перехватывает и подавляет любые исключения",
+                    "noexcept переносит обработку исключений в фоновый поток",
+                    "noexcept ускоряет выделение памяти в 5 раз"
+                ],
+                correctIndex: 1,
+                explanation: 'Спецификатор `noexcept` сообщает компилятору, что функция гарантированно не выпустит наружу исключений. Это позволяет компилятору применять агрессивные оптимизации (например, перемещение элементов вектора без копирования). Нарушение этого контракта приводит к немедленному жесткому падению программы через **std::terminate()**.'
+            },
+            {
+                category: "STL Контейнеры",
+                text: "Какова вычислительная сложность вставки элемента в начало двусвязного списка std::list по сравнению с вектором std::vector в STL?",
+                options: [
+                    "std::list: O(N), std::vector: O(1)",
+                    "std::list: O(1), std::vector: O(N)",
+                    "Оба контейнера имеют сложность O(1)",
+                    "Оба контейнера имеют сложность O(N)",
+                    "std::list не поддерживает вставку в начало"
+                ],
+                correctIndex: 1,
+                explanation: 'Вставить элемент в начало `std::list` — это операция O(1) (перестановка указателей узлов). Вставить в начало `std::vector` требует **сдвига всех существующих элементов на одну позицию вправо**, что занимает O(N) времени.'
+            },
+            {
+                category: "Конструкторы",
+                text: "Какое ключевое слово используется в C++ для предотвращения неявного преобразования типов при вызове конструктора с одним аргументом?",
+                options: [
+                    "explicit",
+                    "inline",
+                    "virtual",
+                    "override",
+                    "mutable"
+                ],
+                correctIndex: 0,
+                explanation: 'Ключевое слово <strong>explicit</strong> запрещает компилятору использовать конструктор класса для автоматического (неявного) приведения типов. Например, если есть `MyClass(int)`, то без explicit строка `MyClass obj = 10;` скомпилируется неявно. С explicit потребуется писать явно: `MyClass obj(10);`.'
+            },
+            {
+                category: "Модификаторы членов",
+                text: "Что позволяет делать ключевое слово mutable применительно к нестатическим полям класса в C++?",
+                options: [
+                    "Поле может изменять свой тип во время выполнения",
+                    "Поле класса может быть изменено даже внутри const-методов (методов чтения) текущего класса",
+                    "Поле автоматически синхронизируется между потоками",
+                    "Поле становится доступным для сборщика мусора",
+                    "Поле нельзя наследовать"
+                ],
+                correctIndex: 1,
+                explanation: 'Спецификатор <strong>mutable</strong> разрешает модификацию поля объекта даже в константном контексте (например, из константных методов класса). Это полезно для реализации внутренних деталей, не меняющих логическое состояние объекта (например, кэширование, подсчет чтений, захват мьютекса отладки).'
+            },
+            {
+                category: "Классы",
+                text: "Что представляет собой чистая виртуальная функция (pure virtual function) в C++?",
+                options: [
+                    "Функция, написанная на чистом ассемблере",
+                    "Виртуальная функция без реализации по умолчанию, сигнатура которой завершается синтаксисом `= 0`. Она делает класс абстрактным",
+                    "Функция, которая не изменяет никаких переменных класса",
+                    "Статический метод класса, возвращающий void",
+                    "В C++ чистых функций не существует"
+                ],
+                correctIndex: 1,
+                explanation: 'Чистая виртуальная функция объявляется как <code>virtual void MyMethod() = 0;</code>. Класс, содержащий хотя бы одну такую функцию, автоматически становится **абстрактным классом**, и создавать его объекты напрямую запрещено. Классы-наследники обязаны переопределить этот метод.'
+            },
+            {
+                category: "Операторы",
+                text: "Что описывает правило трех / пяти / нуля (Rule of 3/5/0) в современном дизайне классов C++?",
+                options: [
+                    "Количество методов в классе должно быть кратно трем",
+                    "Если класс явно определяет деструктор, конструктор копирования или оператор копирующего присваивания, он, скорее всего, управляет ресурсами и должен явно определить все три (или пять с перемещением в C++11) члена, либо ни одного (правило нуля)",
+                    "Правило для оптимизации работы с многопоточностью",
+                    "Требование к глубине наследования классов",
+                    "Правило написания чистого кода на шаблонах"
+                ],
+                correctIndex: 1,
+                explanation: 'Правило пяти гласит: если вашему классу нужен кастомный деструктор, конструктор копирования, перемещения, оператор копирующего или перемещающего присваивания, ему, скорее всего, **нужны все 5 этих членов** для корректного управления ресурсом в куче. Правило нуля рекомендует избегать ручного управления ресурсами, делегируя это умным указателям.'
+            },
+            {
+                category: "Продвинутый C++",
+                text: "Что произойдет при попытке скомпилировать следующий код, нарушающий правила константности C++?",
+                code: `class Test {\npublic:\n    void Print() {}\n};\n\nvoid run(const Test& obj) {\n    obj.Print();\n}`,
+                options: [
+                    "Код скомпилируется успешно",
+                    "Вызовется ошибка компиляции: константный объект `obj` не может вызывать неконстантный метод `Print()`",
+                    "Произойдет аварийное завершение программы во время выполнения",
+                    "Метод Print() автоматически приведется к const",
+                    "Метод Print() вызовется асинхронно"
+                ],
+                correctIndex: 1,
+                explanation: 'Поскольку параметр `obj` передан по константной ссылке `const Test&`, компилятор гарантирует его неизменяемость. Из него разрешено вызывать исключительно методы, помеченные модификатором `const` (например, `void Print() const`). Попытка вызвать неконстантный метод `Print()` приведет к **ошибке компиляции**.'
+            },
+            {
+                category: "Конструкторы",
+                text: "В каком порядке вызываются конструкторы базовых классов и полей класса при создании объекта наследника в C++?",
+                options: [
+                    "Конструктор наследника, затем поля, затем базы",
+                    "Сначала конструкторы базовых классов (в порядке перечисления при наследовании), затем конструкторы полей класса (в порядке их объявления в классе), и только потом тело конструктора самого наследника",
+                    "В случайном порядке, определяемом планировщиком ОС",
+                    "Сначала поля, затем наследник, базы не вызываются вообще",
+                    "Все конструкторы вызываются строго параллельно"
+                ],
+                correctIndex: 1,
+                explanation: 'Порядок инициализации строго детерминирован: 1) **Базовые классы** снизу вверх; 2) **Члены-данные (поля) класса** строго в порядке их объявления внутри тела класса (обратите внимание: порядок их перечисления в списке инициализации конструктора игнорируется компилятором!); 3) Тело конструктора самого класса.'
+            },
+            {
+                category: "Динамическая память",
+                text: "Что произойдет, если оператор new в C++ не сможет выделить необходимый объем памяти в куче?",
+                options: [
+                    "Вернет NULL, как функция malloc в Си",
+                    "Среда выполнения сгенерирует исключение std::bad_alloc (если не используется форма new(std::nothrow))",
+                    "Программа немедленно завершится без сообщений об ошибках",
+                    "Запустится автоматическая дефрагментация жесткого диска",
+                    "new перенаправит выделение в стек"
+                ],
+                correctIndex: 1,
+                explanation: 'В C++ оператор `new` по умолчанию сообщает о нехватке памяти генерацией стандартного исключения **std::bad_alloc**. Историческое поведение с возвратом `nullptr` можно включить, передав специальный флаг: `new (std::nothrow) MyClass()`.'
+            },
+            {
+                category: "Modern C++",
+                text: "Что представляет собой тип std::string_view, добавленный в C++17?",
+                options: [
+                    "Класс для шифрования текстовых строк",
+                    "Дешевый невладеющий наблюдатель за строкой (view). Хранит только указатель на константные данные символов и их длину, предотвращая лишние аллокации памяти при передаче строк в методы",
+                    "Контейнер для динамического редактирования текста",
+                    "Замена стандартной библиотеки регулярных выражений",
+                    "Указатель на строковый буфер в памяти видеокарты"
+                ],
+                correctIndex: 1,
+                explanation: '`std::string_view` — это легковесный класс, содержащий `const char*` и длину строки. Он **не владеет памятью** и не создает копий строк. Передача `std::string_view` вместо `const std::string&` предотвращает создание временных объектов строк из C-style литералов.'
+            },
+            {
+                category: "Шаблоны",
+                text: "Что представляет собой концепция SFINAE (Substitution Failure Is Not An Error) в C++?",
+                options: [
+                    "Правило, по которому ошибки компиляции шаблонов игнорируются",
+                    "Принцип разрешения перегрузок: если при подстановке шаблонных параметров в функцию генерируется невалидный тип или выражение, этот шаблон тихо исключается из кандидатов на перегрузку без генерации общей ошибки компиляции",
+                    "Способ компиляции C++ кода без заголовочных файлов",
+                    "Метод динамического связывания библиотек",
+                    "Специальный сборщик мусора для шаблонов"
+                ],
+                correctIndex: 1,
+                explanation: 'SFINAE — мощный инструмент метапрограммирования. Если при подстановке аргументов в шаблон (например, при использовании `std::enable_if`) возникает ошибка типа, компилятор не останавливает сборку, а просто считает, что этот конкретный шаблон не подходит, и ищет другие перегрузки.'
+            },
+            {
+                category: "Объектная модель C++",
+                text: "Что гарантирует стандарт C++ относительно размера пустого класса (class Empty {};) при вычислении sizeof(Empty)?",
+                options: [
+                    "Размер равен 0 байт",
+                    "Размер гарантированно не менее 1 байта (чтобы разные объекты этого класса имели уникальные адреса в памяти)",
+                    "Размер совпадает с размером указателя void*",
+                    "Размер равен 4 байтам",
+                    "Размер пустого класса не определен"
+                ],
+                correctIndex: 1,
+                explanation: 'Даже пустой класс в C++ имеет размер **не менее 1 байта**. Это необходимо для того, чтобы при создании массива объектов `Empty arr[5]` каждый объект имел свой уникальный адрес в памяти. Однако при наследовании пустые базовые классы могут оптимизироваться до 0 байт (Empty Base Optimization - EBO).'
+            },
+            {
+                category: "RTTI",
+                text: "Какое ключевое слово C++ возвращает информацию о типе объекта во время выполнения в виде ссылки на структуру std::type_info?",
+                options: [
+                    "typename",
+                    "typeid",
+                    "typeof",
+                    "decltype",
+                    "dynamic_cast"
+                ],
+                correctIndex: 1,
+                explanation: 'Оператор <strong>typeid</strong> возвращает информацию о типе объекта во время выполнения. Например, `typeid(*ptr).name()` вернет имя реального полиморфного класса объекта, на который указывает полиморфный базовый указатель.'
+            },
+            {
+                category: "Modern C++",
+                text: "Что делает ключевое слово constexpr, примененное к функции или переменной в C++?",
+                options: [
+                    "Помечает переменную как сохраняемую в регистре процессора",
+                    "Указывает компилятору, что выражение или функция может быть гарантированно вычислена еще на этапе компиляции, превращая вызов в константу в бинарном файле",
+                    "Запрещает использовать многопоточность для данной функции",
+                    "Объявляет функцию асинхронной",
+                    "Запрещает изменять локальные переменные внутри функции"
+                ],
+                correctIndex: 1,
+                explanation: 'Спецификатор `constexpr` (constant expression) указывает, что значение переменной или результат работы функции могут быть **вычислены во время компиляции**. Это переносит вычисления из рантайма в этап сборки, повышая общую производительность программы.'
+            },
+            {
+                category: "Шаблоны",
+                text: "Что произойдет при компиляции данного кода с явной специализацией шаблона класса?",
+                code: `template<typename T> class Box { public: int val = 1; };\ntemplate<> class Box<double> { public: double val = 3.14; };\n// Вызов:\nBox<int> b1;\nBox<double> b2;\nstd::cout << b1.val << " " << b2.val;`,
+                options: [
+                    "1 1",
+                    "3.14 3.14",
+                    "1 3.14",
+                    "Ошибка компиляции: дублирование класса Box",
+                    "Неопределенное поведение"
+                ],
+                correctIndex: 2,
+                explanation: 'В коде объявлен общий шаблон `Box<T>` и его **полная специализация** для типа `double` (с другим набором полей и типов). При создании `Box<int>` компилируется общий шаблон (`val` равен 1). При создании `Box<double>` компилируется специализация (`val` равен 3.14). Итог: **1 3.14**.'
+            },
+            {
+                category: "STL Контейнеры",
+                text: "Каков порядок элементов гарантируется при обходе ассоциативного контейнера std::map в STL C++?",
+                options: [
+                    "Элементы обходятся в случайном порядке",
+                    "Элементы обходятся строго в порядке их вставки в контейнер",
+                    "Элементы всегда отсортированы по возрастанию ключей (на основе оператора < ключа, используя красно-черное дерево)",
+                    "Элементы отсортированы по значению хэш-кода ключа",
+                    "В std::map порядок обхода не определен"
+                ],
+                correctIndex: 2,
+                explanation: 'Контейнер `std::map` реализован внутри в виде **сбалансированного двоичного дерева поиска (обычно красно-черного)**. При его обходе элементы гарантированно будут **отсортированы по возрастанию ключей** (используется встроенный компаратор `std::less`).'
+            },
+            {
+                category: "Полиморфизм",
+                text: "Что произойдет при вызове виртуального метода из конструктора базового класса во время создания объекта наследника в C++?",
+                options: [
+                    "Вызовется переопределенный метод дочернего класса (динамический полиморфизм)",
+                    "Вызовется метод базового класса, так как дочерний класс еще не сконструирован и его таблица vtable наследника еще не активна",
+                    "Произойдет мгновенное падение программы с Pure Virtual Method Call",
+                    "Вызов перенаправится в конструктор копирования",
+                    "Компилятор запретит вызов виртуальных методов из любых конструкторов"
+                ],
+                correctIndex: 1,
+                explanation: 'В C++ во время работы конструктора базового класса объект дочернего класса **еще не существует** (его поля не инициализированы). Вызов виртуального метода на этом этапе приведет к **статическому вызову версии метода из базового класса**. Это фундаментальное отличие C++ от Java и C#.'
+            },
+            
+            // QUESTIONS 32 TO 60 (Advanced C++ and OOP topics)
+            {
+                category: "Modern C++",
+                text: "Что произойдет при компиляции кода со сверткой параметров шаблона (Fold Expressions) из C++17?",
+                code: `template<typename... Args>\nauto sum(Args... args) {\n    return (... + args);\n}\n// Вызов:\nstd::cout << sum(1, 2, 3, 4);`,
+                options: [
+                    "10",
+                    "1",
+                    "Ошибка компиляции: невалидный синтаксис троеточия",
+                    "Неопределенное поведение",
+                    "Программа напечатает 1 2 3 4"
+                ],
+                correctIndex: 0,
+                explanation: 'В C++17 добавлены **выражения свертки (fold expressions)** для variadic-шаблонов. Синтаксис `(... + args)` автоматически раскрывается компилятором в цепочку сложений: `(((1 + 2) + 3) + 4) = 10`. Код полностью корректен.'
+            },
+            {
+                category: "Modern C++",
+                text: "Что представляет собой rvalue-ссылка (&&), добавленная в спецификацию C++11?",
+                options: [
+                    "Указатель на указатель в куче",
+                    "Ссылка на временный объект (rvalue), ресурсы которого можно безболезненно забрать (переместить), избегая дорогого копирования",
+                    "Ссылка, которая может быть пустой (nullptr)",
+                    "Ссылка на статический член класса",
+                    "Ссылка на константный объект"
+                ],
+                correctIndex: 1,
+                explanation: 'Rvalue-ссылка (`&&`) связывается только с временными объектами (выражениями, у которых нельзя взять адрес памяти, например результатом функции или числом). Наличие таких ссылок позволило компилятору различать копирование и **перемещение ресурсов**.'
+            },
+            {
+                category: "Конструкторы",
+                text: "Что произойдет при попытке скомпилировать следующий код C++, нарушающий правила инициализации констант?",
+                code: `class Demo {\n    const int value;\npublic:\n    Demo(int val) {\n        value = val;\n    }\n};`,
+                options: [
+                    "value запишет значение val через неявное приведение",
+                    "Вызовется ошибка компиляции: константное поле `value` должно инициализироваться строго в списке инициализации конструктора, а не в его теле",
+                    "value примет случайное мусорное значение",
+                    "Код скомпилируется, но выбросит исключение во время рантайма",
+                    "value станет статической константой"
+                ],
+                correctIndex: 1,
+                explanation: 'Константные члены класса (`const`), а также ссылки (`&`) **обязаны быть инициализированы в списке инициализации конструктора** (до фигурных скобок тела конструктора), так как в теле конструктора происходит уже присваивание, а не инициализация. Код вызовет **ошибку компиляции**.'
+            },
+            {
+                category: "Modern C++",
+                text: "Что выведет данный код C++ с лямбда-выражением и захватом по ссылке?",
+                code: `int x = 10;\nauto lam = [&x]() { x += 5; };\nx = 20;\nlam();\nstd::cout << x;`,
+                options: [
+                    "15",
+                    "25",
+                    "20",
+                    "10",
+                    "Ошибка компиляции"
+                ],
+                correctIndex: 1,
+                explanation: 'Лямбда захватывает переменную `x` **по ссылке** (`&x`). Это означает, что внутри лямбды происходит работа с оригинальной переменной `x`. После изменения `x = 20` вызов лямбды `lam()` прибавляет 5 к текущему значению `x` (20 + 5 = 25). Итог: **25**.'
+            },
+            {
+                category: "Умные указатели",
+                text: "Какая потенциальная проблема возникает при создании циклической связи двух объектов через std::shared_ptr?",
+                options: [
+                    "Программа начинает работать в 10 раз медленнее",
+                    "Объекты никогда не будут уничтожены сборщиком мусора кучи C++, так как счетчик ссылок каждого объекта никогда не упадет до нуля (утечка памяти)",
+                    "Произойдет переполнение стека вызовов",
+                    "Связь автоматически разорвется при первом выходе из функции",
+                    "shared_ptr не позволяет связывать объекты циклически на этапе компиляции"
+                ],
+                correctIndex: 1,
+                explanation: 'Циклическая зависимость shared_ptr держит счетчики ссылок обоих объектов на значении минимум 1. Даже когда внешние указатели на них уничтожаются, память объектов в куче **никогда не освобождается**, порождая утечку памяти. Для решения этой проблемы связи наблюдателей помечают как `std::weak_ptr`.'
+            },
+            {
+                category: "Ключевые слова",
+                text: "Какое поведение задает ключевое слово inline для функций в современном C++?",
+                options: [
+                    "Обязывает компилятор встроить тело функции вместо вызова",
+                    "Разрешает определять одну и ту же функцию в нескольких файлах трансляции (единицах сборки), предотвращая ошибки линковки ODR (One Definition Rule), и рекомендует компилятору рассмотреть возможность встраивания тела функции на месте вызова",
+                    "Запускает функцию в фоновом асинхронном потоке",
+                    "Ограничивает вызовы функции только текущим файлом исходного кода",
+                    "Запрещает использовать рекурсию"
+                ],
+                correctIndex: 1,
+                explanation: 'В современном C++ `inline` — это в первую очередь **указание для линкера**, разрешающее нарушить правило ODR (One Definition Rule) и определить тело функции в заголовочном файле, который подключается ко многим файлам сборки. Для встраивания кода на месте вызова современные компиляторы ориентируются на собственные эвристики оптимизации.'
+            },
+            {
+                category: "Modern C++",
+                text: "Что выведет данный код с использованием std::string_view?",
+                code: `std::string s = "Adventure";\nstd::string_view sv = s;\ns[0] = 'O';\nstd::cout << sv;`,
+                options: [
+                    "Adventure",
+                    "Odventure",
+                    "O",
+                    "Ошибка выполнения",
+                    "sv станет пустым"
+                ],
+                correctIndex: 1,
+                explanation: 'Поскольку `std::string_view` является **невладеющим наблюдателем** (хранит лишь указатель на символы исходной строки `s`), любые изменения данных внутри `s` немедленно отражаются на просмотре через `sv`. Изменение первого символа на `O` выведет **Odventure**.'
+            },
+            {
+                category: "Ассоциативные контейнеры",
+                text: "Каково среднее время поиска элемента в ассоциативном контейнере std::unordered_map в STL C++ по сравнению с std::map?",
+                options: [
+                    "std::unordered_map: O(log N), std::map: O(1)",
+                    "std::unordered_map: O(1), std::map: O(log N)",
+                    "Оба контейнера выполняют поиск за O(1)",
+                    "Оба контейнера выполняют поиск за O(N)",
+                    "std::unordered_map работает медленнее во всех случаях"
+                ],
+                correctIndex: 1,
+                explanation: '`std::unordered_map` построен на основе **хэш-таблицы**, что гарантирует среднее время поиска/вставки за **O(1)**. Контейнер `std::map` реализован в виде сбалансированного бинарного дерева поиска, требующего **O(log N)** времени на операцию.'
+            },
+            {
+                category: "Концепция RAII",
+                text: "Как идиома RAII помогает гарантировать отсутствие утечек ресурсов при возникновении исключений в C++?",
+                options: [
+                    "RAII автоматически перехватывает все исключения в блок catch",
+                    "При раскрутке стека (stack unwinding) во время полета исключения среда выполнения C++ гарантированно вызывает деструкторы для всех локальных объектов стека, освобождая привязанные к ним ресурсы",
+                    "RAII отключает механизм исключений в программе",
+                    "RAII переносит локальные объекты в глобальную память",
+                    "Никак не помогает"
+                ],
+                correctIndex: 1,
+                explanation: 'При генерации исключения происходит **раскрутка стека (stack unwinding)**. Среда выполнения удаляет все локальные переменные из стека по пути к блоку `catch`. Деструкторы локальных объектов вызываются автоматически, гарантируя освобождение любых завернутых в них ресурсов (памяти, файлов, мьютексов).'
+            },
+            {
+                category: "Виртуальные функции",
+                text: "Что такое чисто виртуальный деструктор (pure virtual destructor) в C++?",
+                options: [
+                    "Деструктор, который не содержит никакого кода",
+                    "Чисто виртуальный деструктор делает класс абстрактным, но в отличие от обычных чистых виртуальных функций, он ОБЯЗАН иметь тело реализации (определение), так как деструкторы базовых классов всегда автоматически вызываются по цепочке при уничтожении наследников",
+                    "Деструктор, помеченный ключевым словом delete",
+                    "Деструктор, возвращающий nullptr",
+                    "Такой деструктор запрещен компилятором C++"
+                ],
+                correctIndex: 1,
+                explanation: 'Объявление `virtual ~MyClass() = 0;` делает класс абстрактным. Однако, в отличие от функций вида `= 0` без тела, **чисто виртуальный деструктор обязан иметь тело реализации** (определение), так как при удалении наследника деструктор базы вызовется неявно, и без тела возникнет ошибка линковки.'
+            },
+            {
+                category: "Modern C++",
+                text: "Что делает спецификатор override при объявлении метода в дочернем классе C++?",
+                options: [
+                    "Разрешает перегрузку метода с другими типами параметров",
+                    "Явно сообщает компилятору о намерении переопределить виртуальный метод базового класса. Если сигнатуры методов не совпадают (ошибка в имени или типах), компилятор выдаст ошибку на этапе сборки",
+                    "Переносит выполнение метода в фоновый поток",
+                    "Скрывает метод от внешнего доступа",
+                    "Делает метод статическим"
+                ],
+                correctIndex: 1,
+                explanation: 'Модификатор `override` (введен в C++11) защищает от случайных ошибок опечаток. Если программист ошибется в типе аргумента (например, напишет `int` вместо `double`), без override компилятор просто создаст новую функцию (сокрытие). С `override` компилятор **выдаст ошибку**, так как базовый метод не найден.'
+            },
+            {
+                category: "Перегрузка операторов",
+                text: "Каким образом в C++ перегружается оператор копирующего присваивания `operator=` для предотвращения самоприсваивания (self-assignment)?",
+                options: [
+                    "Самоприсваивание автоматически блокируется компилятором",
+                    "В теле метода обязательно добавляется проверка адресов указателей: `if (this == &other) return *this;`",
+                    "Оператор присваивания должен возвращать void",
+                    "Использованием ключевого слова volatile",
+                    "Самоприсваивание в C++ синтаксически невозможно"
+                ],
+                correctIndex: 1,
+                explanation: 'Самоприсваивание вида `obj = obj;` без проверки адресов `this == &other` может привести к критической ошибке: если внутри оператора сначала освобождается старая динамическая память объекта перед копированием новой, объект **уничтожит собственные данные** до того, как скопирует их.'
+            },
+            {
+                category: "Modern C++",
+                text: "Каков тип переменной `y`, выведенный компилятором по правилам автовывода в C++11?",
+                code: `int x = 5;\nconst int& ref = x;\nauto y = ref;`,
+                options: [
+                    "const int&",
+                    "int&",
+                    "const int",
+                    "int",
+                    "Ошибка компиляции"
+                ],
+                correctIndex: 3,
+                explanation: 'Спецификатор `auto` по умолчанию **отбрасывает константность (const) и ссылочность (&)** при автовыводе типов. Так как `ref` имеет тип `const int&`, переменная `y` получит базовый тип **int**. Чтобы сохранить ссылки и константность, надо писать явно: `const auto& y = ref;`.'
+            },
+            {
+                category: "Modern C++",
+                text: "Что представляет собой библиотека std::variant, добавленная в C++17?",
+                options: [
+                    "Класс для работы со случайными числами",
+                    "Безопасный типобезопасный аналог объединения (union), способный хранить ровно одно значение из списка предопределенных типов в каждый момент времени, с проверкой активного типа",
+                    "Контейнер для динамических массивов с автоудалением",
+                    "Библиотека для создания графических интерфейсов",
+                    "В C++17 такого типа не существует"
+                ],
+                correctIndex: 1,
+                explanation: '`std::variant` — это **типобезопасный union**. Он знает, какой тип данных активен в данный момент, не выполняет некорректных приведений типов в памяти и генерирует исключение `std::bad_variant_access` при попытке прочитать неактивный тип данных.'
+            },
+            {
+                category: "Modern C++",
+                text: "Какое ключевое свойство отличает лямбда-выражение с пустым списком захвата `[]` от лямбды с захватом внешних переменных?",
+                options: [
+                    "Оно работает медленнее",
+                    "Лямбда-выражение без захвата внешнего контекста `[]` может неявно приводиться (конвертироваться) к стандартному указателю на обычную функцию C-style",
+                    "Оно не может вызываться в цикле",
+                    "Оно хранится исключительно в динамической памяти кучи",
+                    "Различий в преобразовании типов нет"
+                ],
+                correctIndex: 1,
+                explanation: 'Если лямбда-выражение ничего не захватывает (`[]`), компилятор генерирует его без состояния. В этом случае стандарт C++ разрешает **неявную конверсию лямбды в обычный указатель на функцию C-style** (например, `void(*)(int)`), что полезно для интеграции с C-библиотеками.'
+            },
+            {
+                category: "Исключения",
+                text: "Что произойдет при выходе исключения из деструктора объекта во время раскрутки стека (stack unwinding) в C++?",
+                options: [
+                    "Исключение автоматически перенаправится в функцию main()",
+                    "Среда выполнения немедленно вызовет функцию std::terminate(), аварийно завершая работу приложения (так как в полете не может быть одновременно два активных исключения)",
+                    "Деструктор перезапустится повторно",
+                    "Второе исключение тихо подавится",
+                    "Программа приостановит поток выполнения"
+                ],
+                correctIndex: 1,
+                explanation: 'В C++ деструкторы по умолчанию являются `noexcept(true)`. Если во время обработки существующего исключения из деструктора другого разрушаемого объекта выбрасывается второе исключение, среда выполнения не может обработать два активных исключения одновременно и немедленно вызывает **std::terminate()**.'
+            },
+            {
+                category: "Шаблоны",
+                text: "Каким образом в современном C++20 реализуется ограничение типов шаблонов (Constraints and Concepts)?",
+                options: [
+                    "Через встроенную рефлексию во время выполнения",
+                    "Использованием ключевых слов requires и concept, позволяющих накладывать ограничения на шаблонные параметры на этапе компиляции, улучшая читаемость ошибок и перегрузку шаблонов",
+                    "Специальным макросом препроцессора #assert_type",
+                    "С помощью динамического приведения dynamic_cast",
+                    "В C++20 концепции отсутствуют"
+                ],
+                correctIndex: 1,
+                explanation: 'В C++20 добавлены **концепты (concepts)**. С помощью синтаксиса `template<typename T> requires Integral<T>` мы можем четко ограничить применимость шаблона на этапе компиляции. Это избавляет от километров нечитаемых ошибок SFINAE и существенно ускоряет сборку.'
+            },
+            {
+                category: "Modern C++",
+                text: "Что выведет данный код с использованием конструктора перемещения C++11?",
+                code: `class Box {\npublic:\n    std::string text = "A";\n    Box() = default;\n    Box(Box&& other) noexcept : text(std::move(other.text)) {}\n};\n// Вызов:\nBox b1;\nBox b2(std::move(b1));\nstd::cout << b1.text << " " << b2.text;`,
+                options: [
+                    "A A",
+                    " A",
+                    "A ",
+                    "Ошибка компиляции",
+                    "Неопределенное поведение"
+                ],
+                correctIndex: 1,
+                explanation: 'При перемещении ресурса `std::move(other.text)` данные строки перемещаются в новый объект `b2`. Оригинальная строка `b1.text` остается в **валидном, но неопределенном состоянии** (для типа `std::string` перемещение оставляет строку пустой `""`). Таким образом, `b1.text` напечатает пустоту, а `b2.text` напечатает `A`. Вывод: ** A**.'
+            },
+            {
+                category: "Управление памятью",
+                text: "Какое ключевое отличие в поведении оператора `new` от вызова функции `malloc()` в C++ является определяющим?",
+                options: [
+                    "new работает значительно медленнее",
+                    "new не только выделяет физическую память в куче под объект, но и автоматически вызывает его конструктор для инициализации. malloc() только выделяет сырые байты памяти",
+                    "new выделяет память исключительно в сегменте bss",
+                    "new автоматически регистрирует объект в Garbage Collector",
+                    "malloc() запрещен стандартом C++"
+                ],
+                correctIndex: 1,
+                explanation: 'Оператор `new` — это языковая конструкция C++. Он сначала выделяет память (вызывая `operator new`), а затем **вызывает конструктор объекта** для инициализации полей класса. Функция `malloc` из библиотеки Си ничего не знает о классах и просто выделяет блок сырых байтов.'
+            },
+            {
+                category: "Шаблоны",
+                text: "Что представляет собой вариативный шаблон (variadic template) в C++?",
+                options: [
+                    "Шаблон, который может изменять параметры в процессе выполнения программы",
+                    "Шаблон класса или функции, способный принимать переменное (произвольное) количество аргументов типов на этапе компиляции, используя синтаксис троеточия (parameter pack)",
+                    "Шаблон, предназначенный только для работы со структурами данных vector",
+                    "Шаблон препроцессора Си",
+                    "В C++ вариативные шаблоны запрещены"
+                ],
+                correctIndex: 1,
+                explanation: 'Вариативные шаблоны (появились в C++11) записываются с троеточием: `template<typename... Args>`. Они позволяют передавать в шаблоны списки аргументов любой длины (например, для реализации форматированного вывода или кортежей `std::tuple`).'
+            },
+            {
+                category: "Объектная модель C++",
+                text: "Каков будет размер (sizeof) объекта класса, содержащего одну виртуальную функцию, на 64-битной архитектуре, если класс не имеет полей данных?",
+                options: [
+                    "1 байт (как у пустого класса)",
+                    "8 байтов (размер неявного указателя vptr на таблицу vtable)",
+                    "16 байтов",
+                    "0 байтов",
+                    "Зависит от имени функции"
+                ],
+                correctIndex: 1,
+                explanation: 'Если класс содержит хотя бы одну виртуальную функцию, компилятор добавляет в каждый объект этого класса неявный указатель **vptr (virtual pointer)** на таблицу виртуальных методов класса (`vtable`). На 64-битной архитектуре любой указатель занимает **8 байтов**, поэтому размер объекта будет равен 8 байтам.'
+            },
+            {
+                category: "Ключевые слова",
+                text: "Что делает ключевое слово friend при объявлении функции или класса внутри другого класса C++?",
+                options: [
+                    "Делает класс наследником дружественного класса",
+                    "Предоставляет указанной дружественной функции или дружественному классу полный доступ к закрытым (private) и защищенным (protected) членам текущего класса",
+                    "Запрещает переопределение методов класса",
+                    "Делает метод доступным только в том же пространстве имен",
+                    "Friend компилируется в unsafe указатели"
+                ],
+                correctIndex: 1,
+                explanation: 'Спецификатор `friend` (друг) дает право внешней функции или классу обращаться к приватным и защищенным полям/методам текущего класса. Это полезно при перегрузке бинарных операторов (например, `operator<<` для потоков вывода).'
+            },
+            {
+                category: "Modern C++",
+                text: "Что представляет собой объект std::span, добавленный в спецификацию C++20?",
+                options: [
+                    "Контейнер для асинхронной отправки данных по сети",
+                    "Легковесный невладеющий непрерывный просмотр элементов (view), оборачивающий указатель на данные и размер, позволяя передавать в функции массивы C-style, std::vector и std::array единым безопасным образом",
+                    "Замена для умного указателя shared_ptr",
+                    "Библиотека параллельных вычислений",
+                    "В C++20 такого типа не существует"
+                ],
+                correctIndex: 1,
+                explanation: '`std::span` (C++20) — это дешевый невладеющий обозреватель **непрерывной последовательности объектов**. Он хранит указатель и длину, обеспечивая единый интерфейс доступа к сырым массивам, `std::vector` и `std::array` без копирования данных.'
+            },
+            {
+                category: "Modern C++",
+                text: "Что выведет данный код с использованием анонимной структуры Structured Binding из C++17?",
+                code: `std::pair<int, std::string> p = {42, "C++"};\nauto [id, lang] = p;\nid = 100;\nstd::cout << p.first;`,
+                options: [
+                    "42",
+                    "100",
+                    "C++",
+                    "Ошибка компиляции",
+                    "Неопределенное поведение"
+                ],
+                correctIndex: 0,
+                explanation: 'Используется механизм **структурированной привязки (structured binding)**. Синтаксис `auto [id, lang] = p;` создает **копии** полей пары `p` в новые переменные `id` и `lang`. Изменение копии `id = 100;` никак не влияет на оригинальную пару `p`, поэтому `p.first` остается равным **42**.'
+            },
+            {
+                category: "Шаблоны",
+                text: "Что гарантирует концепт std::integral в C++20 при использовании в шаблонах?",
+                options: [
+                    "Что тип данных является классом с деструктором",
+                    "Что переданный тип данных является исключительно целочисленным типом (например, int, char, short, long, bool)",
+                    "Что функция выполняется параллельно",
+                    "Что память выделяется на стеке",
+                    "Концепта std::integral не существует"
+                ],
+                correctIndex: 1,
+                explanation: 'Концепт `std::integral` накладывает строгое ограничение на компиляцию: шаблон будет успешно инсталлирован компилятором только в том случае, если переданный тип `T` является целочисленным (целые числа различных размеров, символы, логические типы).'
+            },
+            {
+                category: "Динамическая память",
+                text: "Каким образом в C++ уничтожается массив объектов, созданный с помощью `MyClass *arr = new MyClass[5];`?",
+                options: [
+                    "delete arr;",
+                    "delete[] arr; (гарантирует вызов деструкторов для всех 5 элементов массива и освобождение памяти)",
+                    "free(arr);",
+                    "Массив удаляется автоматически при выходе из функции",
+                    "Массив в C++ удалить невозможно"
+                ],
+                correctIndex: 1,
+                explanation: 'Для освобождения массива, выделенного через `new[]`, **обязательно использовать оператор `delete[]`**. Это гарантирует, что деструктор `~MyClass()` будет вызван ровно 5 раз для каждого элемента перед тем, как блок памяти кучи будет возвращен диспетчеру памяти.'
+            },
+            {
+                category: "Деструкторы объектов",
+                text: "Каков порядок вызова деструкторов полей и базовых классов при уничтожении объекта наследника в C++?",
+                options: [
+                    "Сначала вызывается деструктор базы, затем полей, затем самого класса",
+                    "Строго в порядке, обратном вызову их конструкторов: сначала тело деструктора наследника, затем деструкторы полей в порядке, обратном объявлению, затем деструкторы базовых классов",
+                    "Все деструкторы вызываются параллельно в пуле потоков",
+                    "Деструкторы полей не вызываются вообще",
+                    "В случайном порядке"
+                ],
+                correctIndex: 1,
+                explanation: 'В C++ уничтожение объектов всегда происходит в **строго обратном порядке** относительно их создания. Сначала отрабатывает деструктор наследника, затем разрушаются его локальные поля снизу вверх по объявлению, и в самом конце вызываются деструкторы базовых классов.'
+            },
+            {
+                category: "Потоки вывода",
+                text: "Что делает манипулятор std::endl при записи в поток вывода (например, `std::cout << std::endl;`)?",
+                options: [
+                    "Просто шифрует поток вывода",
+                    "Записывает символ перевода строки `\\n` и принудительно очищает буфер вывода потока (вызывает метод flush())",
+                    "Удаляет предыдущий символ из консоли",
+                    "Переводит консоль в безопасный режим чтения",
+                    "Манипулятор std::endl переводит программу в спящий режим"
+                ],
+                correctIndex: 1,
+                explanation: 'Манипулятор `std::endl` делает два действия: 1) вставляет символ конца строки `\n`; 2) вызывает **сброс буфера `flush()`**. Частое использование `std::endl` вместо простого `"\n"` в циклах может критически замедлить вывод в консоль или файл из-за частых дисковых/системных операций сброса буфера.'
+            },
+            {
+                category: "Перегрузка операторов",
+                text: "Какие операторы в C++ ЗАПРЕЩЕНО перегружать пользователю согласно стандарту языка?",
+                options: [
+                    "new, delete, operator+",
+                    "operator. (доступ к члену), operator:: (разрешение области видимости), operator.* (указатель на член), тернарный оператор ?:",
+                    "operator==, operator!=, operator<",
+                    "operator[] и operator()",
+                    "В C++ можно перегружать абсолютно любые символы"
+                ],
+                correctIndex: 1,
+                explanation: 'Стандарт C++ строго запрещает перегрузку четырех операторов: 1) оператор доступа к членам класса через точку `.` ; 2) оператор разрешения области видимости `::` ; 3) оператор разыменования указателя на член класса `.*` ; 4) тернарный условный оператор `?:` . Также нельзя создавать новые операторы, отсутствующие в синтаксисе языка.'
+            },
+            {
+                category: "Ключевые слова",
+                text: "Что выведет данный код C++ с тернарным условием и вычислениями?",
+                code: `int x = 5;\nint res = (x == 5) ? ([](){ return 20; }()) : 30;\nstd::cout << res;`,
+                options: [
+                    "5",
+                    "20",
+                    "30",
+                    "Ошибка компиляции",
+                    "Неопределенное поведение"
+                ],
+                correctIndex: 1,
+                explanation: 'В коде внутри тернарного оператора во вкладке true объявлена и **сразу же вызвана** безымянная лямбда-функция `[](){ return 20; }()`. Она возвращает значение 20. Так как условие `x == 5` истинно, вычисляется именно эта ветка. Результат равен **20**.'
+            }
+        ];
+
+        // State variables
+        let currentQuestionIndex = 0;
+        let scoreCorrect = 0;
+        let scoreWrong = 0;
+        let currentStreak = 0;
+        let maxStreak = 0;
+        let answeredQuestions = {}; // Maps index -> { chosenIndex: int, isCorrect: bool }
+        let startTime = Date.now();
+        let timerInterval = null;
+        let timeOffset = 0; // In case of resume from LocalStorage
+        let wrongAnswersList = [];
+
+        // Elements
+        const currentQIndexEl = document.getElementById('current-q-index');
+        const totalQCountEl = document.getElementById('total-q-count');
+        const completionPercentageEl = document.getElementById('completion-percentage');
+        const progressFillEl = document.getElementById('progress-fill');
+        const questionCategoryEl = document.getElementById('question-category');
+        const questionTextEl = document.getElementById('question-text');
+        
+        const codeContainerEl = document.getElementById('code-container');
+        const lineNumbersEl = document.getElementById('line-numbers');
+        const codeBodyEl = document.getElementById('code-body');
+        
+        const answersGridEl = document.getElementById('answers-grid');
+        
+        const explanationCardEl = document.getElementById('explanation-card');
+        const explanationHeaderEl = document.getElementById('explanation-header');
+        const explanationBodyEl = document.getElementById('explanation-body');
+        const nextBtnEl = document.getElementById('next-btn');
+        
+        const correctCountEl = document.getElementById('correct-count');
+        const wrongCountEl = document.getElementById('wrong-count');
+        const streakCountEl = document.getElementById('streak-count');
+        const elapsedTimeEl = document.getElementById('elapsed-time');
+        const streakBadgeEl = document.getElementById('streak-badge');
+        
+        const questionsGridEl = document.getElementById('questions-grid');
+        const answeredCountEl = document.getElementById('answered-count');
+        
+        const quizPanelEl = document.getElementById('quiz-panel');
+        const resultsPanelEl = document.getElementById('results-panel');
+        const sidebarPanelEl = document.getElementById('sidebar-panel');
+
+        // Color syntax highlighting helper for code view
+        function highlightCsharpCode(codeStr) {
+            if (!codeStr) return "";
+            
+            let escaped = codeStr
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt bridge;");
+            
+            // Simple C++ syntax highlighting
+            const keywords = /\b(class|struct|interface|record|public|private|protected|virtual|override|explicit|mutable|const|static|constexpr|noexcept|inline|template|typename|auto|decltype|int|double|void|return|new|delete|std|string|string_view|vector|list|map|pair|cout|endl|requires|concept|lambda)\b/g;
+
+            escaped = escaped.replace(/(\/\/.*)/g, '<span class="comment">$1</span>');
+            
+            escaped = escaped.replace(keywords, function(match) {
+                return '<span class="keyword">' + match + '</span>';
+            });
+            
+            escaped = escaped.replace(/\b(Empty|Test|Demo|Box|b1|b2|sv|lam|sum|run|p|x|res)\b/g, '<span class="type">$1</span>');
+            
+            return escaped.replace(/&gt bridge;/g, "&gt;");
+        }
+
+        // Initialize Web App
+        function initApp() {
+            totalQCountEl.textContent = questions.length;
+            loadProgress();
+            buildSidebarGrid();
+            startTimer();
+            displayQuestion(currentQuestionIndex);
+            updateStats();
+        }
+
+        // Start Elapsed Time counter
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                const elapsedMs = Date.now() - startTime + (timeOffset * 1000);
+                const totalSec = Math.floor(elapsedMs / 1000);
+                const minutes = Math.floor(totalSec / 60).toString().padStart(2, '0');
+                const seconds = (totalSec % 60).toString().padStart(2, '0');
+                elapsedTimeEl.textContent = `${minutes}:${seconds}`;
+            }, 1000);
+        }
+
+        // Build 60 questions sidebar navigation grid
+        function buildSidebarGrid() {
+            questionsGridEl.innerHTML = "";
+            for (let i = 0; i < questions.length; i++) {
+                const btn = document.createElement('div');
+                btn.className = 'grid-item';
+                btn.textContent = i + 1;
+                btn.id = `grid-item-${i}`;
+                
+                if (answeredQuestions[i]) {
+                    if (answeredQuestions[i].isCorrect) {
+                        btn.classList.add('answered-correct');
+                    } else {
+                        btn.classList.add('answered-wrong');
+                    }
+                }
+                
+                if (i === currentQuestionIndex) {
+                    btn.classList.add('active');
+                }
+                
+                btn.onclick = () => jumpToQuestion(i);
+                questionsGridEl.appendChild(btn);
+            }
+            
+            const answeredCount = Object.keys(answeredQuestions).length;
+            answeredCountEl.textContent = answeredCount;
+        }
+
+        // Display current question card content
+        function displayQuestion(index) {
+            document.querySelectorAll('.grid-item').forEach(item => item.classList.remove('active'));
+            const currentGridItem = document.getElementById(`grid-item-${index}`);
+            if (currentGridItem) currentGridItem.classList.add('active');
+
+            const q = questions[index];
+            currentQIndexEl.textContent = index + 1;
+            questionCategoryEl.textContent = q.category;
+            questionTextEl.textContent = q.text;
+
+            if (q.code) {
+                codeContainerEl.style.display = "block";
+                const highlighted = highlightCsharpCode(q.code);
+                codeBodyEl.innerHTML = `<code>${highlighted}</code>`;
+                
+                const linesCount = q.code.split('\n').length;
+                let numStr = "";
+                for (let i = 1; i <= linesCount; i++) {
+                    numStr += i + "<br>";
+                }
+                lineNumbersEl.innerHTML = numStr;
+            } else {
+                codeContainerEl.style.display = "none";
+            }
+
+            answersGridEl.innerHTML = "";
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+            
+            q.options.forEach((opt, idx) => {
+                const optBtn = document.createElement('button');
+                optBtn.className = 'answer-option';
+                optBtn.innerHTML = `
+                    <div class="option-marker">${letters[idx] || (idx + 1)}</div>
+                    <div class="option-text">${opt.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
+                `;
+                
+                if (answeredQuestions[index]) {
+                    optBtn.classList.add('disabled');
+                    const answered = answeredQuestions[index];
+                    if (idx === q.correctIndex) {
+                        optBtn.classList.add('correct');
+                    } else if (idx === answered.chosenIndex) {
+                        optBtn.classList.add('wrong');
+                    }
+                } else {
+                    optBtn.onclick = () => selectAnswer(idx);
+                }
+                answersGridEl.appendChild(optBtn);
+            });
+
+            if (answeredQuestions[index]) {
+                const answered = answeredQuestions[index];
+                showExplanationBlock(answered.isCorrect, q.explanation);
+            } else {
+                explanationCardEl.style.display = "none";
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Process answer selection
+        function selectAnswer(chosenIdx) {
+            if (answeredQuestions[currentQuestionIndex]) return;
+
+            const q = questions[currentQuestionIndex];
+            const isCorrect = chosenIdx === q.correctIndex;
+
+            answeredQuestions[currentQuestionIndex] = {
+                chosenIndex: chosenIdx,
+                isCorrect: isCorrect
+            };
+
+            if (isCorrect) {
+                scoreCorrect++;
+                currentStreak++;
+                if (currentStreak > maxStreak) maxStreak = currentStreak;
+                triggerSuccessAnimation();
+            } else {
+                scoreWrong++;
+                currentStreak = 0;
+                wrongAnswersList.push({
+                    questionIndex: currentQuestionIndex,
+                    text: q.text
+                });
+                triggerWrongAnimation();
+            }
+
+            const options = answersGridEl.children;
+            for (let i = 0; i < options.length; i++) {
+                options[i].classList.add('disabled');
+                if (i === q.correctIndex) {
+                    options[i].classList.add('correct');
+                } else if (i === chosenIdx) {
+                    options[i].classList.add('wrong');
+                }
+            }
+
+            const gridItem = document.getElementById(`grid-item-${currentQuestionIndex}`);
+            if (gridItem) {
+                gridItem.classList.remove('answered-correct', 'answered-wrong');
+                gridItem.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+            }
+
+            showExplanationBlock(isCorrect, q.explanation);
+            updateStats();
+            saveProgress();
+            
+            if (Object.keys(answeredQuestions).length === questions.length) {
+                nextBtnEl.innerHTML = `<span>Показать результаты</span> <i class="fa-solid fa-square-poll-vertical"></i>`;
+            }
+        }
+
+        function showExplanationBlock(isCorrect, text) {
+            explanationCardEl.style.display = "block";
+            if (isCorrect) {
+                explanationHeaderEl.className = "explanation-header correct-text";
+                explanationHeaderEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>Правильный ответ!</span>`;
+            } else {
+                explanationHeaderEl.className = "explanation-header wrong-text";
+                explanationHeaderEl.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <span>Неверно</span>`;
+            }
+            explanationBodyEl.innerHTML = text;
+        }
+
+        function triggerSuccessAnimation() {
+            const correctBadge = document.querySelector('.stat-badge.correct');
+            correctBadge.style.transform = "scale(1.2)";
+            setTimeout(() => correctBadge.style.transform = "scale(1)", 200);
+            
+            if (currentStreak > 0 && currentStreak % 5 === 0) {
+                confetti({
+                    particleCount: 50,
+                    spread: 60,
+                    origin: { y: 0.8 }
+                });
+            }
+        }
+
+        function triggerWrongAnimation() {
+            const wrongBadge = document.querySelector('.stat-badge.wrong');
+            wrongBadge.style.transform = "scale(1.2)";
+            setTimeout(() => wrongBadge.style.transform = "scale(1)", 200);
+        }
+
+        // Go to next question or show final screen
+        function goToNextQuestion() {
+            if (Object.keys(answeredQuestions).length === questions.length) {
+                showResultsPanel();
+                return;
+            }
+
+            let nextIndex = (currentQuestionIndex + 1) % questions.length;
+            while (answeredQuestions[nextIndex] && nextIndex !== currentQuestionIndex) {
+                nextIndex = (nextIndex + 1) % questions.length;
+            }
+
+            jumpToQuestion(nextIndex);
+        }
+
+        // Jump directly to any question by index
+        function jumpToQuestion(index) {
+            currentQuestionIndex = index;
+            displayQuestion(currentQuestionIndex);
+            
+            quizPanelEl.style.display = "flex";
+            resultsPanelEl.style.display = "none";
+            sidebarPanelEl.style.display = "flex";
+            
+            if (Object.keys(answeredQuestions).length === questions.length) {
+                nextBtnEl.innerHTML = `<span>Показать результаты</span> <i class="fa-solid fa-square-poll-vertical"></i>`;
+            } else {
+                nextBtnEl.innerHTML = `<span>Следующий вопрос</span> <i class="fa-solid fa-arrow-right"></i>`;
+            }
+        }
+
+        // Update statistics panels
+        function updateStats() {
+            correctCountEl.textContent = scoreCorrect;
+            wrongCountEl.textContent = scoreWrong;
+            streakCountEl.textContent = currentStreak;
+
+            const answeredCount = Object.keys(answeredQuestions).length;
+            answeredCountEl.textContent = answeredCount;
+
+            const percent = Math.round((answeredCount / questions.length) * 100);
+            completionPercentageEl.textContent = `${percent}% выполнено`;
+            progressFillEl.style.width = `${percent}%`;
+        }
+
+        // Final score screen evaluation
+        function showResultsPanel() {
+            clearInterval(timerInterval);
+
+            quizPanelEl.style.display = "none";
+            sidebarPanelEl.style.display = "none";
+            resultsPanelEl.style.display = "flex";
+
+            const total = questions.length;
+            const percentage = Math.round((scoreCorrect / total) * 100);
+            resultsPercentageEl.textContent = `${percentage}%`;
+
+            const circleFill = document.getElementById('results-circle-fill');
+            const radius = 90;
+            const circumference = 2 * Math.PI * radius;
+            const offset = circumference - (percentage / 100) * circumference;
+            
+            setTimeout(() => {
+                circleFill.style.strokeDashoffset = offset;
+            }, 100);
+
+            let grade = "";
+            let title = "Тест Завершен!";
+            
+            if (percentage >= 90) {
+                grade = "C++ Architecture Guru 👑 (Архитектор C++)";
+                title = "Потрясающий результат!";
+                triggerCelebrationConfetti();
+            } else if (percentage >= 75) {
+                grade = "Senior C++ Developer 🛡️ (Старший разработчик C++)";
+                title = "Отличная работа!";
+                triggerCelebrationConfetti();
+            } else if (percentage >= 50) {
+                grade = "Middle C++ Developer 💻 (Разработчик Middle)";
+                title = "Неплохой результат!";
+            } else {
+                grade = "Junior Copy-Paster 📋 (Копипастер-стажер)";
+                title = "Нужно подучить теорию!";
+            }
+
+            document.getElementById('results-title').textContent = title;
+            document.getElementById('results-grade').textContent = grade;
+            
+            document.getElementById('res-correct').textContent = scoreCorrect;
+            document.getElementById('res-wrong').textContent = scoreWrong;
+            document.getElementById('res-streak').textContent = maxStreak;
+            document.getElementById('res-time').textContent = elapsedTimeEl.textContent;
+
+            const wrongReviewListEl = document.getElementById('wrong-reviews-list');
+            const reviewsContainer = document.getElementById('wrong-reviews-container');
+            wrongReviewListEl.innerHTML = "";
+
+            if (wrongAnswersList.length > 0) {
+                reviewsContainer.style.display = "block";
+                wrongAnswersList.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = 'wrong-review-item';
+                    row.innerHTML = `
+                        <span>Вопрос ${item.questionIndex + 1}: ${item.text.substring(0, 75)}...</span>
+                        <i class="fa-solid fa-chevron-right" style="font-size: 0.8rem; opacity: 0.7;"></i>
+                    `;
+                    row.onclick = () => jumpToQuestion(item.questionIndex);
+                    wrongReviewListEl.appendChild(row);
+                });
+            } else {
+                reviewsContainer.style.display = "none";
+            }
+        }
+
+        // Celebration Confetti bursts
+        function triggerCelebrationConfetti() {
+            const end = Date.now() + (3 * 1000);
+            const colors = ['#8b5cf6', '#10b981', '#ffffff'];
+
+            (function frame() {
+                confetti({
+                    particleCount: 4,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: colors
+                });
+                confetti({
+                    particleCount: 4,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: colors
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        // Copy source code button
+        function copyCode() {
+            const currentCode = questions[currentQuestionIndex].code;
+            if (!currentCode) return;
+            
+            navigator.clipboard.writeText(currentCode).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.innerHTML = `<i class="fa-solid fa-check"></i> Скопировано!`;
+                setTimeout(() => {
+                    btn.innerHTML = `<i class="fa-solid fa-copy"></i> Копировать`;
+                }, 2000);
+            });
+        }
+
+        // Save progress to LocalStorage
+        function saveProgress() {
+            const elapsedMs = Date.now() - startTime + (timeOffset * 1000);
+            const progressData = {
+                answeredQuestions: answeredQuestions,
+                scoreCorrect: scoreCorrect,
+                scoreWrong: scoreWrong,
+                currentStreak: currentStreak,
+                maxStreak: maxStreak,
+                elapsedSeconds: Math.floor(elapsedMs / 1000),
+                currentQuestionIndex: currentQuestionIndex,
+                wrongAnswersList: wrongAnswersList
+            };
+            localStorage.setItem('cpp_quiz_progress', JSON.stringify(progressData));
+        }
+
+        // Load progress from LocalStorage
+        function loadProgress() {
+            const raw = localStorage.getItem('cpp_quiz_progress');
+            if (raw) {
+                try {
+                    const data = JSON.parse(raw);
+                    answeredQuestions = data.answeredQuestions || {};
+                    scoreCorrect = data.scoreCorrect || 0;
+                    scoreWrong = data.scoreWrong || 0;
+                    currentStreak = data.currentStreak || 0;
+                    maxStreak = data.maxStreak || 0;
+                    timeOffset = data.elapsedSeconds || 0;
+                    currentQuestionIndex = data.currentQuestionIndex || 0;
+                    wrongAnswersList = data.wrongAnswersList || [];
+                    
+                    if (Object.keys(answeredQuestions).length === questions.length) {
+                        showResultsPanel();
+                    }
+                } catch (e) {
+                    console.error("Failed to parse stored progress", e);
+                }
+            }
+        }
+
+        // Confirm starting quiz anew
+        function confirmReset() {
+            if (confirm("Вы действительно хотите сбросить текущий прогресс теста по C++ и начать заново?")) {
+                restartQuiz();
+            }
+        }
+
+        function restartQuiz() {
+            localStorage.removeItem('cpp_quiz_progress');
+            answeredQuestions = {};
+            scoreCorrect = 0;
+            scoreWrong = 0;
+            currentStreak = 0;
+            maxStreak = 0;
+            startTime = Date.now();
+            timeOffset = 0;
+            currentQuestionIndex = 0;
+            wrongAnswersList = [];
+
+            // UI Reset
+            quizPanelEl.style.display = "flex";
+            resultsPanelEl.style.display = "none";
+            sidebarPanelEl.style.display = "flex";
+            
+            initApp();
+        }
+
+        // Mobile responsive sidebar toggle helper
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar-panel');
+            if (sidebar.style.display === "none" || sidebar.style.display === "") {
+                sidebar.style.display = "flex";
+            } else {
+                sidebar.style.display = "none";
+            }
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>

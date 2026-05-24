@@ -1,0 +1,2624 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тренажер по C# (ООП и продвинутые темы) — HARD LEVEL</title>
+    
+    <!-- Google Fonts: Outfit for headings, Fira Code for code blocks, Inter for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Outfit:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* CSS Variables - Premium Cosmic Cyberpunk Theme */
+        :root {
+            --bg-color: #08090f;
+            --container-bg: rgba(13, 16, 31, 0.75);
+            --card-bg: rgba(20, 24, 46, 0.85);
+            --card-hover-border: rgba(124, 58, 237, 0.5);
+            
+            --accent-purple: #7c3aed;
+            --accent-purple-glow: rgba(124, 58, 237, 0.4);
+            --accent-cyan: #06b6d4;
+            --accent-cyan-glow: rgba(6, 182, 212, 0.4);
+            
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --text-dark: #1f2937;
+            
+            --correct-color: #10b981;
+            --correct-bg: rgba(16, 185, 129, 0.15);
+            --correct-border: rgba(16, 185, 129, 0.4);
+            
+            --wrong-color: #ef4444;
+            --wrong-bg: rgba(239, 68, 68, 0.15);
+            --wrong-border: rgba(239, 68, 68, 0.4);
+            
+            --sidebar-width: 340px;
+            --transition-speed: 0.3s;
+            --border-radius: 16px;
+        }
+
+        /* Base Resets & Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(124, 58, 237, 0.15) 0px, transparent 40%),
+                radial-gradient(at 90% 90%, rgba(6, 182, 212, 0.12) 0px, transparent 40%),
+                radial-gradient(at 50% 50%, rgba(8, 9, 15, 0.95) 0px, var(--bg-color) 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0c16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #252843;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-purple);
+        }
+
+        /* App Wrapper */
+        .app-container {
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Header Styles */
+        header {
+            background: var(--container-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+        }
+
+        .header-title-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-icon {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 8px rgba(124, 58, 237, 0.3));
+        }
+
+        .header-text h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(90deg, #ffffff, #d1d5db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-text p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-badge {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-badge i {
+            font-size: 1.1rem;
+        }
+
+        .stat-badge.correct i { color: var(--correct-color); }
+        .stat-badge.wrong i { color: var(--wrong-color); }
+        .stat-badge.streak {
+            background: rgba(249, 115, 22, 0.1);
+            border-color: rgba(249, 115, 22, 0.2);
+            color: #fdba74;
+            animation: pulse-orange 2s infinite;
+        }
+        .stat-badge.streak i { color: #f97316; }
+
+        .stat-badge.timer i { color: var(--accent-cyan); }
+
+        /* Main Workspace Layout */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr var(--sidebar-width);
+            gap: 24px;
+            flex-grow: 1;
+        }
+
+        @media (max-width: 1024px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+            .sidebar-toggle-btn {
+                display: block !important;
+            }
+        }
+
+        /* Main Content Panel */
+        .quiz-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Cards Style */
+        .glass-card {
+            background: var(--container-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
+            position: relative;
+            transition: border-color var(--transition-speed);
+        }
+
+        /* Question Progress Bar */
+        .progress-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            box-shadow: 0 0 10px var(--accent-purple-glow);
+            border-radius: 5px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Question Content styling */
+        .question-category {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(124, 58, 237, 0.15);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            color: #c084fc;
+            margin-bottom: 16px;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.5;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        /* Beautiful Code Snippet Container */
+        .code-container {
+            position: relative;
+            background: #040509;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            margin-bottom: 24px;
+            font-family: 'Fira Code', monospace;
+            box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .code-header .lang-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            color: #93c5fd;
+        }
+
+        .code-header .copy-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+        }
+
+        .code-header .copy-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .code-wrapper {
+            display: flex;
+            overflow-x: auto;
+            padding: 16px;
+        }
+
+        .line-numbers {
+            text-align: right;
+            padding-right: 12px;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            color: #374151;
+            user-select: none;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .code-body {
+            padding-left: 16px;
+            color: #e5e7eb;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            white-space: pre;
+            flex-grow: 1;
+        }
+
+        /* Syntax Highlighting Colors */
+        .code-body .keyword { color: #f472b6; font-weight: 600; }
+        .code-body .type { color: #60a5fa; }
+        .code-body .method { color: #fbbf24; }
+        .code-body .string { color: #34d399; }
+        .code-body .number { color: #fb923c; }
+        .code-body .comment { color: #6b7280; font-style: italic; }
+        .code-body .operator { color: #38bdf8; }
+
+        /* Answer Options Layout */
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .answer-option {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 16px 20px;
+            text-align: left;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .answer-option:hover:not(.disabled) {
+            transform: translateY(-2px);
+            border-color: var(--card-hover-border);
+            box-shadow: 0 6px 15px rgba(124, 58, 237, 0.15);
+            background: rgba(30, 36, 66, 0.85);
+        }
+
+        .answer-option:active:not(.disabled) {
+            transform: translateY(0);
+        }
+
+        .option-marker {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .answer-option:hover:not(.disabled) .option-marker {
+            background: var(--accent-purple);
+            color: #ffffff;
+            border-color: var(--accent-purple);
+        }
+
+        /* Option States after selection */
+        .answer-option.correct {
+            background: var(--correct-bg);
+            border-color: var(--correct-color);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
+        }
+
+        .answer-option.correct .option-marker {
+            background: var(--correct-color);
+            color: #ffffff;
+            border-color: var(--correct-color);
+        }
+
+        .answer-option.wrong {
+            background: var(--wrong-bg);
+            border-color: var(--wrong-color);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.1);
+            animation: shake 0.4s ease-in-out;
+        }
+
+        .answer-option.wrong .option-marker {
+            background: var(--wrong-color);
+            color: #ffffff;
+            border-color: var(--wrong-color);
+        }
+
+        .answer-option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Feedback Explanation Alert Block */
+        .explanation-card {
+            background: rgba(17, 20, 38, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-top: 24px;
+            display: none;
+            animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .explanation-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .explanation-header.correct-text { color: var(--correct-color); }
+        .explanation-header.wrong-text { color: var(--wrong-color); }
+
+        .explanation-body {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .explanation-body strong {
+            color: var(--text-primary);
+        }
+
+        .next-btn {
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 28px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+        }
+
+        .next-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.45);
+        }
+
+        /* Sidebar Navigation Grid */
+        .sidebar-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-header {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-primary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 12px;
+        }
+
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            max-height: 480px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .grid-item {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .grid-item:hover {
+            border-color: var(--accent-purple);
+            color: var(--text-primary);
+            background: rgba(124, 58, 237, 0.1);
+        }
+
+        .grid-item.active {
+            box-shadow: 0 0 0 2px var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            font-weight: 800;
+        }
+
+        .grid-item.answered-correct {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: var(--correct-color);
+            color: var(--correct-color);
+        }
+
+        .grid-item.answered-wrong {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: var(--wrong-color);
+            color: var(--wrong-color);
+        }
+
+        .sidebar-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .reset-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px;
+            color: #ef4444;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .reset-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Results Screen View */
+        .results-panel {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 30px;
+            animation: scale-up 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .results-circle-wrapper {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+
+        .results-circle-svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .results-circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.03);
+            stroke-width: 12;
+        }
+
+        .results-circle-fill {
+            fill: none;
+            stroke: url(#cyan-purple-grad);
+            stroke-width: 12;
+            stroke-linecap: round;
+            stroke-dasharray: 565.48; /* 2 * pi * r (r=90) */
+            stroke-dashoffset: 565.48;
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .results-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #ffffff, #d1d5db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .results-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .results-grade {
+            font-size: 1.25rem;
+            color: var(--accent-cyan);
+            font-weight: 700;
+            margin-top: -10px;
+        }
+
+        .results-stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .result-stat-card {
+            flex: 1;
+            min-width: 120px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .result-stat-card .val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .result-stat-card .label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .wrong-reviews-container {
+            width: 100%;
+            max-width: 700px;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 10px;
+        }
+
+        .wrong-reviews-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .wrong-reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .wrong-review-item {
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .wrong-review-item:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Confetti Container */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        /* Mobile Adjustments */
+        .sidebar-toggle-btn {
+            display: none;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Animations */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scale-up {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pulse-orange {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.2); }
+            50% { box-shadow: 0 0 0 8px rgba(249, 115, 22, 0); }
+        }
+
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 30px 10px 10px 10px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: var(--accent-purple);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- Header -->
+        <header>
+            <div class="header-title-container">
+                <i class="fa-solid fa-graduation-cap header-icon"></i>
+                <div class="header-text">
+                    <h1>C# OOP & Core Expert Trainer</h1>
+                    <p><i class="fa-solid fa-shield-halved"></i> Дисциплина: Объектно-ориентированное программирование (Язык C#) — HARD LEVEL</p>
+                </div>
+            </div>
+            
+            <div class="header-stats">
+                <button class="sidebar-toggle-btn" id="sidebar-toggle" onclick="toggleSidebar()">
+                    <i class="fa-solid fa-list-ol"></i> Сетка
+                </button>
+                <div class="stat-badge timer">
+                    <i class="fa-solid fa-hourglass-half"></i> <span id="elapsed-time">00:00</span>
+                </div>
+                <div class="stat-badge streak" id="streak-badge" title="Серия верных ответов">
+                    <i class="fa-solid fa-fire"></i> <span id="streak-count">0</span>
+                </div>
+                <div class="stat-badge correct" title="Правильно">
+                    <i class="fa-solid fa-circle-check"></i> <span id="correct-count">0</span>
+                </div>
+                <div class="stat-badge wrong" title="Неправильно">
+                    <i class="fa-solid fa-circle-xmark"></i> <span id="wrong-count">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <div class="workspace">
+            
+            <!-- Quiz Panel (Left) -->
+            <div class="quiz-panel" id="quiz-panel">
+                
+                <!-- Main Card -->
+                <div class="glass-card">
+                    <!-- Progress Section -->
+                    <div class="progress-container">
+                        <div class="progress-text">
+                            <span>Вопрос <strong id="current-q-index">1</strong> из <strong id="total-q-count">60</strong></span>
+                            <span id="completion-percentage">0% выполнено</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="progress-fill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Question Block -->
+                    <div class="question-section" style="margin-top: 15px;">
+                        <span class="question-category" id="question-category">ООП и Наследование</span>
+                        <div class="question-text" id="question-text">
+                            Загрузка вопроса...
+                        </div>
+                        
+                        <!-- Beautiful Code Block -->
+                        <div class="code-container" id="code-container" style="display: none;">
+                            <div class="code-header">
+                                <span class="lang-badge"><i class="fa-solid fa-code"></i> C# Source</span>
+                                <button class="copy-btn" onclick="copyCode()"><i class="fa-solid fa-copy"></i> Копировать</button>
+                            </div>
+                            <div class="code-wrapper">
+                                <div class="line-numbers" id="line-numbers">1</div>
+                                <pre class="code-body" id="code-body"><code>// Фрагмент кода</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- Answers Option Grid -->
+                        <div class="answers-grid" id="answers-grid">
+                            <!-- Injected dynamically by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explanation / Feedback Sliding Alert -->
+                <div class="explanation-card" id="explanation-card">
+                    <div class="explanation-header" id="explanation-header">
+                        <i class="fa-solid fa-circle-check"></i> <span>Правильный ответ!</span>
+                    </div>
+                    <div class="explanation-body" id="explanation-body">
+                        Пояснение к вопросу...
+                    </div>
+                    <button class="next-btn" id="next-btn" onclick="goToNextQuestion()">
+                        <span>Следующий вопрос</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Quiz Results View (Initially Hidden) -->
+            <div class="glass-card results-panel" id="results-panel">
+                <div class="results-circle-wrapper">
+                    <svg class="results-circle-svg" viewBox="0 0 200 200">
+                        <defs>
+                            <linearGradient id="cyan-purple-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="var(--accent-cyan)" />
+                                <stop offset="100%" stop-color="var(--accent-purple)" />
+                            </linearGradient>
+                        </defs>
+                        <circle class="results-circle-bg" cx="100" cy="100" r="90" />
+                        <circle class="results-circle-fill" id="results-circle-fill" cx="100" cy="100" r="90" />
+                    </svg>
+                    <div class="results-percentage" id="results-percentage">85%</div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div class="results-title" id="results-title">Тест Завершен!</div>
+                    <div class="results-grade" id="results-grade">C# Grandmaster 👑</div>
+                </div>
+
+                <div class="results-stats-row">
+                    <div class="result-stat-card">
+                        <div class="label">Правильно</div>
+                        <div class="val" style="color: var(--correct-color);" id="res-correct">45</div>
+                    </div>
+                    <div class="result-stat-card">
+                        <div class="label">Неправильно</div>
+                        <div class="val" style="color: var(--wrong-color);" id="res-wrong">15</div>
+                    </div>
+                    <div class="result-stat-card">
+                        <div class="label">Время</div>
+                        <div class="val" style="color: #60a5fa;" id="res-time">12:34</div>
+                    </div>
+                    <div class="result-stat-card">
+                        <div class="label">Макс. Серия</div>
+                        <div class="val" style="color: #f97316;" id="res-streak">8</div>
+                    </div>
+                </div>
+
+                <!-- Wrong Answers Review List -->
+                <div class="wrong-reviews-container" id="wrong-reviews-container">
+                    <div class="wrong-reviews-title">
+                        <i class="fa-solid fa-triangle-exclamation" style="color: #f59e0b;"></i>
+                        <span>Вопросы с ошибками (кликните для просмотра):</span>
+                    </div>
+                    <div class="wrong-reviews-list" id="wrong-reviews-list">
+                        <!-- Injected dynamically -->
+                    </div>
+                </div>
+
+                <div style="margin-top: 10px; display: flex; gap: 15px;">
+                    <button class="next-btn" onclick="restartQuiz()"><i class="fa-solid fa-rotate-right"></i> Начать заново</button>
+                </div>
+            </div>
+
+            <!-- Navigation Sidebar (Right) -->
+            <div class="sidebar-panel glass-card" id="sidebar-panel">
+                <div class="sidebar-header">
+                    <span>Сетка вопросов</span>
+                    <span style="font-size: 0.8rem; opacity: 0.7;"><span id="answered-count">0</span> / 60</span>
+                </div>
+                
+                <div class="questions-grid" id="questions-grid">
+                    <!-- 60 Grid Items Injected by JS -->
+                </div>
+
+                <div class="sidebar-actions">
+                    <button class="reset-btn" onclick="confirmReset()"><i class="fa-solid fa-trash-can"></i> Сбросить текущий прогресс</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            Разработано в рамках обучения языку C# и ООП | <a href="#" onclick="confirmReset()">Сбросить прогресс</a>
+        </footer>
+
+    </div>
+
+    <!-- Canvas for Confetti -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Confetti Library via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Core Javascript Code containing 60 highly distinct and complete C# OOP and advanced questions -->
+    <script>
+        const questions = [
+            {
+                category: "ООП и Наследование",
+                text: "Каким образом можно передать аргументы x, y из конструктора производного класса конструктору базового класса в C#?",
+                options: [
+                    "имя_базового_класса(x, y)",
+                    "super(x, y)",
+                    "this(x, y)",
+                    "base(x, y)",
+                    "parent(x, y)"
+                ],
+                correctIndex: 3,
+                explanation: "Ключевое слово <strong>base</strong> используется для вызова конструкторов базового класса из конструкторов производного класса. Вызов записывается через двоеточие сразу после сигнатуры конструктора наследника, например: <code>Derived(int x, int y) : base(x, y)</code>."
+            },
+            {
+                category: "Типы данных",
+                text: "Каков точный размер переменной типа float (System.Single) в памяти в языке C#?",
+                options: [
+                    "Один байт",
+                    "Два байта",
+                    "Четыре байта",
+                    "Восемь байтов",
+                    "Десять байтов"
+                ],
+                correctIndex: 2,
+                explanation: "Тип <strong>float</strong> в C# представляет 32-битное число с плавающей запятой одинарной точности, что соответствует спецификации IEEE 754. 32 бита составляют ровно <strong>4 байта</strong>."
+            },
+            {
+                category: "Исключения",
+                text: "Что произойдёт на уровне выполнения среды CLR, если в стеке вызовов не будет найден подходящий блок catch для сгенерированного исключения?",
+                options: [
+                    "Продолжится выполнение кода программы, следующего за блоком try, породившим ошибку",
+                    "Выполнится код обработчика по умолчанию и выполнение продолжится",
+                    "Программа аварийно завершится",
+                    "Появится диалоговое окно с сообщением об исключении и программа продолжится",
+                    "Появится диалог с предложением завершить программу или продолжить её работу"
+                ],
+                correctIndex: 2,
+                explanation: "Если ни один метод в текущем стеке вызовов не обрабатывает исключение, управление попадает глобальному обработчику среды выполнения CLR. Происходит генерация события неперехваченного исключения, после чего <strong>программа аварийно завершается</strong> (crash) с выводом StackTrace."
+            },
+            {
+                category: "Структуры и Ссылки",
+                text: "Можно ли передать доступ к некоторой структуре (struct) в вызываемый метод по ссылке?",
+                options: [
+                    "Нельзя ни при каких условиях",
+                    "Можно. Так по умолчанию передаются структурные переменные в метод",
+                    "Можно, преобразовав предварительно структуру в тип object",
+                    "Можно, используя модификатор аргумента ref, in или out",
+                    "Можно, используя модификатор public при объявлении параметров"
+                ],
+                correctIndex: 3,
+                explanation: "Структуры являются типами значений (value types) и по умолчанию передаются по значению (копированием). Однако с помощью ключевых слов <strong>ref</strong> (передача на чтение-запись), <strong>in</strong> (передача только на чтение без копирования) или <strong>out</strong> (передача в качестве возвращаемого аргумента) их можно передавать по ссылке."
+            },
+            {
+                category: "Точка входа",
+                text: "Что является точкой входа в программу на языке C#?",
+                options: [
+                    "Метод Start()",
+                    "Конструктор главного класса приложения",
+                    "Метод Main() класса или top-level statements в главном файле",
+                    "Первый подключенный интерфейс",
+                    "Блок глобальной инициализации global{}"
+                ],
+                correctIndex: 2,
+                explanation: "Точкой входа в консольное или настольное приложение C# традиционно является статический метод <strong>Main</strong>. В современном C# также поддерживаются <strong>Top-level statements</strong> (инструкции верхнего уровня), которые компилятор автоматически оборачивает в неявный метод Main при компиляции."
+            },
+            {
+                category: "Архитектура приложений",
+                text: "Что отличает консольное приложение на языке C# от графического приложения Windows Forms на архитектурном уровне?",
+                options: [
+                    "Консольное приложение не использует CLR и компилируется в машинный код напрямую",
+                    "Windows Forms приложение имеет бесконечный цикл обработки событий ОС (Message Loop) в STA-потоке, тогда как консольное выполняется линейно по потокам команд",
+                    "В Windows Forms запрещено использовать классы и структуры",
+                    "Консольные приложения не поддерживают асинхронные операции",
+                    "Windows Forms запускает каждый класс в отдельном физическом потоке процессора"
+                ],
+                correctIndex: 1,
+                explanation: "Ключевое отличие Windows Forms приложений — наличие <strong>цикла обработки сообщений Windows (Message Loop)</strong>, запускаемого методом <code>Application.Run()</code> в однопоточном апартаменте (STA-поток). Это позволяет приложению реагировать на клики, отрисовку окон и системные события."
+            },
+            {
+                category: "Типы данных",
+                text: "Какое имя логического типа данных используется на уровне CTS (Common Type System) в платформе .NET?",
+                options: [
+                    "bool",
+                    "System.Bool",
+                    "System.Boolean",
+                    "System.Bit",
+                    "Logical"
+                ],
+                correctIndex: 2,
+                explanation: "В языке C# ключевое слово <code>bool</code> является синонимом системного типа <strong>System.Boolean</strong> из CTS, который и представляет логические значения true/false в экосистеме .NET."
+            },
+            {
+                category: "Управление памятью",
+                text: "Что возвращает оператор new для ссылочного типа (class) в языке C#?",
+                options: [
+                    "Хэш-код создаваемого объекта",
+                    "Ссылку на вновь созданный экземпляр объекта в управляемой куче (heap)",
+                    "Адрес первого байта объекта в физической оперативной памяти типа IntPtr",
+                    "Копию полей класса, упакованную в структуру",
+                    "Случайный уникальный идентификатор GUID"
+                ],
+                correctIndex: 1,
+                explanation: "Оператор <code>new</code> для ссылочных типов выполняет выделение памяти в управляемой куче (heap) под экземпляр класса, инициализирует его поля дефолтными значениями, вызывает конструктор и возвращает <strong>ссылку на созданный объект</strong> в куче."
+            },
+            {
+                category: "Ключевые слова",
+                text: "Что означает ключевое слово this в языке C#?",
+                options: [
+                    "Ссылка на базовый класс текущего объекта",
+                    "Указатель на вызывающий поток выполнения",
+                    "Ссылка на текущий экземпляр класса или структуры, в котором выполняется данный код",
+                    "Ссылка на статический контекст сборки",
+                    "Локальный синоним оператора new"
+                ],
+                correctIndex: 2,
+                explanation: "Ключевое слово <strong>this</strong> представляет собой ссылку на <strong>текущий экземпляр класса или структуры</strong>. С его помощью обращаются к полям/методам текущего объекта, передают объект параметром или вызывают другие конструкторы по цепочке."
+            },
+            {
+                category: "Передача значений",
+                text: "Каким будет значение p1.X после выполнения следующего кода при условии, что Point объявлен как СТРУКТУРА?",
+                code: `public struct Point {\n    public int X;\n    public int Y;\n    public Point(int x, int y) { X = x; Y = y; }\n}\n\n// Выполнение:\nPoint p1 = new Point(10, 10);\nPoint p2 = p1;\np2.X = 26;`,
+                options: [
+                    "10",
+                    "26",
+                    "0",
+                    "Вызовет ошибку компиляции",
+                    "Вызовет NullReferenceException"
+                ],
+                correctIndex: 0,
+                explanation: "Поскольку Point объявлен как <strong>struct</strong>, это тип значения (value type). Строка <code>Point p2 = p1</code> осуществляет **побитовое копирование** всех полей структуры p1 в новую переменную p2. Это независимые объекты. Изменение <code>p2.X = 26</code> не влияет на p1, поэтому p1.X остается равным **10**."
+            },
+            {
+                category: "Передача значений",
+                text: "Каким будет значение p1.X после выполнения следующего кода при условии, что Point объявлен как КЛАСС?",
+                code: `public class Point {\n    public int X { get; set; }\n    public int Y { get; set; }\n    public Point(int x, int y) { X = x; Y = y; }\n}\n\n// Выполнение:\nPoint p1 = new Point(10, 10);\nPoint p2 = p1;\np2.X = 26;`,
+                options: [
+                    "10",
+                    "26",
+                    "0",
+                    "Вызовет ошибку компиляции",
+                    "Вызовет NullReferenceException"
+                ],
+                correctIndex: 1,
+                explanation: "Поскольку Point объявлен как <strong>класс</strong>, это ссылочный тип. Строка <code>Point p2 = p1</code> копирует саму ссылку, а не объект. Переменные p1 и p2 ссылаются на <strong>один и тот же объект</strong> в куче. Изменение <code>p2.X = 26</code> меняет общее свойство, поэтому p1.X будет равно <strong>26</strong>."
+            },
+            {
+                category: "Управление памятью",
+                text: "Каким действием можно детерминировано и гарантированно освободить неуправляемые ресурсы (файлы, сокеты, коннекты к БД), используемые экземпляром класса в C#?",
+                options: [
+                    "Присвоить ссылке на объект значение null",
+                    "Вызвать сборщик мусора с помощью GC.Collect()",
+                    "Вызвать метод Dispose() (или задействовать конструкцию using) у объекта, реализующего IDisposable",
+                    "Применить ключевое слово delete к переменной",
+                    "Выйти из программы и дождаться вызова деструктора операционной системой"
+                ],
+                correctIndex: 2,
+                explanation: "Для предсказуемого и немедленного освобождения неуправляемых ресурсов класс должен реализовать интерфейс <code>IDisposable</code>. Своевременный вызов метода <strong>Dispose()</strong> (или использование синтаксиса <strong>using</strong>) гарантирует немедленное закрытие дескрипторов ресурсов."
+            },
+            {
+                category: "Базовый синтаксис",
+                text: "Какой оператор цикла отсутствует в языке C#?",
+                options: [
+                    "for",
+                    "foreach",
+                    "while",
+                    "do..while",
+                    "repeat..until"
+                ],
+                correctIndex: 4,
+                explanation: "В языке C# есть четыре встроенных оператора цикла: <code>for</code>, <code>foreach</code>, <code>while</code> и <code>do...while</code>. Цикл <strong>repeat...until</strong> (известный по языку Pascal) в C# отсутствует."
+            },
+            {
+                category: "Структуры и Классы",
+                text: "Какое отличие структуры от класса в C# указано верно?",
+                options: [
+                    "Структуры поддерживают наследование от других структур, а классы — нет",
+                    "Структуры являются ссылочным типом данных, а классы — значимым",
+                    "Структуры хранятся в куче (heap), а классы всегда хранятся в стеке (stack)",
+                    "Структуры являются типами значений (value types), не поддерживают пользовательское наследование (кроме интерфейсов) и неявно наследуются от System.ValueType",
+                    "В структурах нельзя объявлять автосвойства и конструкторы"
+                ],
+                correctIndex: 3,
+                explanation: "Структуры (<code>struct</code>) представляют собой **типы значений (value types)**. Они не поддерживают наследование от других классов или структур и не могут служить базовыми типами. Неявно они наследуются от <code>System.ValueType</code> (который в свою очередь наследуется от <code>System.Object</code>)."
+            },
+            {
+                category: "Структуры и Конструкторы",
+                text: "Сколько аргументов должен получать пользовательский конструктор структуры в современном C#, начиная с C# 10?",
+                options: [
+                    "Обязательно не менее одного аргумента (конструкторы без параметров запрещены)",
+                    "Ровно столько, сколько полей определено в структуре",
+                    "Любое количество (в C# 10+ разрешено объявлять явный конструктор без параметров)",
+                    "Не более трех параметров",
+                    "Конструкторы структуры вообще не могут принимать аргументы"
+                ],
+                correctIndex: 2,
+                explanation: "До C# 10 структуры не могли содержать явные конструкторы без параметров (поскольку компилятор всегда генерировал неявный конструктор по умолчанию, зануляющий все поля). Начиная с C# 10, **разрешено явно объявлять публичный конструктор без параметров**, инициализирующий поля структуры."
+            },
+            {
+                category: "Объекты и Классы",
+                text: "Какое выражение создает экземпляр класса X на языке C#, используя Target-typed new, доступный начиная с C# 9.0?",
+                options: [
+                    "X obj = X();",
+                    "X obj = new X;",
+                    "X obj = new();",
+                    "var obj = new();",
+                    "X obj = create X();"
+                ],
+                correctIndex: 2,
+                explanation: "Синтаксис <code>X obj = new();</code> называется **Target-typed new expression**. Если целевой тип переменной явно указан (в данном случае X), тип после `new` можно опустить. Обратите внимание: синтаксис <code>var obj = new();</code> вызовет ошибку компиляции, так как компилятору не из чего вывести тип."
+            },
+            {
+                category: "Методы Object",
+                text: "Какой метод НЕ входит в состав базового системного класса System.Object в языке C#?",
+                options: [
+                    "ToString",
+                    "GetHashCode",
+                    "GetType",
+                    "Equals",
+                    "Dispose"
+                ],
+                correctIndex: 4,
+                explanation: "Класс <code>System.Object</code> содержит методы: <code>Equals</code>, <code>GetHashCode</code>, <code>GetType</code>, <code>ToString</code>, <code>MemberwiseClone</code> (protected) и статический <code>ReferenceEquals</code>. Метод <strong>Dispose</strong> принадлежит интерфейсу <code>IDisposable</code> и не имеет отношения к Object."
+            },
+            {
+                category: "Модификаторы Доступа",
+                text: "Каков уровень доступа по умолчанию к полям структуры (struct), если модификатор доступа не указан явно?",
+                options: [
+                    "public",
+                    "protected",
+                    "internal",
+                    "private",
+                    "protected internal"
+                ],
+                correctIndex: 3,
+                explanation: "По умолчанию в структурах (и классах) все члены (поля, методы, свойства) имеют доступ **private**, если модификатор доступа не указан явно."
+            },
+            {
+                category: "Полиморфизм",
+                text: "С помощью какого ключевого модификатора в C# можно переопределить виртуальную или абстрактную функцию базового класса в производном классе?",
+                options: [
+                    "overload",
+                    "new",
+                    "override",
+                    "virtual",
+                    "sealed"
+                ],
+                correctIndex: 2,
+                explanation: "Для переопределения виртуального (virtual) или абстрактного (abstract) метода в дочернем классе применяется модификатор <strong>override</strong>. Ключевое слово <code>new</code> скрывает родительский метод без полиморфного связывания."
+            },
+            {
+                category: "Классы",
+                text: "Какое свойство характеризует абстрактный класс (abstract class) в языке C#?",
+                options: [
+                    "Он не может содержать полей и методов с телом реализации",
+                    "Все члены абстрактного класса обязаны быть помечены ключевым словом abstract",
+                    "Нельзя создавать экземпляры абстрактного класса напрямую через оператор new",
+                    "Абстрактный класс не может иметь конструкторов",
+                    "Он автоматически является запечатанным (sealed)"
+                ],
+                correctIndex: 2,
+                explanation: "Главное свойство абстрактного класса — **невозможность создать его экземпляр напрямую** через оператор <code>new</code>. Абстрактный класс служит базовым шаблоном для наследования и может содержать как абстрактные члены (без реализации), так и обычные методы с телом."
+            },
+            {
+                category: "Интерфейсы",
+                text: "Чем интерфейс отличается от абстрактного класса в C# (включая нововведения современной версии C# 8.0 с Default Interface Methods)?",
+                options: [
+                    "Интерфейсы компилируются исключительно в C-структуры",
+                    "Класс может наследовать только один класс, но реализовывать множество интерфейсов; интерфейсы также не могут содержать нестатические поля (состояние экземпляра)",
+                    "Интерфейсы могут содержать деструкторы и конструкторы экземпляра",
+                    "Абстрактный класс не может реализовывать интерфейсы",
+                    "Все члены интерфейса обязаны быть private"
+                ],
+                correctIndex: 1,
+                explanation: "Даже с введением реализаций методов по умолчанию (DIM) в C# 8.0, ключевое отличие остается: класс может наследоваться **только от одного класса** (одиночное наследование), но реализовывать **множество интерфейсов**. Также интерфейсы по-прежнему **не могут объявлять нестатические поля экземпляра** (state)."
+            },
+            {
+                category: "Исключения",
+                text: "Что означает ключевое слово try в структуре конструкции обработки исключений C#?",
+                options: [
+                    "Определяет метод, который может бросить исключение",
+                    "Вызывает генерацию исключения CLR",
+                    "Выделяет защищенный блок кода, при выполнении которого будут отслеживаться и перехватываться возникающие исключения",
+                    "Зацикливает выполнение кода до исчезновения ошибки",
+                    "Служит меткой для безусловного перехода"
+                ],
+                correctIndex: 2,
+                explanation: "Ключевое слово <strong>try</strong> предваряет блок кода, в котором разработчик ожидает возможное возникновение исключений. Любое исключение, брошенное внутри этого блока, перехватывается последующими блоками catch."
+            },
+            {
+                category: "Исключения",
+                text: "Какие типы объектов могут передаваться оператору throw в языке C# для генерации ошибки?",
+                options: [
+                    "Строки (string) и целочисленные коды ошибок (int)",
+                    "Любой класс или структура, без ограничений",
+                    "Только экземпляры класса System.Exception или классов, унаследованных от него",
+                    "Только указатели типа void*",
+                    "Объекты, реализующие специальный интерфейс IDisposable"
+                ],
+                correctIndex: 2,
+                explanation: "В C# оператор <code>throw</code> принимает исключительно экземпляры класса <strong>System.Exception</strong> или любых его производных классов. Попытка бросить объект другого типа приведет к ошибке компиляции."
+            },
+            {
+                category: "Типизация и ООП",
+                text: "Если формальный аргумент метода объявлен как экземпляр класса X, то аргумент какого типа может быть фактически передан при вызове метода?",
+                options: [
+                    "Только объект класса X и ничего более",
+                    "Любой тип данных .NET, включая неродственные интерфейсы",
+                    "Сам класс X, любой производный от X класс, либо значение null (для ссылочного типа)",
+                    "Только структуры, реализующие интерфейсы класса X",
+                    "Любая переменная, если к ней применен модификатор unsafe"
+                ],
+                correctIndex: 2,
+                explanation: "Благодаря наследованию и полиморфизму, в метод, ожидающий класс X, можно передать **объект самого класса X, либо объект любого его наследника (производного класса)**. Также, так как класс — ссылочный тип, допустимо передать значение **null**."
+            },
+            {
+                category: "Типизация",
+                text: "Если присваивание переменных x = y допустимо (где x имеет тип A, а y имеет тип B), то допустимо ли всегда обратное присваивание y = x в языке C#?",
+                options: [
+                    "Да, полиморфизм в C# работает симметрично в обе стороны",
+                    "Нет, обратное присваивание возможно только если типы A и B идентичны, или между ними определено явное/неявное преобразование типа",
+                    "Да, при условии, что A — класс, а B — структура",
+                    "Да, если обе переменные объявлены внутри одного и того же метода",
+                    "Нет, обратное присваивание строго запрещено стандартом C# во всех случаях без исключения"
+                ],
+                correctIndex: 1,
+                explanation: "Совместимость типов является направленной. Например, если A — базовый класс, а B — наследник, то <code>A x = y</code> (восходящее приведение) допустимо неявно. Однако обратное присваивание <code>B y = x</code> требует **явного приведения типов** <code>(B)x</code>, поскольку компилятор не может гарантировать совместимость во время выполнения."
+            },
+            {
+                category: "Система Типов",
+                text: "Для каких типов данных в языке C# базовым (корневым) является тип System.Object (object)?",
+                options: [
+                    "Только для пользовательских классов",
+                    "Только для ссылочных типов (classes, delegates, interfaces)",
+                    "Для всех типов данных C#, включая значимые типы (через упаковку/boxing) и ссылочные",
+                    "Только для встроенных числовых типов",
+                    "Только для массивов"
+                ],
+                correctIndex: 2,
+                explanation: "В платформе .NET вся система типов объединена под общим предком **System.Object**. Даже значимые типы (int, struct, char) неявно наследуются от System.ValueType, который наследуется от System.Object. Значимые типы могут приводиться к object с помощью механизма упаковки (boxing)."
+            },
+            {
+                category: "Типизация",
+                text: "При каком условии возможно без явных преобразований присваивание y = x в языке C#, если x имеет тип T_X, а y — тип T_Y?",
+                options: [
+                    "Только если T_X является базовым классом для T_Y",
+                    "Если существует определенное неявное преобразование (implicit conversion) от T_X к T_Y (например, T_X наследуется от T_Y, или реализован оператор implicit)",
+                    "При любых условиях, компилятор сам приведет типы во время выполнения",
+                    "Только если T_X и T_Y являются структурами",
+                    "Если T_X равен object"
+                ],
+                correctIndex: 1,
+                explanation: "Неявное присваивание <code>y = x</code> возможно только при наличии **неявного преобразования (implicit conversion)** от типа переменной-источника (T_X) к типу переменной-приемника (T_Y). Это происходит при расширении типов (например, `int` в `double`), при восходящем приведении классов (наследник в базу), или при явном описании `implicit` оператора."
+            },
+            {
+                category: "Передача параметров",
+                text: "Что задаёт ключевое слово ref для параметров метода в языке C#?",
+                options: [
+                    "Параметр передается асинхронно через пул потоков",
+                    "Параметр передается по ссылке; метод работает с исходной переменной и может читать/записывать её, при этом переменная должна быть обязательно инициализирована до вызова метода",
+                    "Параметр передается только для записи; метод обязан проинициализировать переменную до выхода",
+                    "Параметр автоматически упаковывается в куче",
+                    "Параметр является константным и защищенным от изменений внутри метода"
+                ],
+                correctIndex: 1,
+                explanation: "Ключевое слово <strong>ref</strong> указывает, что аргумент передается **по ссылке**. Изменения параметра в методе отразятся на исходной переменной. Вызывающий код обязан **проинициализировать** переменную перед передачей в метод."
+            },
+            {
+                category: "Модификаторы Доступа",
+                text: "Какие права доступа задаёт модификатор доступа internal в языке C#?",
+                options: [
+                    "Доступ разрешен только внутри текущего класса",
+                    "Доступ разрешен только наследникам класса в любой сборке",
+                    "Доступ ограничен рамками текущей сборки (assembly / .dll или .exe)",
+                    "Доступ разрешен только в пределах текущего файла исходного кода",
+                    "Полный доступ отовсюду без ограничений"
+                ],
+                correctIndex: 2,
+                explanation: "Модификатор <strong>internal</strong> делает тип или член класса доступным **только внутри той же сборки** (assembly), в которой он определен. Для внешних сборок данный член скрыт."
+            },
+            {
+                category: "Модификаторы Доступа",
+                text: "Какие права доступа задаёт модификатор доступа protected в языке C#?",
+                options: [
+                    "Доступ разрешен только коду в той же сборке",
+                    "Доступ ограничен пределами текущего класса и классов, которые унаследованы от данного класса",
+                    "Доступ открыт для любых методов в том же пространстве имен (namespace)",
+                    "Доступ разрешен только статическим методам текущего файла",
+                    "Ограничивает вызов методов только безопасным кодом (safe)"
+                ],
+                correctIndex: 1,
+                explanation: "Модификатор <strong>protected</strong> делает члены класса доступными **внутри самого класса, а также в любых классах-наследниках (производных классах)**, независимо от того, находятся ли они в той же сборке или нет."
+            },
+            {
+                category: "Базовый синтаксис",
+                text: "Что делает математический оператор % в языке C#?",
+                options: [
+                    "Рассчитывает процентное отношение",
+                    "Делит левый операнд на правый нацело, отбрасывая дробную часть",
+                    "Возвращает остаток от деления левого операнда на правый операнд",
+                    "Возводит левое число в степень правого числа",
+                    "Сдвигает биты числа влево на указанное количество позиций"
+                ],
+                correctIndex: 2,
+                explanation: "Оператор <code>%</code> (остаток от деления / remainder) вычисляет остаток после деления первого числа на второе. Например, <code>7 % 3</code> вернет 1."
+            },
+            {
+                category: "Массивы",
+                text: "Укажите корректный способ объявления и инициализации двумерного прямоугольного массива целых чисел размерностью 3х3 в C#.",
+                options: [
+                    "int[][] matrix = new int[3, 3];",
+                    "int[, ] matrix = new int[3, 3];",
+                    "int[, ] matrix = new int[3][3];",
+                    "int[3, 3] matrix = new int[, ];",
+                    "Array[int, int] matrix = new Array(3, 3);"
+                ],
+                correctIndex: 1,
+                explanation: "В C# прямоугольные (двумерные) массивы объявляются с помощью запятой внутри квадратных скобок: <code>int[, ] matrix = new int[3, 3];</code>. Синтаксис с двойными скобками `int[][]` используется для зубчатых (jagged) массивов — массивов массивов."
+            },
+            {
+                category: "Делегаты и События",
+                text: "Какое ограничение накладывается в языке C# на сигнатуру метода, который назначается в качестве обработчика события (event)?",
+                options: [
+                    "Метод должен быть строго статическим",
+                    "Метод должен обязательно возвращать тип int или bool",
+                    "Параметры и возвращаемый тип метода должны в точности соответствовать сигнатуре делегата, на основе которого объявлено событие",
+                    "Метод должен быть помечен ключевым словом eventhandler",
+                    "Метод не должен содержать аргументов вообще"
+                ],
+                correctIndex: 2,
+                explanation: "События объявляются на основе определенного типа делегата. Любой метод, подписывающийся на это событие, **должен строго соответствовать сигнатуре (типам аргументов и возвращаемому значению) этого делегата**, иначе возникнет ошибка компиляции."
+            },
+            {
+                category: "Классы и Члены",
+                text: "Какой код в C# корректно создаст экземпляр класса X и неизменяемую ссылку на него (которую нельзя переназначить на другой объект во время жизни содержащего объекта)?",
+                options: [
+                    "const X refX = new X();",
+                    "readonly X refX = new X(); (как поле класса)",
+                    "let refX = new X();",
+                    "static X refX = new X();",
+                    "Ни один из вариантов, локальные readonly переменные не поддерживаются"
+                ],
+                correctIndex: 1,
+                explanation: "Модификатор <strong>readonly</strong> применяется к полям класса/структуры и указывает, что поле может быть проинициализировано только при объявлении или в конструкторе. После этого ссылку нельзя изменить. Локальные переменные в C# не поддерживают readonly или const с оператором new (так как new вычисляется в рантайме)."
+            },
+            {
+                category: "Небезопасный код",
+                text: "Могут ли в языке C# использоваться указатели и прямая работа с адресами физической памяти?",
+                options: [
+                    "Нет, C# полностью исключает указатели в целях безопасности выполнения",
+                    "Да, но только при компиляции на Unix-платформах через Mono",
+                    "Да, в специальных блоках кода, помеченных ключевым словом unsafe, при условии включения сборки с флагом AllowUnsafeBlocks",
+                    "Да, указатели автоматически используются по умолчанию для всех обычных ссылочных типов без специальных флагов",
+                    "Да, но только для типов данных string и object"
+                ],
+                correctIndex: 2,
+                explanation: "В C# поддерживается прямая работа с памятью и указателями через ключевое слово <strong>unsafe</strong>. Для компиляции такого кода в настройках проекта должна быть явно включена опция компилятора **AllowUnsafeBlocks (Разрешить небезопасный код)**."
+            },
+            {
+                category: "Модификаторы",
+                text: "Какое ключевое слово в языке C# НЕ относится к модификаторам полей или переменных?",
+                options: [
+                    "readonly",
+                    "volatile",
+                    "static",
+                    "virtual",
+                    "public"
+                ],
+                correctIndex: 3,
+                explanation: "Модификатор <strong>virtual</strong> используется только для методов, свойств, индексаторов или событий класса, чтобы разрешить их переопределение в производных классах. К переменным и полям `virtual` применить нельзя."
+            },
+            {
+                category: "Передача параметров",
+                text: "Что задаёт ключевое слово out для формальных параметров метода в языке C#?",
+                options: [
+                    "Параметр передается по ссылке; метод обязан присвоить ему значение до своего завершения; исходная переменная перед передачей может быть не инициализирована",
+                    "Параметр выводится на экран в консоль отладки",
+                    "Параметр является необязательным и принимает значение по умолчанию",
+                    "Параметр освобождается сборщиком мусора при входе в метод",
+                    "Метод возвращает управление асинхронно"
+                ],
+                correctIndex: 0,
+                explanation: "Модификатор <strong>out</strong> передает параметр по ссылке. Исходная переменная **может быть не инициализирована** до вызова метода, но вызываемый метод **внутри своего тела обязан гарантированно присвоить значение** этому параметру до завершения работы."
+            },
+            {
+                category: "Исключения",
+                text: "Какое ключевое слово в C# НЕ относится к механизму обработки исключительных ситуаций?",
+                options: [
+                    "try",
+                    "catch",
+                    "finally",
+                    "throw",
+                    "rescue"
+                ],
+                correctIndex: 4,
+                explanation: "Блоки обработки исключений в C# состоят из ключевых слов <code>try</code>, <code>catch</code>, <code>finally</code> и оператора генерации ошибки <code>throw</code>. Ключевое слово <strong>rescue</strong> используется в других языках (например, Ruby), но не в C#."
+            },
+            {
+                category: "Классы и Методы",
+                text: "Каким образом можно вызвать статический (static) public метод Calc класса X из кода другого класса в языке C#?",
+                options: [
+                    "X.Calc();",
+                    "new X().Calc();",
+                    "this.Calc();",
+                    "base.Calc();",
+                    "X->Calc();"
+                ],
+                correctIndex: 0,
+                explanation: "Статические члены класса принадлежат самому типу, а не его экземплярам. Поэтому они вызываются напрямую через имя класса: <strong>X.Calc()</strong>."
+            },
+            {
+                category: "Базовый синтаксис",
+                text: "Что будет выведено при выполнении следующего фрагмента кода на C#?",
+                code: `int x = 5;\nint y = x++ + ++x * 2 - --x;\nConsole.WriteLine($"x={x}, y={y}");`,
+                options: [
+                    "x=6, y=13",
+                    "x=7, y=14",
+                    "x=5, y=13",
+                    "x=6, y=15",
+                    "x=7, y=12"
+                ],
+                correctIndex: 0,
+                explanation: "Посчитаем по шагам слева направо:<br>1) <code>x++</code>: возвращает текущее значение <strong>5</strong>. После этого x увеличивается до 6.<br>2) <code>++x</code>: x увеличивается с 6 до 7 и возвращает <strong>7</strong>.<br>3) Умножение имеет приоритет: <code>++x * 2</code> равно <code>7 * 2 = 14</code>.<br>4) <code>--x</code>: x уменьшается с 7 до 6 и возвращает <strong>6</strong>.<br>5) Итоговое выражение: <code>5 + 14 - 6 = 13</code>.<br>После выполнения x равен 6, а y равен 13. Вывод: <strong>x=6, y=13</strong>."
+            },
+            {
+                category: "Небезопасный код",
+                text: "Какая операция в языке C# доступна только внутри блоков небезопасного кода (unsafe)?",
+                options: [
+                    "Деление на ноль",
+                    "Преобразование типов с помощью оператора as",
+                    "Использование оператора разыменования указателя (*) и взятия адреса (&)",
+                    "Вызов многоадресных делегатов",
+                    "Применение динамической типизации через dynamic"
+                ],
+                correctIndex: 2,
+                explanation: "Работа с сырыми адресами памяти, арифметикой указателей, операторами взятия адреса <strong>&</strong>, разыменования <strong>*</strong> и обращения по указателю <strong>-></strong> разрешена только в блоках <strong>unsafe</strong>."
+            },
+            {
+                category: "Продвинутый C#",
+                text: "Что выведет данный код, использующий Nullable-типы данных в C#?",
+                code: `int? a = null;\nint b = a ??= 10;\nint c = a++ ?? 5;\nConsole.WriteLine($"a={a}, b={b}, c={c}");`,
+                options: [
+                    "a=11, b=10, c=10",
+                    "a=10, b=10, c=10",
+                    "a=11, b=10, c=5",
+                    "a=10, b=10, c=5",
+                    "a=null, b=10, c=5"
+                ],
+                correctIndex: 0,
+                explanation: "Разберем код:<br>1) <code>a ??= 10</code>: так как a равен null, ему присваивается 10. Переменная <code>b</code> получает результат операции, то есть 10. Теперь a = 10.<br>2) <code>a++ ?? 5</code>: Постфиксный инкремент <code>a++</code> возвращает текущее значение (10), после чего a увеличивается до 11. Выражение принимает вид <code>10 ?? 5</code>, что дает 10. Переменная <code>c</code> становится равной 10.<br>В итоге: a=11, b=10, c=10."
+            },
+            {
+                category: "Продвинутый C#",
+                text: "Какое из ограничений, накладываемых на структуры типа ref struct (например, Span<T>), сформулировано НЕВЕРНО?",
+                options: [
+                    "Они не могут быть упакованы (boxed) в object или приведены к интерфейсу",
+                    "Они не могут быть полями обычных классов или обычных некороткоживущих структур",
+                    "Их нельзя объявлять и использовать внутри асинхронных (async) методов",
+                    "Они не могут реализовывать интерфейсы",
+                    "Переменные типа ref struct нельзя передавать в методы в качестве параметров"
+                ],
+                correctIndex: 4,
+                explanation: "Типы <code>ref struct</code> **могут передаваться в качестве параметров методов**. Неверно утверждать обратное. Остальные пункты верны: они создаются исключительно в стеке, не могут бокситься, не могут быть полями классов (кучи), не могут имплементировать интерфейсы и не могут использоваться в async-методах из-за генерации стейт-машины в куче."
+            },
+            {
+                category: "Продвинутый C#",
+                text: "Что выведет данное выражение с сопоставлением шаблонов (Pattern Matching) в C# 9+?",
+                code: `object val = 5.0f;\nstring res = val switch {\n    int i => "int",\n    double d => "double",\n    float f and > 0 => "positive float",\n    float f => "any float",\n    _ => "unknown"\n};\nConsole.WriteLine(res);`,
+                options: [
+                    "positive float",
+                    "any float",
+                    "float",
+                    "double",
+                    "unknown"
+                ],
+                correctIndex: 0,
+                explanation: "Значение <code>5.0f</code> относится к типу <strong>float</strong>. Шаблон <code>float f and > 0</code> проверяет, что тип равен float и значение больше нуля. Условие выполняется, поэтому возвращается <strong>positive float</strong>."
+            },
+            {
+                category: "Продвинутый C#",
+                text: "Что выведет следующий фрагмент кода с Record-типом?",
+                code: `public record Person(string Name, int Age);\n\n// Выполнение:\nvar p1 = new Person("Alice", 20);\nvar p2 = p1 with { Age = 21 };\nvar p3 = new Person("Alice", 21);\nConsole.WriteLine($"\${p1 == p2} \${p2 == p3}");`,
+                options: [
+                    "False True",
+                    "True True",
+                    "False False",
+                    "True False",
+                    "Ошибка компиляции"
+                ],
+                correctIndex: 0,
+                explanation: "Записи (records) обладают встроенным **сравнением по значению (value-based equality)**. Переменные `p1` и `p2` имеют разный возраст, поэтому <code>p1 == p2</code> возвращает **False**. А переменные `p2` и `p3` имеют одинаковые значения всех свойств (Alice, 21), поэтому <code>p2 == p3</code> возвращает **True**."
+            },
+            {
+                category: "Продвинутый C#",
+                text: "Какое из следующих присваиваний корректно с точки зрения правил ковариантности (covariance) обобщений в C#?",
+                options: [
+                    "IEnumerable<object> list = new List<string>();",
+                    "Action<object> act = new Action<string>();",
+                    "IList<object> list = new List<string>();",
+                    "Func<string> fn = new Func<object>(() => new object());",
+                    "IComparer<object> comp = new Comparer<string>();"
+                ],
+                correctIndex: 0,
+                explanation: "Интерфейс <code>IEnumerable<out T></code> помечен ключевым словом <code>out</code>, что делает его **ковариантным**. Это позволяет присвоить более обобщенный интерфейс <code>IEnumerable<object></code> более конкретному объекту <code>List<string></code>. Интерфейс `IList<T>` инвариантен, а `Action<in T>` контравариантен."
+            },
+            {
+                category: "Асинхронность",
+                text: "Какой код при работе в GUI-приложении (например, WPF/WinForms) с высокой вероятностью приведет к взаимной блокировке (Deadlock)?",
+                options: [
+                    "await Task.Delay(1000);",
+                    "Task.Run(() => {}).Wait(); внутри фонового потока",
+                    "Вызов асинхронного метода из синхронного кода основного потока с помощью .Result или .Wait()",
+                    "Применение метода ConfigureAwait(false) перед await",
+                    "Использование yield return вместе с await Task.Yield()"
+                ],
+                correctIndex: 2,
+                explanation: "При вызове `.Result` или `.Wait()` основной поток блокируется в ожидании завершения таски. Однако асинхронной таске для завершения требуется вернуться в исходный контекст синхронизации (SynchronizationContext), который занят блокировкой. Они начинают бесконечно ждать друг друга, вызывая **deadlock**."
+            },
+            {
+                category: "Продвинутый C#",
+                text: "Что будет выведено на консоль при выполнении данного кода с ленивым итератором yield return?",
+                code: `static IEnumerable<int> GetNumbers() {\n    Console.Write("A");\n    yield return 1;\n    Console.Write("B");\n    yield return 2;\n}\n\n// Вызов:\nvar numbers = GetNumbers();\nConsole.Write("C");\nforeach(var n in numbers) {\n    Console.Write(n);\n}`,
+                options: [
+                    "CA1B2",
+                    "ACB12",
+                    "A1B2C",
+                    "CAB12",
+                    "C1A2B"
+                ],
+                correctIndex: 0,
+                explanation: 'Вызов <code>GetNumbers()</code> не начинает выполнять метод, а лишь возвращает ленивый генератор. Поэтому сначала срабатывает <code>Console.Write("C")</code>. <br>При входе в `foreach` начинает выполняться итератор: выводится **A**, возвращается 1 (выводится **1**). На второй итерации выводится **B**, возвращается 2 (выводится **2**). Итоговый вывод: <strong>CA1B2</strong>.'
+            },
+            {
+                category: "Структуры и Оптимизация",
+                text: "Какова основная причина рекомендации помечать значимые структуры как readonly (readonly struct) при их передаче по ссылке только для чтения с ключевым словом in?",
+                options: [
+                    "Сборщик мусора быстрее удаляет readonly-структуры",
+                    "Если структура не помечена как readonly, компилятор при любом вызове метода или свойства внутри нее вынужден создавать в стеке защитную копию (defensive copy) для предотвращения мутаций, что существенно снижает производительность",
+                    "Иначе структуру нельзя передавать в async-методы",
+                    "Это единственный способ заставить поля структуры работать со строками",
+                    "Иначе размер структуры в памяти увеличивается вдвое"
+                ],
+                correctIndex: 1,
+                explanation: "Ключевое слово <code>in</code> гарантирует неизменяемость структуры. Если структура не объявлена как <strong>readonly struct</strong>, компилятор не может доверять ее внутренним методам и свойствам (вдруг они мутируют поля). Поэтому при каждом вызове метода компилятор делает **копию структуры в стеке (defensive copy)**. Объявление `readonly struct` убирает это копирование, ускоряя код."
+            },
+            {
+                category: "Упаковка и интерфейсы",
+                text: "Что выведет следующий фрагмент кода с упакованной структурой?",
+                code: `interface IIncrementable { void Increment(); }\nstruct Counter : IIncrementable {\n    public int Value;\n    public void Increment() { Value++; }\n}\n\n// Вызов:\nCounter c = new Counter { Value = 5 };\nobject boxed = c;\n((IIncrementable)boxed).Increment();\nConsole.WriteLine(((Counter)boxed).Value + " " + c.Value);`,
+                options: [
+                    "5 5",
+                    "6 5",
+                    "6 6",
+                    "5 6",
+                    "Ошибка выполнения (InvalidCastException)"
+                ],
+                correctIndex: 1,
+                explanation: "Переменная <code>boxed</code> ссылается на упакованную в куче копию структуры Counter. При приведении <code>(IIncrementable)boxed</code> не происходит распаковки или копирования, возвращается интерфейсная ссылка на тот же упакованный объект. Вызов <code>.Increment()</code> модифицирует поле Value прямо в упакованном объекте в куче, меняя его с 5 на 6. Оригинальная структура <code>c</code> на стеке не меняется (остается 5). Распаковка <code>(Counter)boxed</code> возвращает 6. Результат: **6 5**."
+            },
+            {
+                category: "Разрешение перегрузок",
+                text: "Что выведет данный код при совпадении имени метода экземпляра и метода расширения (extension method)?",
+                code: `public class Helper {\n    public void Print() => Console.Write("Instance");\n}\npublic static class HelperExtensions {\n    public static void Print(this Helper helper) => Console.Write("Extension");\n}\n\n// Вызов:\nnew Helper().Print();`,
+                options: [
+                    "Instance",
+                    "Extension",
+                    "InstanceExtension",
+                    "Ошибка компиляции из-за конфликта имен",
+                    "Случайный выбор рантайма"
+                ],
+                correctIndex: 0,
+                explanation: "Компилятор C# при разрешении вызова методов всегда отдает **наивысший приоритет встроенным методам экземпляра**. Методы расширения (extension methods) подключаются и рассматриваются компилятором только в том случае, если подходящего метода экземпляра не было найдено."
+            },
+            {
+                category: "Статические конструкторы",
+                text: "Каков порядок вывода статических и экземплярных конструкторов при наследовании в C#?",
+                code: `class Base {\n    static Base() => Console.Write("BaseStatic ");\n    public Base() => Console.Write("BaseInst ");\n}\nclass Derived : Base {\n    static Derived() => Console.Write("DerStatic ");\n    public Derived() => Console.Write("DerInst ");\n}\n\n// Вызов:\nnew Derived();`,
+                options: [
+                    "BaseStatic DerStatic BaseInst DerInst ",
+                    "DerStatic BaseStatic BaseInst DerInst ",
+                    "BaseInst DerInst BaseStatic DerStatic ",
+                    "DerInst BaseInst DerStatic BaseStatic ",
+                    "BaseStatic BaseInst DerStatic DerInst "
+                ],
+                correctIndex: 1,
+                explanation: "При первом обращении к типу <code>Derived</code> среда CLR обязана сначала проинициализировать сам тип. Поэтому сначала выполняется статический конструктор наследника <code>DerStatic </code>. Поскольку он наследует <code>Base</code>, инициализируется базовый класс — вызывается его статический конструктор <code>BaseStatic </code>. Только после этого создается экземпляр: сначала вызывается конструктор базы <code>BaseInst </code>, а затем наследника <code>DerInst </code>. Итог: <strong>DerStatic BaseStatic BaseInst DerInst </strong>."
+            },
+            {
+                category: "Ключевые слова",
+                text: "Что произойдет, если в конструкции using (var resource = GetResource()) { ... } метод GetResource() вернет значение null?",
+                options: [
+                    "Выбросится исключение NullReferenceException на входе в блок using",
+                    "Блок using выполнится нормально, а при выходе из него вызов Dispose() будет безопасно пропущен без генерации ошибок",
+                    "Блок using пропустит выполнение всего своего внутреннего тела",
+                    "Вызовется зависание потока сборщика мусора",
+                    "Сгенерируется исключение ArgumentNullException"
+                ],
+                correctIndex: 1,
+                explanation: "Конструкция <code>using</code> компилируется в конструкцию <code>try-finally</code>. В блоке finally генерируется проверка на null перед вызовом освобождения: <code>if (resource != null) ((IDisposable)resource).Dispose();</code>. Поэтому, если ресурс равен null, **никаких ошибок при выходе не произойдет**."
+            },
+            {
+                category: "Делегаты",
+                text: "Что произойдет при вызове группового (multicast) делегата, если один из зарегистрированных в нем методов выбросит исключение?",
+                code: `Action action = () => Console.Write("A");\naction += () => { throw new Exception(); };\naction += () => Console.Write("B");\ntry {\n    action();\n} catch {\n    Console.Write("Error");\n}`,
+                options: [
+                    "AError",
+                    "ABError",
+                    "Error",
+                    "A",
+                    "AErrB"
+                ],
+                correctIndex: 0,
+                explanation: "Методы, подписанные на групповой делегат, вызываются **последовательно в порядке подписки**. Первый метод выведет <strong>A</strong>. Второй метод выбросит исключение. Так как исключение не перехвачено внутри цепочки делегата, выполнение цепочки немедленно прерывается (третий делегат с выводом B **не запустится**). Исключение ловится внешним catch, выводя <strong>Error</strong>. Итог: **AError**."
+            },
+            {
+                category: "Строки",
+                text: "В чем заключается принципиальная разница между типом FormattableString и обычной строкой при использовании интерполяции строк?",
+                options: [
+                    "FormattableString хранится в неуправляемой памяти и не нагружает GC",
+                    "Обычная строка немедленно форматируется в текущей культуре (CurrentCulture), тогда как FormattableString сохраняет строку-шаблон и массив аргументов, позволяя форматировать ее позже с указанием специфичной культуры (например, InvariantCulture)",
+                    "FormattableString не может работать с числовыми переменными",
+                    "FormattableString — это значимый тип (struct), а обычная строка — class",
+                    "FormattableString всегда шифрует свое содержимое"
+                ],
+                correctIndex: 1,
+                explanation: 'Интерполяция строк вида <code>$"..."</code> может неявно преобразовываться в <code>FormattableString</code>. Этот класс сохраняет сырой формат строки <code>"...{0}"</code> и массив переданных объектов. Это позволяет, например, безопасно передавать дробные числа в SQL-запросы или файлы конфигурации, отформатировав их через InvariantCulture (с точкой вместо запятой), независимо от настроек Windows пользователя.'
+            },
+            {
+                category: "Обобщения (Generics)",
+                text: "Укажите правильный синтаксический порядок перечисления ограничений в конструкции `where T : ...`, если обобщенный тип T должен наследоваться от класса Base, реализовывать интерфейс IComparable и иметь конструктор без параметров.",
+                options: [
+                    "where T : new(), Base, IComparable",
+                    "where T : Base, IComparable, new()",
+                    "where T : IComparable, Base, new()",
+                    "where T : new(), IComparable, Base",
+                    "Любой порядок ограничений является синтаксически верным"
+                ],
+                correctIndex: 1,
+                explanation: "Компилятор C# накладывает строгий порядок на перечисление ограничений типа: **сначала идет базовый класс** (если есть, только один), **затем перечисляются интерфейсы**, и **в самом конце** указывается ограничение на конструктор без параметров **new()**."
+            },
+            {
+                category: "Базовый синтаксис",
+                text: "Что выведет следующий хитрый код с вычислениями префиксного и постфиксного инкрементов?",
+                code: `int[] arr = { 10, 20, 30, 40 };\nint i = 1;\narr[i++] = ++i * 10;\nConsole.WriteLine(string.Join(",", arr) + " i=" + i);`,
+                options: [
+                    "10,30,30,40 i=3",
+                    "10,20,30,40 i=3",
+                    "10,30,30,40 i=2",
+                    "10,20,20,40 i=3",
+                    "Ошибка IndexOutOfRangeException"
+                ],
+                correctIndex: 0,
+                explanation: "Рассчитаем строго по правилам C# (вычисление слева направо):<br>1) Вычисляется левая часть присваивания (цель записи): <code>arr[i++]</code>. Постфиксный инкремент возвращает исходное значение <strong>1</strong>. Целевой ячейкой становится **arr[1]**. Сразу после этого `i` становится равен 2.<br>2) Вычисляется правая часть: <code>++i * 10</code>. Префиксный инкремент увеличивает `i` с 2 до 3 и возвращает <strong>3</strong>. Получаем <code>3 * 10 = 30</code>.<br>3) Происходит присваивание: <code>arr[1] = 30;</code>.<br>Массив `arr` теперь содержит `{ 10, 30, 30, 40 }`, а переменная `i` равна 3."
+            },
+            {
+                category: "Делегаты и События",
+                text: "Какое ключевое отличие в безопасности отличает объявление события (event) от обычного публичного поля типа делегата (delegate)?",
+                options: [
+                    "События нельзя объявлять со спецификатором доступа public",
+                    "Событие из внешних классов можно только подписывать (+=) и отписывать (-=); его невозможно вызвать (.Invoke()) или обнулить (= null) за пределами содержащего класса",
+                    "Делегаты могут вызываться только асинхронно",
+                    "События хранятся исключительно в стеке",
+                    "События работают на 150% медленнее обычных делегатов"
+                ],
+                correctIndex: 1,
+                explanation: "События (<code>event</code>) — это безопасная обертка над делегатами. Они реализуют паттерн Издатель-Подписчик. Внешний код **не имеет права обнулить список подписчиков или принудительно запустить событие** — эти действия может выполнять исключительно сам класс-владелец события. Извне доступны только операции добавления/удаления обработчиков (`+=` и `-=`)."
+            },
+            {
+                category: "Свойства класса",
+                text: "Где и когда допускается инициализация свойств, имеющих модификатор init (init-only properties)?",
+                options: [
+                    "Исключительно в статическом конструкторе класса",
+                    "Только непосредственно при объявлении поля со значением по умолчанию",
+                    "Во время создания объекта в блоке инициализатора объекта (object initializer) либо внутри конструкторов класса. После инициализации свойство становится доступным только для чтения (readonly)",
+                    "В любых публичных методах класса в любое время",
+                    "Только в методах расширения"
+                ],
+                correctIndex: 2,
+                explanation: "Модификатор <strong>init</strong> (введен в C# 9.0) делает свойство **доступным для записи только во время инициализации объекта** (в конструкторе или блоке инициализации <code>new Parent { Property = val }</code>). После завершения создания объекта свойство ведет себя как readonly."
+            },
+            {
+                category: "Операторы",
+                text: "Что выведет на экран следующий фрагмент кода с оператором nameof в C#?",
+                code: `string name = nameof(System.Collections.Generic.List<int>.Count);\nConsole.WriteLine(name);`,
+                options: [
+                    "Count",
+                    "List<int>.Count",
+                    "System.Collections.Generic.List<int>.Count",
+                    "List",
+                    "Выдаст ошибку компиляции"
+                ],
+                correctIndex: 0,
+                explanation: "Оператор <code>nameof</code> вычисляется во время компиляции и возвращает **только самый последний сегмент имени** переданного типа, свойства, переменной или метода. Поэтому результатом будет простая строка <strong>\"Count\"</strong>."
+            },
+            {
+                category: "Типы данных",
+                text: "Какое из утверждений верно описывает различие между типами System.ValueTuple (например, `(int, string)`) и System.Tuple (например, `Tuple<int, string>`) in C#?",
+                options: [
+                    "ValueTuple является ссылочным типом (class), а Tuple — значимым типом (struct)",
+                    "ValueTuple — это значимый тип (struct), элементы которого являются изменяемыми публичными полями Item1, Item2 и т.д., и он поддерживает именование элементов на уровне компилятора. Tuple — это ссылочный тип (class), элементы которого неизменяемы",
+                    "Они абсолютно идентичны и являются просто синонимами друг друга",
+                    "Tuple не поддерживает разыменование и деконструкцию, а ValueTuple нельзя возвращать из методов",
+                    "ValueTuple может хранить в себе только значимые типы, а Tuple — любые типы данных"
+                ],
+                correctIndex: 1,
+                explanation: "Новые кортежи C# 7+ (<strong>ValueTuple</strong>) реализованы как **структуры**, что убирает нагрузку на кучу (garbage collection). Их элементы являются **изменяемыми публичными полями**, и компилятор поддерживает их именование (например, `(int id, string name)`). Старый класс **Tuple** — это **ссылочный тип** (class), элементы которого неизменяемы (readonly свойства)."
+            },
+            
+            // QUESTIONS 41 TO 60
+            {
+                category: "Типы данных",
+                text: "Каков точный размер переменной типа double (System.Double) в памяти в языке C#?",
+                options: [
+                    "Два байта",
+                    "Четыре байта",
+                    "Восемь байтов",
+                    "Десять байтов",
+                    "Шестнадцать байтов"
+                ],
+                correctIndex: 2,
+                explanation: "Тип данных <strong>double</strong> в C# представляет вещественное число двойной точности и занимает в памяти ровно **8 байтов** (64 бита)."
+            },
+            {
+                category: "Клонирование объектов",
+                text: "Какое поведение демонстрирует стандартный метод MemberwiseClone() класса System.Object при его вызове?",
+                options: [
+                    "Создает глубокую (deep) копию объекта, рекурсивно копируя все вложенные ссылочные объекты",
+                    "Создает поверхностную (shallow) копию объекта, копируя значения для значимых типов и только ссылки для ссылочных полей",
+                    "Удаляет объект из кучи, возвращая его дескриптор",
+                    "Преобразует объект в структуру данных JSON",
+                    "Сравнивает текущий объект с другим объектом побайтово"
+                ],
+                correctIndex: 1,
+                explanation: "Метод <code>MemberwiseClone()</code> выполняет **поверхностное копирование (shallow copy)**. При этом создается новый объект, его нестатические значимые поля копируются побитово, а для полей ссылочного типа копируются только ссылки. То есть оригинал и копия будут разделять вложенные ссылочные объекты."
+            },
+            {
+                category: "Продвинутый C#",
+                text: "Чем принципиально отличается переменная типа dynamic от переменной типа object в языке C#?",
+                options: [
+                    "dynamic хранится исключительно в стеке",
+                    "Компилятор полностью пропускает проверку типов во время компиляции для dynamic, перенося все разрешения вызовов членов, методов и операций на время выполнения (runtime) с использованием DLR (Dynamic Language Runtime)",
+                    "dynamic работает в 10 раз быстрее object",
+                    "dynamic может хранить только числовые значения",
+                    "Ничем не отличается, это просто алиас"
+                ],
+                correctIndex: 1,
+                explanation: "Тип <code>dynamic</code> указывает компилятору временно отключить строгую проверку типов во время компиляции. Все вызовы свойств и методов разрешаются на этапе выполнения с помощью **DLR**. Тип <code>object</code> требует явного приведения типов или рефлексии для доступа к специфичным членам объекта."
+            },
+            {
+                category: "Замыкания",
+                text: "Что представляет собой механизм замыкания (closure) в C# при захвате локальной переменной внутри лямбда-выражения?",
+                options: [
+                    "Автоматическая блокировка переменной от перезаписи другими потоками (thread-lock)",
+                    "Генерация компилятором скрытого вспомогательного класса (display class), куда локальная переменная переносится в качестве поля, благодаря чему время ее жизни продлевается до тех пор, пока жив ссылающийся делегат",
+                    "Принудительное приведение переменной к типу void*",
+                    "Мгновенный перевод переменной в неизменяемое (readonly) состояние",
+                    "Удаление переменной из стека сразу после объявления лямбды"
+                ],
+                correctIndex: 1,
+                explanation: "При создании замыкания компилятор C# генерирует **скрытый класс (display class)**, содержащий захваченную переменную как поле и саму лямбду как метод. За счет этого переменная перемещается из стека в кучу, и ее время жизни не ограничивается выходом из исходного метода."
+            },
+            {
+                category: "Управление памятью",
+                text: "Что делает метод string.Intern(string str) в языке C#?",
+                options: [
+                    "Шифрует строку с использованием алгоритма AES",
+                    "Помещает строку в системный пул интернирования строк и возвращает на нее ссылку, позволяя оптимизировать расход памяти за счет хранения уникальных строк в единственном экземпляре",
+                    "Разбивает строку на массив символов",
+                    "Преобразует строку в UTF-32 кодировку",
+                    "Записывает строку во временный файл на диске"
+                ],
+                correctIndex: 1,
+                explanation: "Метод <code>string.Intern</code> обращается к **пулу интернирования строк** CLR. Если переданная строка уже содержится в пуле, метод возвращает ссылку на существующий экземпляр строки. Это позволяет разным строковым переменным разделять одну и ту же область памяти."
+            },
+            {
+                category: "Базовый синтаксис",
+                text: "Что произойдет при выходе числового значения за границы диапазона типа данных внутри блока checked в C#?",
+                options: [
+                    "Значение начнет циклическое вычисление с противоположной границы диапазона (overflow wrap-around)",
+                    "Значение автоматически округлится до нуля",
+                    "Среда CLR сгенерирует исключение System.OverflowException",
+                    "Программа приостановит поток на 1 секунду",
+                    "Произойдет автоматический переход на тип double"
+                ],
+                correctIndex: 2,
+                explanation: "Контекст <strong>checked</strong> принудительно заставляет среду CLR проверять арифметические операции на переполнение. В случае выхода значения за границы диапазона типа выбрасывается исключение **System.OverflowException**."
+            },
+            {
+                category: "Продвинутый C#",
+                text: "Что возвращает выражение typeof(int?) в языке C#?",
+                options: [
+                    "typeof(int)",
+                    "typeof(System.Nullable<int>)",
+                    "typeof(object)",
+                    "Вызывает ошибку компиляции",
+                    "typeof(void)"
+                ],
+                correctIndex: 1,
+                explanation: "Выражение <code>int?</code> является синтаксическим сахаром для обобщенной структуры <code>System.Nullable&lt;int&gt;</code>. Следовательно, `typeof(int?)` возвращает объект типа `System.Type`, представляющий именно <strong>System.Nullable&lt;int&gt;</strong>."
+            },
+            {
+                category: "Полиморфизм",
+                text: "В чем разница между объявлением члена класса с ключевым словом abstract и ключевым словом virtual?",
+                options: [
+                    "virtual члены не могут переопределяться, а abstract — могут",
+                    "abstract члены не содержат тела реализации и обязаны быть переопределены в неабстрактном наследнике; virtual члены имеют реализацию по умолчанию и могут переопределяться по желанию",
+                    "abstract применяется только к полям, а virtual к методам",
+                    "virtual методы работают асинхронно, а abstract синхронно",
+                    "Различий нет, ключевые слова взаимозаменяемы"
+                ],
+                correctIndex: 1,
+                explanation: "Ключевое отличие: **abstract** член задает только сигнатуру без тела метода и **обязывает** наследников предоставить реализацию. Член с ключевым словом **virtual** имеет **собственное тело реализации**, которое наследники могут переопределить через `override`, но делать это не обязаны."
+            },
+            {
+                category: "Структуры и Классы",
+                text: "Можно ли наследоваться от пользовательской структуры (struct) в языке C#?",
+                options: [
+                    "Можно, если структура объявлена с модификатором public",
+                    "Нет, так как все структуры в C# являются неявно запечатанными (sealed) и не могут выступать в качестве базовых классов для других типов",
+                    "Можно, используя ключевое слово base",
+                    "Можно наследоваться только от readonly структур",
+                    "Можно, только если структура реализует интерфейсы"
+                ],
+                correctIndex: 1,
+                explanation: "В C# наследование для структур строго **запрещено**. Компилятор неявно помечает все структуры как **sealed**. Структура может реализовывать интерфейсы, но наследоваться от классов или других структур не может."
+            },
+            {
+                category: "Строки",
+                text: "Каковы основные преимущества использования StringBuilder по сравнению с обычным типом string при частых операциях конкатенации в цикле?",
+                options: [
+                    "StringBuilder занимает меньше места в стеке",
+                    "string является неизменяемым (immutable) типом, поэтому каждая операция слияния строк порождает создание нового объекта в куче и нагружает GC. StringBuilder использует изменяемый буфер символов в памяти, минимизируя аллокации",
+                    "StringBuilder автоматически проверяет строки на орфографию",
+                    "StringBuilder компилируется в unsafe указатели напрямую",
+                    "string вообще нельзя изменять после объявления"
+                ],
+                correctIndex: 1,
+                explanation: 'Поскольку тип <code>string</code> неизменяем, любая конкатенация <code>str += "x"</code> создает новую строку в куче и оставляет старую для сборщика мусора. Класс **StringBuilder** работает внутри с динамически расширяемым массивом символов, выполняя **изменения по месту (in-place)** без лишних выделений памяти.'
+            },
+            {
+                category: "Исключения",
+                text: "В какой ситуации выбрасывается стандартное исключение NullReferenceException в C#?",
+                options: [
+                    "При попытке деления вещественного числа на ноль",
+                    "При обращении к члену (методу, свойству, полю) переменной ссылочного типа, которая в данный момент содержит значение null",
+                    "При выходе индекса за границы массива",
+                    "При переполнении стека вызовов",
+                    "При ошибке приведения типов"
+                ],
+                correctIndex: 1,
+                explanation: "Исключение <strong>NullReferenceException</strong> выбрасывается средой выполнения CLR, когда код пытается обратиться к члену объекта (свойству, методу или полю) через ссылку, которая никуда не указывает и содержит **null**."
+            },
+            {
+                category: "Деконструкция",
+                text: "Каким образом в C# реализуется деконструкция объектов (Deconstruction), позволяющая писать код вида `var (name, age) = person;`?",
+                options: [
+                    "Для этого класс обязан реализовать интерфейс IDeconstructible",
+                    "В классе должен быть определен метод с именем Deconstruct, возвращающий void и принимающий параметры с ключевым словом out",
+                    "Класс должен быть объявлен со спецификатором unsafe",
+                    "Это доступно автоматически для любых классов без дополнительных настроек",
+                    "Нужно переопределить метод ToString()"
+                ],
+                correctIndex: 1,
+                explanation: "Чтобы объект поддерживал синтаксис деконструкции, внутри его класса (или в виде метода расширения) должен быть объявлен метод с сигнатурой: <code>public void Deconstruct(out T1 val1, out T2 val2, ...)</code>. Компилятор сопоставит этот метод с синтаксисом кортежного присваивания."
+            },
+            {
+                category: "Продвинутый C#",
+                text: "Что делает оператор yield break внутри итераторного блока (метода, возвращающего IEnumerable)?",
+                options: [
+                    "Останавливает поток выполнения программы на 1 секунду",
+                    "Немедленно завершает перечисление элементов коллекции, сигнализируя итератору о прекращении обхода",
+                    "Вызывает генерацию исключения прерывания",
+                    "Сбрасывает индекс итератора на начало коллекции",
+                    "Принудительно очищает используемую память"
+                ],
+                correctIndex: 1,
+                explanation: "Инструкция <strong>yield break</strong> служит для **досрочного завершения итератора**. При ее достижении выполнение кода в блоке генерации последовательности завершается, и цикл `foreach`, обходивший итератор, останавливается."
+            },
+            {
+                category: "Операторы приведения",
+                text: "Как ведет себя оператор is при проверке совместимости типов в C#?",
+                options: [
+                    "Возвращает true, если объект совместим с данным типом, либо false в противном случае (включая ситуацию, когда объект равен null)",
+                    "Всегда вызывает исключение при несовместимости типов",
+                    "Преобразует объект в целевой тип принудительно",
+                    "Работает только со значимыми типами",
+                    "Удаляет объект, если он не принадлежит типу"
+                ],
+                correctIndex: 0,
+                explanation: "Оператор <code>is</code> проверяет совместимость объекта с типом во время выполнения. Если объект равен `null`, оператор <code>is</code> всегда возвращает **false** без генерации исключений. В современном C# он также активно применяется в Pattern Matching."
+            },
+            {
+                category: "Массивы и ООП",
+                text: "Какую опасность таит в себе ковариантность массивов в C# (например, возможность присвоить `string[]` в переменную типа `object[]`)?",
+                options: [
+                    "Массивы начинают занимать в 3 раза больше памяти",
+                    "Возможность получить ошибку во время выполнения ArrayTypeMismatchException при попытке записать в ячейку массива объект несовместимого типа",
+                    "Автоматическое зануление всех элементов массива",
+                    "Блокировка Garbage Collector на время жизни массива",
+                    "Компилятор запрещает ковариантность массивов на корню"
+                ],
+                correctIndex: 1,
+                explanation: "Поскольку массивы ссылочных типов ковариантны, код <code>object[] arr = new string[5];</code> скомпилируется успешно. Однако если попытаться записать туда не строку: <code>arr[0] = 42;</code> (целое число), компилятор этого не заметит, но во время выполнения выбросится исключение **ArrayTypeMismatchException**."
+            },
+            {
+                category: "Многопоточность",
+                text: "Какое поведение задает модификатор volatile применительно к полям класса в C#?",
+                options: [
+                    "Обеспечивает синхронизацию потоков через объектную блокировку lock",
+                    "Указывает компилятору и процессору, что значение поля может изменяться параллельными потоками. Это запрещает кэширование значения в регистрах процессора и оптимизационное переупорядочивание инструкций чтения/записи для этого поля",
+                    "Делает поле доступным только для чтения",
+                    "Переносит поле в глобальный статический реестр приложения",
+                    "Автоматически оборачивает поле в структуру Task"
+                ],
+                correctIndex: 1,
+                explanation: "Модификатор <strong>volatile</strong> гарантирует, что при каждом обращении к полю поток будет производить чтение актуального значения непосредственно из оперативной памяти, а не из кэша процессора. Также он предотвращает оптимизационную перестановку инструкций чтения и записи компилятором (memory barrier)."
+            },
+            {
+                category: "Типы данных",
+                text: "Каков размер переменной типа char в C# и какую кодировку символов она представляет?",
+                options: [
+                    "Один байт, кодировка ASCII",
+                    "Два байта, кодировка UTF-16 (представляет кодовую точку Unicode)",
+                    "Четыре байта, кодировка UTF-32",
+                    "Динамический размер от 1 до 4 байтов",
+                    "Восемь байтов, кодировка Base64"
+                ],
+                correctIndex: 1,
+                explanation: "Символьный тип <code>char</code> в языке C# занимает ровно **2 байта** (16 бит) и представляет символ в кодировке **UTF-16**, что позволяет хранить практически любые стандартные символы Unicode."
+            },
+            {
+                category: "Управление памятью",
+                text: "Что представляет собой финализатор (деструктор) класса в языке C# и каков его синтаксис?",
+                options: [
+                    "Метод с именем Destroy(), удаляющий объект",
+                    "Специальный метод, сигнатура которого начинается с тильды (~ClassName), вызываемый сборщиком мусора перед окончательным уничтожением объекта в куче для очистки неуправляемых ресурсов",
+                    "Блок finalize{} в конце класса",
+                    "Метод, помеченный ключевым словом delete",
+                    "Финализаторы полностью отсутствуют в C#"
+                ],
+                correctIndex: 1,
+                explanation: "Финализаторы (деструкторы) объявляются с помощью тильды перед именем класса: <code>~MyClass()</code>. Они автоматически вызываются сборщиком мусора (GC) в фоновом потоке финализации перед утилизацией памяти объекта. Их использование замедляет сборку мусора, поэтому рекомендуется использовать IDisposable."
+            },
+            {
+                category: "Управление памятью",
+                text: "Что делает метод GC.SuppressFinalize(object obj) в C#?",
+                options: [
+                    "Принудительно очищает всю память приложения",
+                    "Указывает сборщику мусора, что для объекта obj не нужно вызывать финализатор (деструктор), так как неуправляемые ресурсы уже были очищены вручную через метод Dispose()",
+                    "Приостанавливает работу GC на 5 секунд",
+                    "Запрещает удалять объект из кучи навсегда",
+                    "Вызывает аварийное завершение приложения"
+                ],
+                correctIndex: 1,
+                explanation: "В паттерне Disposable вызов <code>GC.SuppressFinalize(this)</code> сообщает сборщику мусора, что объект уже очистил свои ресурсы и вызывать его финализатор `~MyClass()` не требуется. Это оптимизирует производительность, избавляя объект от попадания в очередь финализации."
+            },
+            {
+                category: "Анонимные типы",
+                text: "Какими свойствами обладают анонимные типы данных в C#, создаваемые конструкцией `var student = new { Name = \"John\", Age = 20 };`?",
+                options: [
+                    "Их свойства являются изменяемыми и они хранятся в стеке",
+                    "Они представляют собой создаваемые компилятором неизменяемые (immutable) классы, свойства которых доступны только для чтения (get-only properties)",
+                    "Они не поддерживают сравнение Equals()",
+                    "Они могут содержать только строковые типы данных",
+                    "Анонимные типы компилируются в структуры"
+                ],
+                correctIndex: 1,
+                explanation: "Анонимные типы в C# компилируются в **неизменяемые ссылочные типы (классы)**. Все их свойства генерируются как **get-only** (только для чтения). Компилятор также автоматически генерирует для них реализации методов `Equals()` и `GetHashCode()`, сравнивающие свойства по значению."
+            }
+        ];
+
+        // State variables
+        let currentQuestionIndex = 0;
+        let scoreCorrect = 0;
+        let scoreWrong = 0;
+        let currentStreak = 0;
+        let maxStreak = 0;
+        let answeredQuestions = {}; // Maps index -> { chosenIndex: int, isCorrect: bool }
+        let startTime = Date.now();
+        let timerInterval = null;
+        let timeOffset = 0; // In case of resume from LocalStorage
+        let wrongAnswersList = [];
+
+        // Elements
+        const currentQIndexEl = document.getElementById('current-q-index');
+        const totalQCountEl = document.getElementById('total-q-count');
+        const completionPercentageEl = document.getElementById('completion-percentage');
+        const progressFillEl = document.getElementById('progress-fill');
+        const questionCategoryEl = document.getElementById('question-category');
+        const questionTextEl = document.getElementById('question-text');
+        
+        const codeContainerEl = document.getElementById('code-container');
+        const lineNumbersEl = document.getElementById('line-numbers');
+        const codeBodyEl = document.getElementById('code-body');
+        
+        const answersGridEl = document.getElementById('answers-grid');
+        
+        const explanationCardEl = document.getElementById('explanation-card');
+        const explanationHeaderEl = document.getElementById('explanation-header');
+        const explanationBodyEl = document.getElementById('explanation-body');
+        const nextBtnEl = document.getElementById('next-btn');
+        
+        const correctCountEl = document.getElementById('correct-count');
+        const wrongCountEl = document.getElementById('wrong-count');
+        const streakCountEl = document.getElementById('streak-count');
+        const elapsedTimeEl = document.getElementById('elapsed-time');
+        const streakBadgeEl = document.getElementById('streak-badge');
+        
+        const questionsGridEl = document.getElementById('questions-grid');
+        const answeredCountEl = document.getElementById('answered-count');
+        
+        const quizPanelEl = document.getElementById('quiz-panel');
+        const resultsPanelEl = document.getElementById('results-panel');
+        const sidebarPanelEl = document.getElementById('sidebar-panel');
+
+        // Color syntax highlighting helper for code view
+        function highlightCsharpCode(codeStr) {
+            if (!codeStr) return "";
+            
+            // Clean HTML tags first
+            let escaped = codeStr
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+            
+            // Simple regex syntax highlighting
+            const keywords = /\b(class|struct|interface|record|public|private|protected|internal|static|readonly|volatile|const|override|virtual|abstract|sealed|new|void|int|float|double|string|bool|object|var|return|yield|if|else|switch|case|try|catch|finally|throw|nameof|with|ref|out|in|using|null|Console|Action|Exception)\b/g;
+            const strings = /("[^"]*")/g;
+            const comments = /(\/\/.*)/g;
+
+            escaped = escaped.replace(comments, '<span class="comment">$1</span>');
+            
+            // Highlight keywords, avoiding nested replacements inside comments
+            escaped = escaped.replace(keywords, function(match) {
+                return '<span class="keyword">' + match + '</span>';
+            });
+
+            // Clean up type-specific patterns
+            escaped = escaped.replace(/\b(Point|Person|List|Helper|HelperExtensions|IIncrementable|Counter|Base|Derived|System)\b/g, '<span class="type">$1</span>');
+            escaped = escaped.replace(/\b(Print|WriteLine|Write|Calc|GetNumbers|Increment|Dispose|Main)\b/g, '<span class="method">$1</span>');
+            
+            return escaped;
+        }
+
+        // Initialize Web App
+        function initApp() {
+            totalQCountEl.textContent = questions.length;
+            
+            // Check LocalStorage
+            loadProgress();
+            
+            // Build Question Grid Sidebar
+            buildSidebarGrid();
+            
+            // Start Timer
+            startTimer();
+            
+            // Display Current Question
+            displayQuestion(currentQuestionIndex);
+            
+            updateStats();
+        }
+
+        // Start Elapsed Time counter
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                const elapsedMs = Date.now() - startTime + (timeOffset * 1000);
+                const totalSec = Math.floor(elapsedMs / 1000);
+                const minutes = Math.floor(totalSec / 60).toString().padStart(2, '0');
+                const seconds = (totalSec % 60).toString().padStart(2, '0');
+                elapsedTimeEl.textContent = `${minutes}:${seconds}`;
+            }, 1000);
+        }
+
+        // Build 60 questions sidebar navigation grid
+        function buildSidebarGrid() {
+            questionsGridEl.innerHTML = "";
+            for (let i = 0; i < questions.length; i++) {
+                const btn = document.createElement('div');
+                btn.className = 'grid-item';
+                btn.textContent = i + 1;
+                btn.id = `grid-item-${i}`;
+                
+                // Set initial classes based on stored progress
+                if (answeredQuestions[i]) {
+                    if (answeredQuestions[i].isCorrect) {
+                        btn.classList.add('answered-correct');
+                    } else {
+                        btn.classList.add('answered-wrong');
+                    }
+                }
+                
+                if (i === currentQuestionIndex) {
+                    btn.classList.add('active');
+                }
+                
+                btn.onclick = () => jumpToQuestion(i);
+                questionsGridEl.appendChild(btn);
+            }
+            
+            // Update counts
+            const answeredCount = Object.keys(answeredQuestions).length;
+            answeredCountEl.textContent = answeredCount;
+        }
+
+        // Display current question card content
+        function displayQuestion(index) {
+            // Remove active classes from all sidebar grid items
+            document.querySelectorAll('.grid-item').forEach(item => item.classList.remove('active'));
+            
+            // Set current sidebar active
+            const currentGridItem = document.getElementById(`grid-item-${index}`);
+            if (currentGridItem) currentGridItem.classList.add('active');
+
+            const q = questions[index];
+            currentQIndexEl.textContent = index + 1;
+            questionCategoryEl.textContent = q.category;
+            questionTextEl.textContent = q.text;
+
+            // Handle Code Block
+            if (q.code) {
+                codeContainerEl.style.display = "block";
+                const highlighted = highlightCsharpCode(q.code);
+                codeBodyEl.innerHTML = `<code>${highlighted}</code>`;
+                
+                // Line numbers generation
+                const linesCount = q.code.split('\n').length;
+                let numStr = "";
+                for (let i = 1; i <= linesCount; i++) {
+                    numStr += i + "<br>";
+                }
+                lineNumbersEl.innerHTML = numStr;
+            } else {
+                codeContainerEl.style.display = "none";
+            }
+
+            // Build Answers Grid
+            answersGridEl.innerHTML = "";
+            const letters = ['A', 'B', 'C', 'D', 'E'];
+            
+            q.options.forEach((opt, idx) => {
+                const optBtn = document.createElement('button');
+                optBtn.className = 'answer-option';
+                optBtn.innerHTML = `
+                    <div class="option-marker">${letters[idx] || (idx + 1)}</div>
+                    <div class="option-text">${opt.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
+                `;
+                
+                // If already answered
+                if (answeredQuestions[index]) {
+                    optBtn.classList.add('disabled');
+                    const answered = answeredQuestions[index];
+                    
+                    if (idx === q.correctIndex) {
+                        optBtn.classList.add('correct');
+                    } else if (idx === answered.chosenIndex) {
+                        optBtn.classList.add('wrong');
+                    }
+                } else {
+                    optBtn.onclick = () => selectAnswer(idx);
+                }
+                
+                answersGridEl.appendChild(optBtn);
+            });
+
+            // Show explanation if already answered
+            if (answeredQuestions[index]) {
+                const answered = answeredQuestions[index];
+                showExplanationBlock(answered.isCorrect, q.explanation);
+            } else {
+                explanationCardEl.style.display = "none";
+            }
+
+            // Scroll panel to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Process answer selection
+        function selectAnswer(chosenIdx) {
+            if (answeredQuestions[currentQuestionIndex]) return; // Already answered
+
+            const q = questions[currentQuestionIndex];
+            const isCorrect = chosenIdx === q.correctIndex;
+
+            // Mark question as answered in state
+            answeredQuestions[currentQuestionIndex] = {
+                chosenIndex: chosenIdx,
+                isCorrect: isCorrect
+            };
+
+            // Update stats
+            if (isCorrect) {
+                scoreCorrect++;
+                currentStreak++;
+                if (currentStreak > maxStreak) maxStreak = currentStreak;
+                triggerSuccessAnimation();
+            } else {
+                scoreWrong++;
+                currentStreak = 0;
+                wrongAnswersList.push({
+                    questionIndex: currentQuestionIndex,
+                    text: q.text
+                });
+                triggerWrongAnimation();
+            }
+
+            // Update visuals
+            const options = answersGridEl.children;
+            for (let i = 0; i < options.length; i++) {
+                options[i].classList.add('disabled');
+                if (i === q.correctIndex) {
+                    options[i].classList.add('correct');
+                } else if (i === chosenIdx) {
+                    options[i].classList.add('wrong');
+                }
+            }
+
+            // Update sidebar item color
+            const gridItem = document.getElementById(`grid-item-${currentQuestionIndex}`);
+            if (gridItem) {
+                gridItem.classList.remove('answered-correct', 'answered-wrong');
+                gridItem.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+            }
+
+            // Display Explanation block
+            showExplanationBlock(isCorrect, q.explanation);
+
+            // Update scoreboard & save progress
+            updateStats();
+            saveProgress();
+            
+            // Check if entire quiz is finished
+            if (Object.keys(answeredQuestions).length === questions.length) {
+                nextBtnEl.innerHTML = `<span>Показать результаты</span> <i class="fa-solid fa-square-poll-vertical"></i>`;
+            }
+        }
+
+        // Show Explanation alert details
+        function showExplanationBlock(isCorrect, text) {
+            explanationCardEl.style.display = "block";
+            if (isCorrect) {
+                explanationHeaderEl.className = "explanation-header correct-text";
+                explanationHeaderEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>Правильный ответ!</span>`;
+            } else {
+                explanationHeaderEl.className = "explanation-header wrong-text";
+                explanationHeaderEl.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <span>Неверно</span>`;
+            }
+            explanationBodyEl.innerHTML = text;
+        }
+
+        // Micro-animations for feedback
+        function triggerSuccessAnimation() {
+            const correctBadge = document.querySelector('.stat-badge.correct');
+            correctBadge.style.transform = "scale(1.2)";
+            setTimeout(() => correctBadge.style.transform = "scale(1)", 200);
+            
+            // Confetti burst for streak milestones
+            if (currentStreak > 0 && currentStreak % 5 === 0) {
+                confetti({
+                    particleCount: 50,
+                    spread: 60,
+                    origin: { y: 0.8 }
+                });
+            }
+        }
+
+        function triggerWrongAnimation() {
+            const wrongBadge = document.querySelector('.stat-badge.wrong');
+            wrongBadge.style.transform = "scale(1.2)";
+            setTimeout(() => wrongBadge.style.transform = "scale(1)", 200);
+        }
+
+        // Go to next question or show final screen
+        function goToNextQuestion() {
+            if (Object.keys(answeredQuestions).length === questions.length) {
+                showResultsPanel();
+                return;
+            }
+
+            // Find next unanswered question
+            let nextIndex = (currentQuestionIndex + 1) % questions.length;
+            while (answeredQuestions[nextIndex] && nextIndex !== currentQuestionIndex) {
+                nextIndex = (nextIndex + 1) % questions.length;
+            }
+
+            jumpToQuestion(nextIndex);
+        }
+
+        // Jump directly to any question by index
+        function jumpToQuestion(index) {
+            currentQuestionIndex = index;
+            displayQuestion(currentQuestionIndex);
+            
+            // If viewing after results, toggle panels
+            quizPanelEl.style.display = "flex";
+            resultsPanelEl.style.display = "none";
+            sidebarPanelEl.style.display = "flex";
+            
+            // Toggle sidebar next-btn back if needed
+            if (Object.keys(answeredQuestions).length === questions.length) {
+                nextBtnEl.innerHTML = `<span>Показать результаты</span> <i class="fa-solid fa-square-poll-vertical"></i>`;
+            } else {
+                nextBtnEl.innerHTML = `<span>Следующий вопрос</span> <i class="fa-solid fa-arrow-right"></i>`;
+            }
+        }
+
+        // Update statistics panels
+        function updateStats() {
+            correctCountEl.textContent = scoreCorrect;
+            wrongCountEl.textContent = scoreWrong;
+            streakCountEl.textContent = currentStreak;
+
+            const answeredCount = Object.keys(answeredQuestions).length;
+            answeredCountEl.textContent = answeredCount;
+
+            // Fill Progress bar
+            const percent = Math.round((answeredCount / questions.length) * 100);
+            completionPercentageEl.textContent = `${percent}% выполнено`;
+            progressFillEl.style.width = `${percent}%`;
+        }
+
+        // Final score screen evaluation
+        function showResultsPanel() {
+            clearInterval(timerInterval);
+
+            // Hide normal quiz view, show results view
+            quizPanelEl.style.display = "none";
+            sidebarPanelEl.style.display = "none";
+            resultsPanelEl.style.display = "flex";
+
+            // Calculations
+            const total = questions.length;
+            const percentage = Math.round((scoreCorrect / total) * 100);
+            resultsPercentageEl.textContent = `${percentage}%`;
+
+            // SVG circle dashoffset update
+            const circleFill = document.getElementById('results-circle-fill');
+            const radius = 90;
+            const circumference = 2 * Math.PI * radius;
+            const offset = circumference - (percentage / 100) * circumference;
+            
+            setTimeout(() => {
+                circleFill.style.strokeDashoffset = offset;
+            }, 100);
+
+            // Set Grade & Rank
+            let grade = "";
+            let title = "Тест Завершен!";
+            
+            if (percentage >= 90) {
+                grade = "C# Grandmaster 👑 (Грандмастер C#)";
+                title = "Потрясающий результат!";
+                triggerCelebrationConfetti();
+            } else if (percentage >= 75) {
+                grade = "Senior Debugger 🛡️ (Старший отладчик)";
+                title = "Отличная работа!";
+                triggerCelebrationConfetti();
+            } else if (percentage >= 50) {
+                grade = "Middle Developer 💻 (Разработчик Middle)";
+                title = "Неплохой результат!";
+            } else {
+                grade = "Junior Copy-Paster 📋 (Копипастер-стажер)";
+                title = "Нужно подучить теорию!";
+            }
+
+            document.getElementById('results-title').textContent = title;
+            document.getElementById('results-grade').textContent = grade;
+            
+            document.getElementById('res-correct').textContent = scoreCorrect;
+            document.getElementById('res-wrong').textContent = scoreWrong;
+            document.getElementById('res-streak').textContent = maxStreak;
+            document.getElementById('res-time').textContent = elapsedTimeEl.textContent;
+
+            // Build Wrong Answers Review List
+            const wrongReviewListEl = document.getElementById('wrong-reviews-list');
+            const reviewsContainer = document.getElementById('wrong-reviews-container');
+            wrongReviewListEl.innerHTML = "";
+
+            if (wrongAnswersList.length > 0) {
+                reviewsContainer.style.display = "block";
+                wrongAnswersList.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = 'wrong-review-item';
+                    row.innerHTML = `
+                        <span>Вопрос ${item.questionIndex + 1}: ${item.text.substring(0, 75)}...</span>
+                        <i class="fa-solid fa-chevron-right" style="font-size: 0.8rem; opacity: 0.7;"></i>
+                    `;
+                    row.onclick = () => jumpToQuestion(item.questionIndex);
+                    wrongReviewListEl.appendChild(row);
+                });
+            } else {
+                reviewsContainer.style.display = "none";
+            }
+        }
+
+        // Celebration Confetti bursts
+        function triggerCelebrationConfetti() {
+            const end = Date.now() + (3 * 1000);
+            const colors = ['#7c3aed', '#06b6d4', '#10b981'];
+
+            (function frame() {
+                confetti({
+                    particleCount: 4,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: colors
+                });
+                confetti({
+                    particleCount: 4,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: colors
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        // Copy source code button
+        function copyCode() {
+            const currentCode = questions[currentQuestionIndex].code;
+            if (!currentCode) return;
+            
+            navigator.clipboard.writeText(currentCode).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.innerHTML = `<i class="fa-solid fa-check"></i> Скопировано!`;
+                setTimeout(() => {
+                    btn.innerHTML = `<i class="fa-solid fa-copy"></i> Копировать`;
+                }, 2000);
+            });
+        }
+
+        // Save progress to LocalStorage
+        function saveProgress() {
+            const elapsedMs = Date.now() - startTime + (timeOffset * 1000);
+            const progressData = {
+                answeredQuestions: answeredQuestions,
+                scoreCorrect: scoreCorrect,
+                scoreWrong: scoreWrong,
+                currentStreak: currentStreak,
+                maxStreak: maxStreak,
+                elapsedSeconds: Math.floor(elapsedMs / 1000),
+                currentQuestionIndex: currentQuestionIndex,
+                wrongAnswersList: wrongAnswersList
+            };
+            localStorage.setItem('csharp_quiz_progress', JSON.stringify(progressData));
+        }
+
+        // Load progress from LocalStorage
+        function loadProgress() {
+            const raw = localStorage.getItem('csharp_quiz_progress');
+            if (raw) {
+                try {
+                    const data = JSON.parse(raw);
+                    answeredQuestions = data.answeredQuestions || {};
+                    scoreCorrect = data.scoreCorrect || 0;
+                    scoreWrong = data.scoreWrong || 0;
+                    currentStreak = data.currentStreak || 0;
+                    maxStreak = data.maxStreak || 0;
+                    timeOffset = data.elapsedSeconds || 0;
+                    currentQuestionIndex = data.currentQuestionIndex || 0;
+                    wrongAnswersList = data.wrongAnswersList || [];
+                    
+                    if (Object.keys(answeredQuestions).length === questions.length) {
+                        showResultsPanel();
+                    }
+                } catch (e) {
+                    console.error("Failed to parse stored progress", e);
+                }
+            }
+        }
+
+        // Confirm starting quiz anew
+        function confirmReset() {
+            if (confirm("Вы действительно хотите сбросить текущий прогресс теста и начать заново?")) {
+                restartQuiz();
+            }
+        }
+
+        function restartQuiz() {
+            localStorage.removeItem('csharp_quiz_progress');
+            answeredQuestions = {};
+            scoreCorrect = 0;
+            scoreWrong = 0;
+            currentStreak = 0;
+            maxStreak = 0;
+            startTime = Date.now();
+            timeOffset = 0;
+            currentQuestionIndex = 0;
+            wrongAnswersList = [];
+
+            // UI Reset
+            quizPanelEl.style.display = "flex";
+            resultsPanelEl.style.display = "none";
+            sidebarPanelEl.style.display = "flex";
+            
+            initApp();
+        }
+
+        // Mobile responsive sidebar toggle helper
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar-panel');
+            if (sidebar.style.display === "none" || sidebar.style.display === "") {
+                sidebar.style.display = "flex";
+            } else {
+                sidebar.style.display = "none";
+            }
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>

@@ -1,0 +1,589 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>C/C++ HARDCORE TEST</title>
+
+    <style>
+
+        *{
+            box-sizing:border-box;
+        }
+
+        body{
+            margin:0;
+            padding:30px;
+            background:#0f172a;
+            color:white;
+            font-family:Arial,sans-serif;
+        }
+
+        .container{
+            max-width:1200px;
+            margin:auto;
+        }
+
+        h1{
+            text-align:center;
+            font-size:44px;
+            margin-bottom:10px;
+        }
+
+        .subtitle{
+            text-align:center;
+            color:#94a3b8;
+            margin-bottom:40px;
+            font-size:18px;
+        }
+
+        .question{
+            background:#1e293b;
+            border:1px solid #334155;
+            border-radius:18px;
+            padding:25px;
+            margin-bottom:25px;
+            transition:.3s;
+        }
+
+        .question:hover{
+            border-color:#3b82f6;
+            transform:translateY(-2px);
+        }
+
+        .question h3{
+            line-height:1.6;
+        }
+
+        .answers{
+            margin-top:20px;
+        }
+
+        .answers label{
+            display:block;
+            padding:14px;
+            margin-bottom:10px;
+            border-radius:12px;
+            background:#0f172a;
+            cursor:pointer;
+            transition:.2s;
+        }
+
+        .answers label:hover{
+            background:#162033;
+        }
+
+        button{
+            width:100%;
+            padding:20px;
+            border:none;
+            border-radius:16px;
+            background:#2563eb;
+            color:white;
+            font-size:20px;
+            font-weight:bold;
+            cursor:pointer;
+            transition:.3s;
+        }
+
+        button:hover{
+            background:#1d4ed8;
+        }
+
+        .result{
+            display:none;
+            margin-top:40px;
+            background:#111827;
+            padding:30px;
+            border-radius:18px;
+            text-align:center;
+        }
+
+        .score{
+            font-size:54px;
+            font-weight:bold;
+            margin:20px 0;
+        }
+
+        .good{
+            color:#22c55e;
+        }
+
+        .bad{
+            color:#ef4444;
+        }
+
+        code{
+            display:block;
+            margin-top:15px;
+            background:#020617;
+            color:#38bdf8;
+            padding:15px;
+            border-radius:10px;
+            overflow:auto;
+            white-space:pre-wrap;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>☠️ C/C++ HARDCORE TEST</h1>
+
+    <div class="subtitle">
+        30 вопросов • указатели • ссылки • ООП • арифметика указателей • память • инкременты • STL • polymorphism
+    </div>
+
+    <form id="quiz"></form>
+
+    <button onclick="checkAnswers()">
+        Проверить результат
+    </button>
+
+    <div class="result" id="result">
+        <h2>Результат теста</h2>
+        <div class="score" id="score"></div>
+        <div id="message"></div>
+    </div>
+
+</div>
+
+<script>
+
+    const questions = [
+
+        {
+            q:"1. Что выведет код?",
+            code:`int a = 5;
+std::cout << a++ + ++a;`,
+            a:["10","11","12","Undefined Behavior"],
+            correct:"d"
+        },
+
+        {
+            q:"2. Что такое указатель?",
+            a:[
+                "Переменная хранящая адрес",
+                "Тип массива",
+                "Ссылка на класс",
+                "Функция"
+            ],
+            correct:"a"
+        },
+
+        {
+            q:"3. Что выведет код?",
+            code:`int x = 10;
+int* p = &x;
+
+std::cout << *p;`,
+            a:["Адрес","10","Ошибка","0"],
+            correct:"b"
+        },
+
+        {
+            q:"4. Что делает оператор & ?",
+            a:[
+                "Получает адрес переменной",
+                "Создает массив",
+                "Удаляет объект",
+                "Инкрементирует"
+            ],
+            correct:"a"
+        },
+
+        {
+            q:"5. Что делает оператор * у указателя?",
+            a:[
+                "Умножение",
+                "Разыменование",
+                "Создание ссылки",
+                "Освобождение памяти"
+            ],
+            correct:"b"
+        },
+
+        {
+            q:"6. Что такое ссылка в C++?",
+            a:[
+                "Второе имя переменной",
+                "Указатель",
+                "Массив",
+                "Класс"
+            ],
+            correct:"a"
+        },
+
+        {
+            q:"7. Что выведет код?",
+            code:`int a = 5;
+int& ref = a;
+
+ref++;
+
+std::cout << a;`,
+            a:["5","6","Ошибка","0"],
+            correct:"b"
+        },
+
+        {
+            q:"8. Что выведет код?",
+            code:`int arr[] = {1,2,3};
+
+std::cout << *(arr + 1);`,
+            a:["1","2","3","Ошибка"],
+            correct:"b"
+        },
+
+        {
+            q:"9. Что такое nullptr?",
+            a:[
+                "Null pointer в C++",
+                "Тип массива",
+                "GC",
+                "Статическая ссылка"
+            ],
+            correct:"a"
+        },
+
+        {
+            q:"10. Что делает delete?",
+            a:[
+                "Освобождает память",
+                "Удаляет функцию",
+                "Создает поток",
+                "Обнуляет CPU"
+            ],
+            correct:"a"
+        },
+
+        {
+            q:"11. Что такое утечка памяти?",
+            a:[
+                "Неосвобожденная память",
+                "Ошибка компиляции",
+                "Stack overflow",
+                "Null pointer"
+            ],
+            correct:"a"
+        },
+
+        {
+            q:"12. Где обычно хранится локальная переменная?",
+            a:[
+                "Heap",
+                "Stack",
+                "SSD",
+                "GPU"
+            ],
+            correct:"b"
+        },
+
+        {
+            q:"13. Где хранится память выделенная через new?",
+            a:[
+                "Stack",
+                "Heap",
+                "Registers",
+                "ROM"
+            ],
+            correct:"b"
+        },
+
+        {
+            q:"14. Что выведет код?",
+            code:`int x = 5;
+int* p = &x;
+
+(*p)++;
+
+std::cout << x;`,
+            a:["5","6","Ошибка","0"],
+            correct:"b"
+        },
+
+        {
+            q:"15. Что такое инкапсуляция?",
+            a:[
+                "Скрытие данных",
+                "Тип цикла",
+                "Удаление памяти",
+                "Наследование"
+            ],
+            correct:"a"
+        },
+
+        {
+            q:"16. Что такое полиморфизм?",
+            a:[
+                "Много форм одного интерфейса",
+                "Удаление объектов",
+                "Тип массива",
+                "Сжатие памяти"
+            ],
+            correct:"a"
+        },
+
+        {
+            q:"17. Что делает virtual?",
+            a:[
+                "Позволяет переопределение",
+                "Удаляет метод",
+                "Создает указатель",
+                "Инкрементирует объект"
+            ],
+            correct:"a"
+        },
+
+        {
+            q:"18. Что такое pure virtual function?",
+            a:[
+                "Виртуальная функция = 0",
+                "Удаленная функция",
+                "Inline функция",
+                "Static функция"
+            ],
+            correct:"a"
+        },
+
+        {
+            q:"19. Что такое abstract class?",
+            a:[
+                "Класс с pure virtual function",
+                "Пустой класс",
+                "Удаленный класс",
+                "Stack класс"
+            ],
+            correct:"a"
+        },
+
+        {
+            q:"20. Что выведет код?",
+            code:`int a = 5;
+std::cout << a++ << " " << ++a;`,
+            a:["5 7","6 7","5 6","Undefined Behavior"],
+            correct:"d"
+        },
+
+        {
+            q:"21. Что делает sizeof?",
+            a:[
+                "Возвращает размер в байтах",
+                "Размер массива всегда",
+                "Размер адреса",
+                "Размер heap"
+            ],
+            correct:"a"
+        },
+
+        {
+            q:"22. Что выведет код?",
+            code:`char str[] = "abc";
+
+std::cout << sizeof(str);`,
+            a:["3","4","8","Ошибка"],
+            correct:"b"
+        },
+
+        {
+            q:"23. Что такое dangling pointer?",
+            a:[
+                "Указатель на освобожденную память",
+                "Null pointer",
+                "Ссылка",
+                "GC ошибка"
+            ],
+            correct:"a"
+        },
+
+        {
+            q:"24. Что выведет код?",
+            code:`int arr[] = {10,20,30};
+
+int* p = arr;
+
+std::cout << *(p + 2);`,
+            a:["10","20","30","Ошибка"],
+            correct:"c"
+        },
+
+        {
+            q:"25. Что такое STL?",
+            a:[
+                "Standard Template Library",
+                "Static Type Library",
+                "Stack Template Logic",
+                "System Type Loader"
+            ],
+            correct:"a"
+        },
+
+        {
+            q:"26. Что такое vector?",
+            a:[
+                "Динамический массив",
+                "Указатель",
+                "Stack",
+                "GC"
+            ],
+            correct:"a"
+        },
+
+        {
+            q:"27. Что выведет код?",
+            code:`std::string s = "abc";
+
+std::cout << s.size();`,
+            a:["2","3","4","Ошибка"],
+            correct:"b"
+        },
+
+        {
+            q:"28. Что делает const?",
+            a:[
+                "Запрещает изменение",
+                "Удаляет объект",
+                "Создает ссылку",
+                "Создает heap"
+            ],
+            correct:"a"
+        },
+
+        {
+            q:"29. Что такое segmentation fault?",
+            a:[
+                "Ошибка доступа к памяти",
+                "Ошибка компиляции",
+                "Ошибка STL",
+                "Переполнение int"
+            ],
+            correct:"a"
+        },
+
+        {
+            q:"30. Что выведет код?",
+            code:`int x = 5;
+
+int* p = &x;
+
+std::cout << p;`,
+            a:[
+                "5",
+                "Адрес памяти",
+                "Ошибка",
+                "nullptr"
+            ],
+            correct:"b"
+        }
+
+    ];
+
+    const quiz = document.getElementById("quiz");
+
+    questions.forEach((item,index)=>{
+
+        const div = document.createElement("div");
+
+        div.className = "question";
+
+        div.innerHTML = `
+        <h3>
+            ${item.q}
+
+            ${item.code ? `<code>${item.code}</code>` : ""}
+        </h3>
+
+        <div class="answers">
+
+            <label>
+                <input type="radio" name="q${index}" value="a">
+                ${item.a[0]}
+            </label>
+
+            <label>
+                <input type="radio" name="q${index}" value="b">
+                ${item.a[1]}
+            </label>
+
+            <label>
+                <input type="radio" name="q${index}" value="c">
+                ${item.a[2]}
+            </label>
+
+            <label>
+                <input type="radio" name="q${index}" value="d">
+                ${item.a[3]}
+            </label>
+
+        </div>
+    `;
+
+        quiz.appendChild(div);
+
+    });
+
+    function checkAnswers(){
+
+        let score = 0;
+
+        questions.forEach((q,index)=>{
+
+            const answer = document.querySelector(
+                `input[name="q${index}"]:checked`
+            );
+
+            if(answer && answer.value === q.correct){
+                score++;
+            }
+
+        });
+
+        const result = document.getElementById("result");
+        const scoreBlock = document.getElementById("score");
+        const message = document.getElementById("message");
+
+        result.style.display = "block";
+
+        scoreBlock.innerHTML = `${score} / 30`;
+
+        if(score >= 26){
+
+            scoreBlock.className = "score good";
+
+            message.innerHTML =
+                "☠️ Ты древний C++ архимаг";
+
+        }
+        else if(score >= 18){
+
+            scoreBlock.className = "score";
+
+            message.innerHTML =
+                "⚡ Очень сильный уровень";
+
+        }
+        else{
+
+            scoreBlock.className = "score bad";
+
+            message.innerHTML =
+                "💀 Segmentation fault (core dumped)";
+        }
+
+        window.scrollTo({
+            top:document.body.scrollHeight,
+            behavior:"smooth"
+        });
+
+    }
+
+</script>
+
+</body>
+</html>
+```
