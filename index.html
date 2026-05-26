@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+t <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -626,7 +626,7 @@
         <!-- Major Academic Integrations -->
         <div style="
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 24px;
             margin-bottom: 24px;
         " class="banners-grid-wrapper">
@@ -691,14 +691,14 @@
                             font-weight: 800;
                             color: white;
                         ">
-                            Академический Справочник ГИА
+                            Справочник ГИА
                         </h3>
                         <p style="
                             font-size: 0.82rem;
                             line-height: 1.5;
                             color: var(--text-secondary);
                         ">
-                            Полный перечень всех вопросов с верными ответами и подробными разборами теории по всем 5 дисциплинам. Интерактивный живой поиск по тексту, коду и академическим пояснениям.
+                            Полный перечень всех вопросов с верными ответами и подробными разборами теории по всем 5 дисциплинам. Живой поиск по тексту.
                         </p>
                     </div>
                 </div>
@@ -785,14 +785,14 @@
                             font-weight: 800;
                             color: white;
                         ">
-                            Академический Лекторий ГИА
+                            Лекторий ГИА
                         </h3>
                         <p style="
                             font-size: 0.82rem;
                             line-height: 1.5;
                             color: var(--text-secondary);
                         ">
-                            Концентрированный лекционный материал без «воды» по всем 124 экзаменационным темам Си, C#, Сетей и ИБ. Мгновенные интерактивные экспресс-тесты для самопроверки.
+                            Концентрированный лекционный материал без «воды» по всем 124 темам Си, C#, Сетей и ИБ. Мгновенные тесты.
                         </p>
                     </div>
                 </div>
@@ -816,6 +816,100 @@
                     white-space: nowrap;
                 " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(236, 72, 153, 0.4)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(236, 72, 153, 0.25)';">
                     Открыть Лекторий <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+
+            <!-- Wiki Knowledge Base Card -->
+            <div class="wiki-banner" style="
+                background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(139, 92, 246, 0.12));
+                border: 1px solid rgba(245, 158, 11, 0.25);
+                border-radius: var(--border-radius);
+                padding: 28px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                gap: 20px;
+                position: relative;
+                overflow: hidden;
+                transition: all var(--transition-speed);
+            ">
+                <!-- decorative neon background blur -->
+                <div style="
+                    position: absolute;
+                    top: -50px;
+                    right: -50px;
+                    width: 120px;
+                    height: 120px;
+                    background: #f59e0b;
+                    filter: blur(80px);
+                    opacity: 0.2;
+                    pointer-events: none;
+                "></div>
+
+                <div style="display: flex; align-items: flex-start; gap: 16px;">
+                    <div style="
+                        width: 48px;
+                        height: 48px;
+                        border-radius: 12px;
+                        background: linear-gradient(135deg, #f59e0b, #8b5cf6);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 1.4rem;
+                        color: #050508;
+                        box-shadow: 0 6px 15px rgba(245, 158, 11, 0.25);
+                        flex-shrink: 0;
+                    ">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <span style="
+                            font-size: 0.65rem;
+                            text-transform: uppercase;
+                            letter-spacing: 1px;
+                            font-weight: 700;
+                            color: #f59e0b;
+                        ">
+                            Критические Темы ГИА
+                        </span>
+                        <h3 style="
+                            font-family: 'Outfit', sans-serif;
+                            font-size: 1.25rem;
+                            font-weight: 800;
+                            color: white;
+                        ">
+                            Академическая Wiki
+                        </h3>
+                        <p style="
+                            font-size: 0.82rem;
+                            line-height: 1.5;
+                            color: var(--text-secondary);
+                        ">
+                            Интерактивный разбор сложнейших тем госов C#: Class vs Struct, ООП/Полиморфизм и ловушки ref/out. Схемы памяти, интерактивные симуляторы, мини-тесты и To-Do прогресс.
+                        </p>
+                    </div>
+                </div>
+
+                <a href="wiki.html" style="
+                    background: linear-gradient(135deg, #f59e0b, #8b5cf6);
+                    border: none;
+                    border-radius: 10px;
+                    padding: 12px 20px;
+                    color: #050508;
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    text-decoration: none;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.25);
+                    transition: all var(--transition-speed);
+                    cursor: pointer;
+                    white-space: nowrap;
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(245, 158, 11, 0.4)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(245, 158, 11, 0.25)';">
+                    Открыть Wiki <i class="fa-solid fa-chevron-right"></i>
                 </a>
             </div>
 
