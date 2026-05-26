@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тренажер ГИА — Язык С и ТП</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Outfit:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --container-bg: #161b22;
+            --card-bg: #21262d;
+            --card-hover-border: #58a6ff;
+            
+            --accent-blue: #58a6ff;
+            --accent-blue-glow: rgba(88, 166, 255, 0.3);
+            
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            
+            --correct-color: #2ea043;
+            --correct-bg: rgba(46, 160, 67, 0.15);
+            --correct-border: rgba(46, 160, 67, 0.4);
+            
+            --wrong-color: #f85149;
+            --wrong-bg: rgba(248, 81, 73, 0.15);
+            --wrong-border: rgba(248, 81, 73, 0.4);
+            
+            --sidebar-width: 320px;
+            --transition-speed: 0.2s;
+            --border-radius: 12px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--container-bg);
+            border-right: 1px solid #30363d;
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            z-index: 10;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .logo i { color: var(--accent-blue); text-shadow: 0 0 10px var(--accent-blue-glow); }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid #30363d;
+            border-radius: var(--border-radius);
+            padding: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all var(--transition-speed);
+        }
+        .stat-card:hover { border-color: var(--card-hover-border); box-shadow: 0 0 15px var(--accent-blue-glow); }
+        .stat-icon { font-size: 1.8rem; color: var(--accent-blue); }
+        .stat-info h3 { font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; }
+        .stat-info p { font-size: 1.5rem; font-weight: 700; font-family: 'Outfit', sans-serif; }
+
+        .filter-section h4 { font-family: 'Outfit', sans-serif; margin-bottom: 0.8rem; color: var(--text-secondary); }
+        .filter-btn {
+            width: 100%;
+            background: transparent;
+            border: 1px solid #30363d;
+            color: var(--text-primary);
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            margin-bottom: 0.5rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .filter-btn:hover { background: rgba(139, 148, 158, 0.1); }
+        .filter-btn.active {
+            background: var(--accent-blue-glow);
+            border-color: var(--accent-blue);
+            color: #fff;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem 4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--container-bg);
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            border: 1px solid #30363d;
+        }
+
+        .search-box {
+            position: relative;
+            width: 400px;
+        }
+        .search-box i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
+        .search-box input {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-box input:focus { border-color: var(--accent-blue); }
+
+        .questions-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .question-card {
+            background: var(--container-bg);
+            border: 1px solid #30363d;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            transition: transform 0.2s;
+        }
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .badge {
+            background: #30363d;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .badge.cat-theory { background: rgba(163, 113, 247, 0.2); color: #a371f7; border: 1px solid #a371f7; }
+        .badge.cat-trap { background: rgba(248, 81, 73, 0.2); color: #f85149; border: 1px solid #f85149; }
+        .badge.cat-algo { background: rgba(46, 160, 67, 0.2); color: #2ea043; border: 1px solid #2ea043; }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .code-block {
+            background: #0d1117;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            color: #e6edf3;
+            margin-bottom: 1.5rem;
+            border: 1px solid #30363d;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.8rem;
+        }
+        
+        .option-btn {
+            background: var(--card-bg);
+            border: 1px solid #30363d;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .option-btn:hover:not(:disabled) { background: #30363d; border-color: var(--text-secondary); }
+        .option-btn.correct { background: var(--correct-bg); border-color: var(--correct-color); }
+        .option-btn.wrong { background: var(--wrong-bg); border-color: var(--wrong-color); }
+        .option-btn:disabled { cursor: not-allowed; opacity: 0.8; }
+
+        .explanation {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(88, 166, 255, 0.1);
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 0 8px 8px 0;
+            display: none;
+            line-height: 1.6;
+            animation: fadeIn 0.3s ease;
+        }
+        .explanation.visible { display: block; }
+        .explanation h4 { font-family: 'Outfit', sans-serif; color: var(--accent-blue); margin-bottom: 0.5rem; }
+
+        .pagination { display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem; }
+        .page-btn { background: var(--card-bg); border: 1px solid #30363d; color: var(--text-primary); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
+        .page-btn.active { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 1024px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: static; border-right: none; border-bottom: 1px solid #30363d; padding: 1.5rem; }
+            .main-content { margin-left: 0; padding: 1.5rem; }
+            .topbar { flex-direction: column; gap: 1rem; }
+            .search-box { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo"><i class="fa-solid fa-microchip"></i> Тренажер С / ТП</div>
+        
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-bullseye"></i></div>
+            <div class="stat-info">
+                <h3>Прогресс</h3>
+                <p><span id="progressCount">0</span> / 110</p>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="stat-info">
+                <h3>Точность</h3>
+                <p><span id="accuracyCount">0</span>%</p>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <h4>Категории вопросов</h4>
+            <button class="filter-btn active" data-cat="all"><i class="fa-solid fa-layer-group"></i> Все вопросы</button>
+            <button class="filter-btn" data-cat="cat-theory"><i class="fa-solid fa-book"></i> Чистая теория</button>
+            <button class="filter-btn" data-cat="cat-trap"><i class="fa-solid fa-bug"></i> Кодовые ловушки</button>
+            <button class="filter-btn" data-cat="cat-algo"><i class="fa-solid fa-network-wired"></i> Алгоритмы</button>
+        </div>
+        
+        <div class="filter-section">
+            <button class="filter-btn" onclick="clearProgress()" style="color: var(--wrong-color); border-color: var(--wrong-border);"><i class="fa-solid fa-trash-can"></i> Сбросить прогресс</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="topbar">
+            <div>
+                <h2 style="font-family: 'Outfit'; font-weight: 600;">База подготовки к ГИА</h2>
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.2rem;">Стратегия: Теория + Мини-код + Алгоритмы</p>
+            </div>
+            <div class="search-box">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Поиск по вопросам, коду и темам...">
+            </div>
+        </div>
+
+        <div class="questions-container" id="quizContainer">
+            <!-- Questions rendered here via JS -->
+        </div>
+
+        <div class="pagination" id="pagination"></div>
+    </main>
+
+    <script src="c_exam_trainer_db.js"></script>
+    <script>
+        const ITEMS_PER_PAGE = 10;
+        let currentPage = 1;
+        let filteredDB = [...rawDatabase];
+        let userStats = JSON.parse(localStorage.getItem('cexam_stats')) || { answered: 0, correct: 0, states: {} };
+
+        const container = document.getElementById('quizContainer');
+        const searchInput = document.getElementById('searchInput');
+        const filters = document.querySelectorAll('.filter-btn[data-cat]');
+
+        function updateStats() {
+            document.getElementById('progressCount').textContent = userStats.answered;
+            const accuracy = userStats.answered === 0 ? 0 : Math.round((userStats.correct / userStats.answered) * 100);
+            document.getElementById('accuracyCount').textContent = accuracy;
+            localStorage.setItem('cexam_stats', JSON.stringify(userStats));
+        }
+
+        function clearProgress() {
+            if(confirm('Точно сбросить весь прогресс?')) {
+                userStats = { answered: 0, correct: 0, states: {} };
+                updateStats();
+                renderPage(currentPage);
+            }
+        }
+
+        function getCategoryBadge(cat) {
+            if(cat === 'theory') return '<span class="badge cat-theory"><i class="fa-solid fa-book"></i> Чистая теория</span>';
+            if(cat === 'trap') return '<span class="badge cat-trap"><i class="fa-solid fa-bug"></i> Кодовая ловушка</span>';
+            if(cat === 'algo') return '<span class="badge cat-algo"><i class="fa-solid fa-network-wired"></i> Алгоритмы</span>';
+            return '';
+        }
+
+        function handleAnswer(qId, selectedIdx, correctIdx) {
+            if(userStats.states[qId]) return; // Already answered
+            
+            const isCorrect = selectedIdx === correctIdx;
+            userStats.answered++;
+            if(isCorrect) userStats.correct++;
+            
+            userStats.states[qId] = { selected: selectedIdx, isCorrect: isCorrect };
+            updateStats();
+            
+            // UI Update
+            const card = document.getElementById(`q-${qId}`);
+            const btns = card.querySelectorAll('.option-btn');
+            btns.forEach((btn, idx) => {
+                btn.disabled = true;
+                if(idx === correctIdx) btn.classList.add('correct');
+                else if(idx === selectedIdx && !isCorrect) btn.classList.add('wrong');
+            });
+            card.querySelector('.explanation').classList.add('visible');
+        }
+
+        function renderPage(page) {
+            container.innerHTML = '';
+            const start = (page - 1) * ITEMS_PER_PAGE;
+            const end = start + ITEMS_PER_PAGE;
+            const pageData = filteredDB.slice(start, end);
+
+            if(pageData.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#8b949e; padding:3rem;">Вопросы не найдены.</p>';
+                renderPagination();
+                return;
+            }
+
+            pageData.forEach(q => {
+                const state = userStats.states[q.id];
+                const codeHtml = q.code ? `<div class="code-block">${q.code.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>` : '';
+                
+                let optionsHtml = '';
+                q.options.forEach((opt, idx) => {
+                    let btnClass = 'option-btn';
+                    let icon = '<i class="fa-regular fa-circle"></i>';
+                    
+                    if (state) {
+                        if (idx === q.correct) {
+                            btnClass += ' correct';
+                            icon = '<i class="fa-solid fa-check-circle"></i>';
+                        } else if (idx === state.selected && !state.isCorrect) {
+                            btnClass += ' wrong';
+                            icon = '<i class="fa-solid fa-times-circle"></i>';
+                        }
+                    }
+                    
+                    optionsHtml += `<button class="${btnClass}" ${state ? 'disabled' : ''} onclick="handleAnswer(${q.id}, ${idx}, ${q.correct})">${icon} ${opt.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</button>`;
+                });
+
+                const html = `
+                    <div class="question-card" id="q-${q.id}">
+                        <div class="question-header">
+                            <span style="color: var(--text-secondary); font-size: 0.9rem;">#${q.id} • ${q.topic}</span>
+                            ${getCategoryBadge(q.category)}
+                        </div>
+                        <div class="question-text">${q.text}</div>
+                        ${codeHtml}
+                        <div class="options-grid">
+                            ${optionsHtml}
+                        </div>
+                        <div class="explanation ${state ? 'visible' : ''}">
+                            <h4><i class="fa-solid fa-graduation-cap"></i> Академический разбор</h4>
+                            <p>${q.explanation}</p>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+
+            renderPagination();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            const totalPages = Math.ceil(filteredDB.length / ITEMS_PER_PAGE);
+            
+            if(totalPages <= 1) return;
+
+            let startP = Math.max(1, currentPage - 2);
+            let endP = Math.min(totalPages, currentPage + 2);
+
+            if(startP > 1) {
+                pagination.innerHTML += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+                if(startP > 2) pagination.innerHTML += `<span style="color:var(--text-secondary); align-self:center;">...</span>`;
+            }
+
+            for(let i = startP; i <= endP; i++) {
+                pagination.innerHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+            }
+
+            if(endP < totalPages) {
+                if(endP < totalPages - 1) pagination.innerHTML += `<span style="color:var(--text-secondary); align-self:center;">...</span>`;
+                pagination.innerHTML += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+            }
+        }
+
+        function goToPage(p) {
+            currentPage = p;
+            renderPage(currentPage);
+        }
+
+        function applyFilters() {
+            const term = searchInput.value.toLowerCase();
+            const activeCatBtn = document.querySelector('.filter-btn.active[data-cat]');
+            const activeCat = activeCatBtn ? activeCatBtn.getAttribute('data-cat') : 'all';
+
+            filteredDB = rawDatabase.filter(q => {
+                const matchText = q.text.toLowerCase().includes(term) || 
+                                  (q.code && q.code.toLowerCase().includes(term)) ||
+                                  q.topic.toLowerCase().includes(term);
+                
+                let matchCat = true;
+                if (activeCat === 'cat-theory') matchCat = q.category === 'theory';
+                if (activeCat === 'cat-trap') matchCat = q.category === 'trap';
+                if (activeCat === 'cat-algo') matchCat = q.category === 'algo';
+
+                return matchText && matchCat;
+            });
+            currentPage = 1;
+            renderPage(1);
+        }
+
+        searchInput.addEventListener('input', applyFilters);
+        
+        filters.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                filters.forEach(b => b.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+                applyFilters();
+            });
+        });
+
+        // Init
+        if (typeof rawDatabase === 'undefined') {
+            container.innerHTML = '<h3 style="color:var(--wrong-color); text-align:center;">Ошибка: база данных c_exam_trainer_db.js не загружена!</h3>';
+        } else {
+            updateStats();
+            renderPage(1);
+        }
+    </script>
+</body>
+</html>
